@@ -1,0 +1,50 @@
+# Droneacharya - Git Ignore Rules
+
+# Python Virtual Environment
+
+.venv/
+
+# Python Bytecode and Caches
+
+__pycache__/
+*.py[cod]
+
+# Test and Analysis Caches
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter Temporary Checkpoints
+
+.ipynb_checkpoints/
+
+# Environment Variables/Secrets
+
+.env
+.env.*
+
+# IDE Specific State
+
+.vscode/
+.idea/
+
+# Operating System Junk
+.DS_Store
+Thumbs.db
+
+# Logs
+
+*.log
+
+# Model Artifacts / Checkpoints
+
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Local Temporary Files
+
+tmp/
+temp/

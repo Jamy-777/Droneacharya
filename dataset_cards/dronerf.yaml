@@ -1,0 +1,17 @@
+dataset:
+  id: dronerf
+  name: DroneRF
+  version: 1
+  year: 2019
+
+modality:
+  - rf
+
+tasks:
+  - detection
+  - identification
+
+status:
+  acquired: false
+  inspected: false
+  adapter_implemented: false
