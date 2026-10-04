@@ -1,0 +1,365 @@
+dataset:
+  id: drff_r2
+  name: "DRFF-R2"
+  full_name: "Multi-Scenario UAV RF Signal Dataset with Real-World Acquisition and Signal Processing Benchmarking"
+  year: 2026
+  version: "R2"
+
+provenance:
+  primary_paper: "arXiv:2603.00106"
+  license: "CC BY 4.0"
+
+modality:
+  - rf
+
+primary_tasks:
+  - rf_fingerprinting
+  - model_recognition
+  - flight_state_analysis
+  - robustness_analysis
+
+secondary_tasks:
+  - uav_detection
+  - interference_robustness
+  - multi_uav_analysis
+
+signal:
+  representation: complex_iq
+  domain: time
+  storage_format: mat
+
+  sample_rate_sps:
+    value: 100000000
+    status: verified
+
+  approximate_complex_samples_per_segment:
+    value: 140000000
+    status: verified
+
+  dtype:
+    value: null
+    status: empirical_check_required
+
+acquisition:
+  center_frequencies_hz:
+    outdoor:
+      value: 5745000000
+      status: verified
+
+    indoor_wifi:
+      value: 2437000000
+      status: verified
+
+  receiver:
+    count: 2
+
+    model:
+      value: null
+      status: conflicting
+      notes:
+        - "Paper text identifies USRP-2943 devices."
+        - "A figure labels an X310."
+        - "Actual files/acquisition code must resolve this."
+
+  antenna:
+    type: dual_band_omnidirectional
+    gain_dbi: 5
+    orientation_controlled: true
+
+  receiver_gain:
+    stored_per_file: true
+    fixed_globally: false
+
+population:
+  manufacturer:
+    - DJI
+
+  models: 8
+  physical_units: 26
+
+  physical_units_per_model:
+    mini_5_pro: 1
+    mini_4_pro: 5
+    mini_3_pro: 2
+    mavic_3: 1
+    mavic_3c: 1
+    mavic_air_3s: 1
+    mavic_air_2s: 7
+    mavic_air_2: 8
+
+subsets:
+  dataset_1:
+    name: single_drone_states
+    purpose:
+      - operational_state_variation
+      - trajectory_variation
+      - altitude_variation
+      - speed_variation
+
+  dataset_2:
+    name: drone_mixed
+    purpose:
+      - multi_uav_signal_mixture
+      - overlapping_transmitter_analysis
+
+  dataset_3:
+    name: single_drone_hover
+    purpose:
+      - physical_unit_variation
+      - acquisition_day_variation
+      - receiver_variation
+
+  dataset_4:
+    name: single_drone_dual_frequency
+    purpose:
+      - frequency_hopping_analysis
+      - spectral_variation
+
+  dataset_5:
+    name: single_drone_inside_absorbent_material
+    purpose:
+      - controlled_propagation
+      - environmental_effect_reduction
+      - dual_vs_single_frequency_analysis
+
+  dataset_6:
+    name: wifi_mixed
+    purpose:
+      - wifi_interference
+      - interference_robustness
+
+  dataset_7:
+    name: environment
+    purpose:
+      - environmental_baseline
+      - negative_uav_observations
+
+negative_data:
+  available: true
+  source_subset: dataset_7
+  type: recorded_environmental_baseline
+
+  representative_of_universal_non_uav_rf: false
+
+  acquisition_matching:
+    status: empirical_check_required
+    compare_fields:
+      - center_frequency
+      - sample_rate
+      - receiver
+      - gain
+      - acquisition_day
+      - location
+      - antenna_configuration
+
+conditions:
+  outdoor_available: true
+  indoor_available: true
+
+  altitude_variation: true
+  speed_variation: true
+  flight_state_variation: true
+  receiver_variation: true
+  day_variation: true
+  wifi_interference: true
+  frequency_hopping: true
+  multi_uav_mixtures: true
+  controlled_rf_absorption: true
+
+  maximum_documented_distance_m:
+    value: 50
+    status: verified_for_represented_scenarios
+
+labels:
+  granularity: capture_file
+
+  available_fields:
+    - State
+    - Distance
+    - Height
+    - FlightMode
+
+  provenance:
+    source:
+      - acquisition_configuration
+      - filename
+      - mat_file_metadata
+
+file_structure:
+  variables:
+    - RF0_I
+    - RF0_Q
+    - Fs
+    - CenterFrequence
+    - Gain
+    - State
+    - Distance
+    - Height
+    - FlightMode
+
+filename_metadata:
+  contains:
+    - uav_model
+    - physical_unit
+    - flight_state
+    - configuration_id
+    - receiver_id
+    - acquisition_day
+
+leakage_safe_group_keys:
+  available:
+    - physical_unit
+    - acquisition_day
+    - receiver_id
+    - configuration_id
+
+published_preprocessing:
+  stft:
+    window: hann
+    nfft: 1024
+    hop_length: 256
+
+    analysis_slice_seconds:
+      value: 0.1
+      status: verified
+
+    output:
+      - magnitude
+      - log_power
+
+published_baselines:
+  flight_state_classification:
+    available: true
+    model:
+      - EfficientNetB0
+
+  binary_uav_detection:
+    available: false
+
+capabilities:
+  binary_detection: true
+  environmental_negative_data: true
+  model_identification: true
+  physical_unit_analysis: true
+  flight_state_analysis: true
+  temporal_variation_analysis: true
+  receiver_variation_analysis: true
+  frequency_hopping_analysis: true
+  wifi_interference_analysis: true
+  multi_uav_analysis: true
+  complex_iq_analysis: true
+
+known_limitations:
+  - "All represented UAVs are manufactured by DJI."
+  - "Physical-unit counts are strongly imbalanced between models."
+  - "Several models contain only one physical unit."
+  - "Models represented by one unit cannot support same-model leave-one-unit-out evaluation."
+  - "Environmental baseline recordings do not represent the universal non-UAV RF distribution."
+  - "Unified acquisition conditions do not establish cross-dataset or cross-hardware generalization."
+  - "Receiver hardware documentation contains a conflict that requires empirical resolution."
+  - "Negative/positive acquisition-setting equivalence requires empirical verification."
+  - "Dataset alone cannot support long-range operational detection claims."
+  - "Empirical inspection found large received-power separation between sampled UAV-positive and environmental-negative windows, creating a potential energy-based detection shortcut."
+
+information_provenance:
+  sample_rate: stored_in_file
+  center_frequency: stored_in_file
+  gain: stored_in_file
+  flight_state: stored_in_file_and_filename
+  physical_unit: filename
+  receiver_id: filename
+  acquisition_day: filename
+  manufacturer: paper_documentation
+
+compatibility:
+  full_complex_iq_experiments: true
+  magnitude_only_experiments: true
+  phase_dependent_experiments: true
+  spectrogram_experiments: true
+  engineered_feature_experiments: true
+
+  compatibility_with_amplitude_only_datasets:
+    possible: true
+    requires_information_reduction: true
+    notes:
+      - "Complex IQ can be reduced to magnitude/spectral representations."
+      - "Phase information must not be discarded globally merely to accommodate poorer datasets."
+
+unique_contribution:
+  - physical_unit_variation
+  - acquisition_day_variation
+  - receiver_variation
+  - flight_state_variation
+  - altitude_and_speed_variation
+  - wifi_interference
+  - frequency_hopping
+  - multi_uav_signal_mixtures
+  - controlled_vs_real_propagation
+  - environmental_baseline
+
+claim_ceiling:
+  supported:
+    - "Controlled robustness experiments across represented DJI models and units."
+    - "Cross-unit evaluation for models containing multiple physical units."
+    - "Cross-day and cross-receiver robustness experiments."
+    - "Interference, frequency-hopping, and multi-UAV experiments."
+    - "Detection experiments against the represented environmental baseline."
+
+  unsupported:
+    - "Manufacturer-independent UAV detection."
+    - "Universal non-UAV rejection."
+    - "Custom-built UAV generalization."
+    - "Long-range battlefield detection."
+    - "RF-silent or fiber-optic UAV detection."
+    - "Universal cross-hardware generalization."
+
+empirical_checks_required:
+  - receiver_hardware_identity
+  - numeric_dtype
+  - negative_positive_acquisition_matching
+  - exact_file_sizes
+  - exact_file_counts_per_subset
+  - gain_distribution_by_label
+  - center_frequency_distribution_by_label
+  - receiver_distribution_by_model
+  - day_distribution_by_model
+
+droneacharya:
+  acquired: false
+  inspected: false
+  adapter_implemented: false
+
+  candidate_roles:
+    - detection_training
+    - robustness_evaluation
+    - cross_unit_evaluation
+    - cross_day_evaluation
+    - cross_receiver_evaluation
+    - interference_evaluation
+    - frequency_hopping_evaluation
+    - multi_uav_evaluation
+    - complex_iq_research
+
+empirical_findings:
+  signal_dtype: float32
+  samples_per_channel: 140000000
+  duration_seconds: 1.4
+
+  subset_schema_consistency: false
+
+  environment_matching:
+    sample_rate: verified_matched
+    center_frequency: verified_matched
+    dtype: verified_matched
+    sample_count: verified_matched
+    receiver: unknown
+    gain: unknown
+    acquisition_day: unknown
+
+  detection_shortcuts:
+    received_power:
+      risk: high
+      notes: >
+        Sampled environmental windows after the initial transient exhibited
+        substantially lower mean power than sampled UAV-positive windows.
+        Dataset 7 must not be treated as a sufficient hard-negative corpus.

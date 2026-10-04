@@ -1,0 +1,338 @@
+# CardRF dataset card
+#
+# Evidence levels used in this card:
+#   AUTHOR_DOC        stated in CardRF.pdf (authors' dataset description, on disk)
+#   AUTHOR_CODE       read directly from Code.zip (Telemetry_/Control_Resampling.m, Resampling_Dividers.mlx)
+#   EMPIRICAL (n=..)  measured by us on local files; n = number of files/classes inspected
+#   INFERRED          derived from the above; requires confirmation
+#   UNVERIFIED        reported by a secondary source only; not checked by us
+#   UNKNOWN           not established
+#
+# Raw archive CARDRF.zip (66.3 GB) is downloading at the time of writing.
+# Every raw-file property below is AUTHOR_DOC until the raw audit is run.
+
+dataset:
+  id: cardrf
+  name: "CardRF"
+  full_name: "Cardinal RF (CardRF): An Outdoor UAV/UAS/Drone RF Signals with Bluetooth and WiFi Signals Dataset"
+  doi:
+    value: "10.21227/1XP7-GE95"
+    status: UNVERIFIED  # carried from handover; not re-checked against IEEE DataPort
+  acquisition_date:
+    value: "August 2020"
+    status: AUTHOR_DOC
+
+provenance:
+  authors:
+    - "Olusiji O. Medaiyese"
+    - "Martins Ezuma"
+    - "Adrian P. Lauf"
+    - "Ayodeji A. Adeniran"
+  site:
+    value: "AERPAW Lake Wheeler site, Raleigh, North Carolina, USA"
+    status: AUTHOR_DOC
+  related_publications:
+    - "arXiv:2107.04908 (Hierarchical learning framework for UAV detection and identification)"
+    - "arXiv:2102.11894 (Wavelet transform analytics for RF-based UAV detection and identification)"
+  distribution:
+    official: "IEEE DataPort (login may be required)"
+    open_mirror: "University of Louisville OneDrive/SharePoint folder linked from the paper page"
+  author_repository:
+    value: "github.com/medosh09/Cardinal-RF"
+    contents: "access pointer only; no processing code (checked 2026-10-04)"
+
+license:
+  type:
+    value: null
+    status: UNKNOWN  # check IEEE DataPort record before redistribution or publication
+
+modality:
+  - rf
+
+primary_tasks:
+  - uav_vs_non_uav_emitter_discrimination
+  - uav_and_controller_identification
+  - rf_fingerprinting
+
+secondary_tasks:
+  - flight_mode_classification
+  - los_to_nlos_robustness
+
+public_release:
+  artifacts:
+    CARDRF.zip:
+      size_gb: 66.3
+      content: "raw .mat captures (LOS train/test + NLOS)"
+      local_status: downloading
+    Processed_CardRF.zip:
+      size_gb: 1.0
+      content: "1024-sample slices of LOS UAV and UAV-controller captures only"
+      local_status: acquired
+    Code.zip:
+      size_kb: 50.2
+      local_status: acquired
+    CardRF.pdf:
+      size_mb: 1.86
+      local_status: acquired
+    system_model.pdf:
+      size_kb: 176
+      local_status: not_downloaded  # cheap primary document; download it
+
+population:
+  status: AUTHOR_DOC  # Table I of CardRF.pdf
+  uas:
+    - {make: DJI, model: "Phantom 4"}
+    - {make: DJI, model: "Inspire"}
+    - {make: DJI, model: "Matrice 600"}
+    - {make: DJI, model: "Mavic Pro 1"}
+    - {make: Beebeerun, model: "FPV RC drone mini quadcopter"}
+    - {make: 3DR, model: "Iris", note: "Table I lists 'Iris FS-TH9x'; FS-TH9x is a FlySky transmitter. Processed data contains 3DR_IRIS as a controller class only."}
+  bluetooth:
+    - {make: Apple, model: "iPhone 6S"}
+    - {make: Apple, model: "iPhone 7"}
+    - {make: Apple, model: "iPad 3"}
+    - {make: FitBit, model: "Charge3 smartwatch"}
+    - {make: Motorola, model: "E5 Cruise"}
+  wifi:
+    - {make: Cisco, model: "Linksys E3200"}
+    - {make: TP-Link, model: "TL-WR940N"}
+  physical_units_per_model:
+    value: 1
+    status: INFERRED  # Table I lists one device per model
+    consequence: "Model identity and physical-unit identity are inseparable; identification results are unit fingerprints."
+
+signal:
+  representation: real_valued_direct_rf_waveform
+  complex_iq_available: false
+  down_conversion_applied: false
+
+  storage:
+    format: mat
+    top_level_structs: [Channel_1, Frame]
+    waveform_field: "Channel_1.Data"
+    scalar_dtype:
+      value: int16
+      status: AUTHOR_DOC  # Fig. 7, one example file
+    voltage_conversion:
+      formula: "volts = Data * YInc + YOrg"
+      example_YInc_v_per_code: 6.5841e-06
+      example_YOrg_v: 0.0066
+      status: AUTHOR_DOC  # Fig. 7, one example file
+      documentation_conflict: "Body text gives scale factor 6.581e-06; Fig. 7 struct shows YInc 6.5841e-06."
+
+  sample_rate_sps:
+    value: 20000000000
+    status: AUTHOR_DOC  # Fig. 7 XInc = 5.0e-11 s, one example file; raw audit pending
+  samples_per_capture:
+    value: 5000000
+    status: AUTHOR_DOC  # Fig. 7 NumPoints
+  capture_duration_seconds:
+    value: 0.00025
+    status: INFERRED  # 5,000,000 x 5e-11 s
+
+  trigger:
+    example_XOrg_seconds: -1.25e-4
+    interpretation: "Trigger at the capture midpoint; first ~2.5M samples are pre-trigger."
+    status: INFERRED  # from Fig. 7 XOrg and Fig. 6 (noise, then transient at ~midpoint, then steady state)
+
+  center_frequency_hz:
+    value: null
+    status: NOT_APPLICABLE  # direct RF sampling; band of interest is 2.4 GHz ISM
+  analog_bandwidth_hz:
+    value: null
+    status: UNKNOWN  # oscilloscope/filter front-end bandwidth not documented in CardRF.pdf
+
+acquisition:
+  capture_system:
+    name: "RFSSCS (RF signal sensing and capturing system)"
+    instrument: "oscilloscope (Keysight per AERPAW record — UNVERIFIED)"
+    count: 1
+  example_vertical_settings:
+    YDispRange_v: 0.4
+    YDispOrigin_v: 0
+    status: AUTHOR_DOC  # Fig. 7, one example file
+  per_file_settings_vary:
+    status: UNKNOWN  # raw audit: XInc, YInc, YOrg, YDispRange per class
+  environment: outdoor
+  distance_m:
+    los_range: [8, 12]
+    status: AUTHOR_DOC
+  conditions:
+    los:
+      categories: [UAV, UAV_Controller, WiFi, Bluetooth]
+    nlos:
+      categories: [UAV]
+      uavs: ["DJI Inspire", "DJI Matrice 600", "DJI Phantom"]
+      description: "UAV flying adjacent to a building"
+    status: AUTHOR_DOC
+
+directory_structure:
+  status: AUTHOR_DOC  # Figs. 3–5
+  raw: |
+    CardRF/
+      LOS/
+        Train/{WiFi, Bluetooth, UAV, UAV Controller}
+        Test/{WiFi, Bluetooth, UAV, UAV Controller}
+      NLOS/
+        UAV/
+  los_uav_flight_modes:
+    DJI_Phantom: [Flying, Hovering]
+    DJI_Matrice: [Flying]
+    DJI_Inspire: [Flying, Videoing]
+    DJI_MavicPro: [Hovering, Flying]
+    Beebeerun: [Flying]
+  nlos_uav_flight_modes:
+    DJI_Phantom: [Flying]
+    DJI_Matrice: [Flying]
+    DJI_Inspire: [Flying]
+
+labels:
+  granularity: capture_file
+  provenance: "manual, via directory/sub-directory placement"
+  hierarchy: [los_or_nlos, split, category, device, flight_mode]
+  status: AUTHOR_DOC
+
+processed_artifact:
+  name: Processed_CardRF
+  status: EMPIRICAL  # all 22 CSVs streamed from the zip, 2026-10-04
+  contents:
+    classes_uav: [BEEBEERUN, DJI_INSPIRE, DJI_M600, DJI_MAVICPRO, DJI_PHANTOM]
+    classes_uav_controller: [3DR_IRIS, BEEBEERUN, DJI_INSPIRE, DJI_M600, DJI_MAVICPRO, DJI_PHANTOM]
+    wifi: absent
+    bluetooth: absent
+    nlos: absent
+  row_schema:
+    non_control: "1024 int samples + signal_type + device + device_flightmode (1027 columns)"
+    control: "1024 int samples + signal_type + device (1026 columns)"
+  values:
+    type: "raw int16 ADC codes (not volts)"
+    quantization_step_codes: 4  # gcd of sampled values
+    observed_min: -32736
+    observed_max: 30720
+  slicing:
+    slice_length_samples: 1024
+    slices_per_capture:
+      value: 100
+      status: EMPIRICAL  # rows chain (last sample of row i == first of row i+1) in runs of exactly 100, all 22 files
+    adjacent_slice_overlap_samples: 1  # AUTHOR_CODE (inclusive MATLAB indexing)
+    start_index: 2500000  # AUTHOR_CODE; approximately the trigger point
+    time_per_capture_seconds:
+      value: 5.12e-06  # 100 x 1024 x 5e-11
+      status: INFERRED
+    shipped_notebook_matches_production: false  # Resampling_Dividers.mlx uses number_slice=5
+  split:
+    train_test_ratio: "70/30"
+    unit_of_split: capture
+    status: EMPIRICAL  # every 100-row capture run lies entirely in Train or Test
+    captures_per_class:
+      train: 350
+      test: 150
+      exception: "BEEBEERUN controller: 245 train / 105 test"
+    flight_mode_balance: "exactly 50/50 where a device has two modes"
+    session_independence: NOT_ESTABLISHED  # captures may come from the same flight
+
+known_acquisition_defects:
+  adc_saturation:
+    present: true
+    status: EMPIRICAL  # processed data, all 22 files
+    rail_codes: [-32736, 30720]
+    fraction_of_samples_at_rails_by_class:
+      uav:
+        DJI_INSPIRE: "16.1% train / 17.0% test"
+        DJI_PHANTOM: "27.0% / 27.4%"
+        DJI_M600: "29.0% / 29.4%"
+        BEEBEERUN: "29.8% / 30.5%"
+        DJI_MAVICPRO: "30.0% / 29.9%"
+      uav_controller:
+        BEEBEERUN: "0.001% / 0.002%"
+        DJI_INSPIRE: "7.2% / 7.0%"
+        DJI_M600: "8.4% / 8.1%"
+        DJI_PHANTOM: "14.2% / 13.5%"
+        DJI_MAVICPRO: "37.4% / 37.0%"
+        3DR_IRIS: "40.1% / 40.1%"
+    author_doc_evidence: "Fig. 6 (Phantom 4 controller) is flat-topped at about +/-0.2 V, equal to YDispRange/2."
+    consequence: "Clipping fraction alone separates several classes. Must be controlled before any CardRF result is trusted."
+    raw_audit_required: true
+
+  temporal_discontinuity:
+    description: "Each capture is an independent 250 us trigger; consecutive files are not a continuous stream."
+    status: INFERRED
+
+negative_data:
+  explicit_hard_negatives:
+    available: true
+    location: "raw CARDRF.zip only (LOS Train/Test WiFi and Bluetooth)"
+    status: AUTHOR_DOC  # not yet empirically inspected
+  no_emitter_background_class:
+    available: false
+    notes:
+      - "Captures are triggered by a transmission; there is no 'empty band' class."
+      - "The pre-trigger half of each capture is in-capture noise, not an independent negative recording."
+  acquisition_matching_with_positives:
+    status: EMPIRICAL_CHECK_REQUIRED
+    compare_fields: [XInc, YInc, YOrg, YDispRange, XOrg, clipping_fraction, rms]
+
+leakage_safe_group_keys:
+  raw: [capture_file, device, flight_mode, los_nlos]
+  processed: "100-row chained run = one capture"
+  session_level: UNKNOWN
+
+potential_shortcuts:
+  - adc_clipping_fraction
+  - vertical_scale_setting
+  - received_amplitude_and_distance
+  - trigger_alignment
+  - device_unit_identity_equals_model
+  - dataset_source_in_cross_dataset_training
+
+compatible_experiments:
+  complex_iq: false
+  phase_dependent: false
+  real_waveform_time_domain: true
+  spectral_after_digital_downconversion: true  # derived representation; record parameters
+  short_window_fingerprinting: true
+  long_temporal_or_hopping_analysis: false
+
+known_limitations:
+  - "One physical unit per model: model and unit cannot be separated."
+  - "Single site, single month, single capture system."
+  - "250 us captures: no burst timing, hopping period or packet-sequence information."
+  - "Captures are signal-triggered: no empty-band negative class."
+  - "Processed artifact omits Wi-Fi, Bluetooth and NLOS; it cannot serve as the hard-negative source."
+  - "Class-correlated ADC saturation (0.001% to 40% of samples) in processed data."
+  - "Processed slices start at the trigger, so they likely contain transient rather than steady-state signal, contrary to the PDF wording."
+  - "Shipped processing notebook does not reproduce the released processed artifact."
+  - "License not yet established."
+
+claim_ceiling:
+  supported:
+    - "Short-window discrimination between the 6 represented UAS (aircraft or controller) and the 7 represented Wi-Fi/Bluetooth devices, at one outdoor site, 8–12 m, LOS."
+    - "LOS to NLOS comparison for DJI Inspire, Matrice 600 and Phantom aircraft."
+    - "Fingerprinting of the represented physical devices."
+  unsupported:
+    - "Detection of UAV presence in an empty band."
+    - "Unseen-unit generalization within a model."
+    - "Cross-site, cross-receiver or cross-day generalization."
+    - "Temporal, hopping or burst-pattern claims."
+    - "Any claim before clipping/scale confounds are controlled."
+
+empirical_checks_required:
+  - raw_mat_schema_per_category
+  - xinc_yinc_yorg_ydisprange_per_class
+  - clipping_fraction_per_class_in_raw
+  - trigger_position_and_transient_extent
+  - wifi_and_bluetooth_capture_counts
+  - raw_train_test_capture_counts
+  - nlos_capture_counts
+  - license
+
+droneacharya:
+  acquired: partial  # processed + code + doc; raw downloading
+  inspected: partial
+  adapter_implemented: false
+  provisional_role:
+    - hard_negative_source  # pending raw audit
+    - uav_vs_controller_discrimination
+    - los_to_nlos_check
+  primary_detection_foundation: "hard-negative component only, pending raw audit"
+  full_download_justified: true  # Wi-Fi, Bluetooth and NLOS exist only in the raw archive

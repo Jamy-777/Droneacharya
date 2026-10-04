@@ -1,17 +1,357 @@
 dataset:
   id: dronerf
-  name: DroneRF
-  version: 1
+  name: "DroneRF"
+  full_name: "DroneRF dataset: A dataset of drones for RF-based detection, classification, and identification"
   year: 2019
+  version: 1
+  doi: "10.17632/f4c2b4n755.1"
+
+license:
+  type: "CC BY 4.0"
 
 modality:
   - rf
 
-tasks:
-  - detection
-  - identification
+primary_tasks:
+  - uav_detection
+  - uav_identification
+  - flight_mode_classification
 
-status:
-  acquired: false
-  inspected: false
+population:
+  manufacturers:
+    - Parrot
+    - DJI
+
+  models:
+    - Parrot Bebop
+    - Parrot AR Drone
+    - DJI Phantom 3
+
+  model_count: 3
+
+  physical_unit_identity:
+    status: unknown
+
+dataset_structure:
+  logical_segments: 227
+  released_files: 454
+  bands_per_segment: 2
+
+  bands:
+    - L
+    - H
+
+  segments:
+    background: 41
+    bebop: 84
+    ar_drone: 81
+    phantom_3: 21
+
+signal:
+  domain: time
+  representation: amplitude_time_series
+  complex_iq_available: false
+
+  storage:
+    format: csv
+    structure: single_row_comma_separated
+    numeric_text_representation: decimal
+
+  samples_per_band_file:
+    value: 10000000
+    status: empirically_verified
+
+  samples_per_logical_segment:
+    value: 20000000
+    status: empirically_verified
+    notes:
+      - "One logical segment consists of paired L and H files."
+      - "Each band file contains 10,000,000 amplitude samples."
+
+  documentation_conflict:
+    present: true
+    notes:
+      - "Paper prose states 1,000,000 samples per part."
+      - "Paper tabulated totals imply 10,000,000 samples per part."
+      - "Empirical inspection of distributed CSV confirms 10,000,000 values per part."
+
+sampling:
+  sample_rate_sps:
+    status: unresolved
+
+  notes:
+    - "Do not infer sample rate directly from receiver instantaneous bandwidth."
+
+acquisition:
+  receiver:
+    model: "NI-USRP-2943R"
+    count: 2
+
+  environment:
+    type: laboratory
+
+  frequency_region:
+    primary: "2.4 GHz ISM/Wi-Fi region"
+
+  instantaneous_bandwidth_per_receiver_hz:
+    value: 40000000
+    status: documented
+
+  simultaneous_band_capture:
+    available: true
+    bands:
+      - L
+      - H
+
+filename_structure:
+  empirical_pattern: "<BUI><band>_<segment>.csv"
+
+  examples:
+    - "00000H_0.csv"
+    - "00000L_0.csv"
+    - "10000H_0.csv"
+    - "10000L_0.csv"
+
+  documentation_variation:
+    present: true
+    notes:
+      - "Some publication text/examples omit the underscore."
+      - "Distributed files empirically use the underscore form."
+
+  logical_pairing:
+    rule: "same BUI + same segment index + matching L/H bands"
+
+labels:
+  encoding:
+    type: BUI
+
+  levels:
+    detection:
+      target: uav_present
+
+    identification:
+      target: uav_model
+
+    flight_mode:
+      target: operational_mode
+
+  granularity:
+    source: logical_segment
+
+  window_level_reliability:
+    status: requires_activity_aware_handling
+    notes:
+      - "Empirical temporal analysis shows file-level positive recordings can contain long windows whose amplitude statistics resemble background."
+      - "Derived windows must not automatically inherit a strong UAV-active label without considering temporal RF activity."
+
+negative_data:
+  available: true
+
+  type: recorded_rf_background
+  condition: drones_off
+
+  taxonomy:
+    - ambient_rf_background
+
+  explicit_hard_negative_emitters:
+    available: false
+
+  wifi_only_labeled: false
+  bluetooth_only_labeled: false
+  non_uav_rc_only_labeled: false
+
+  diversity:
+    status: limited_or_unknown
+
+  provenance:
+    status: documented_as_background_rf_activity
+
+  notes:
+    - "Background is useful for benchmark detection."
+    - "It is not established as a representative corpus of arbitrary non-UAV RF emitters."
+
+positive_signal_composition:
+  source: drone_controller_communication
+
+  operational_modes:
+    - powered_on_and_connected
+    - hovering
+    - flying
+    - flying_with_video_recording
+
+  temporal_activity:
+    status: bursty_activity_empirically_observed
+
+empirical_inspection:
+  performed: true
+
+  inspected_files:
+    - "00000H_0.csv"
+    - "00000L_0.csv"
+    - "10000H_0.csv"
+    - "10000L_0.csv"
+
+  sample_count:
+    values_per_band_file: 10000000
+    verified: true
+
+  temporal_window_audit:
+    windows_per_file: 100
+    samples_per_window: 100000
+
+    background_h:
+      rms_min: 2.430
+      rms_median: 2.463
+      rms_mean: 3.469
+      rms_p90: 3.809
+      rms_max: 19.483
+      max_absolute_amplitude: 214
+
+    background_l:
+      rms_min: 2.353
+      rms_median: 2.378
+      rms_mean: 2.634
+      rms_p90: 2.743
+      rms_max: 10.569
+      max_absolute_amplitude: 115
+
+    bebop_h:
+      rms_min: 2.406
+      rms_median: 2.463
+      rms_mean: 3.090
+      rms_p90: 3.175
+      rms_max: 18.317
+      max_absolute_amplitude: 176
+
+    bebop_l:
+      rms_min: 2.307
+      rms_median: 2.604
+      rms_mean: 336.077
+      rms_p90: 1290.641
+      rms_max: 1709.861
+      max_absolute_amplitude: 9336
+
+  interpretation:
+    - "Bebop H-band median RMS is effectively identical to sampled background H-band median RMS."
+    - "Bebop L-band median RMS remains close to background despite extremely large high-energy windows."
+    - "Whole-file Bebop L-band energy is dominated by temporally sparse high-energy activity."
+    - "A universal drone-equals-higher-energy shortcut is not supported by the inspected H band."
+    - "Band-specific received-energy shortcuts remain a significant risk."
+
+parent_recording_identity:
+  available: true
+  derived_from:
+    - BUI
+    - segment_index
+
+  paired_components:
+    - L
+    - H
+
+window_safe_splitting:
+  possible: true
+  rule: >
+    All derived windows from both L and H components of one logical
+    segment must remain in the same train/validation/test partition.
+
+published_derived_representations:
+  normalized_time_domain_visualization:
+    available: true
+
+  fft_or_spectral_processing:
+    available_in_related_code: true
+
+raw_to_derived_reproducibility:
+  status: strong
+  notes:
+    - "Original CSV data are public."
+    - "Associated MATLAB/Python/LabVIEW code is publicly available."
+
+potential_shortcuts:
+  - band_specific_received_power
+  - operational_mode
+  - BUI_encoding_if_accidentally_exposed
+  - segment_leakage
+  - adjacent_window_leakage
+  - dataset_source_in_cross_dataset_training
+
+known_limitations:
+  - "Only three UAV models are represented."
+  - "Acquisition is laboratory-domain."
+  - "Negative taxonomy is narrow and does not establish broad non-UAV rejection."
+  - "Physical UAV unit identity is not established."
+  - "Full complex IQ is not distributed."
+  - "Exact sample rate remains unresolved."
+  - "Published prose conflicts with the distributed artifact on samples per part."
+  - "File-level positive labels do not guarantee continuous UAV RF activity in every derived window."
+  - "Strong band-specific energy bursts may provide shortcut features."
+
+compatible_experiments:
+  complex_iq: false
+  phase_dependent: false
+
+  amplitude_time_domain: true
+  magnitude_common: true
+  spectral_features: true
+  engineered_features: true
+  classical_ml: true
+
+  cross_dataset_common_representation:
+    possible: true
+    likely_representations:
+      - magnitude
+      - power_spectral_density
+      - normalized_spectrum
+      - engineered_spectral_features
+
+    notes:
+      - "Richer complex-IQ datasets must not be globally reduced to DroneRF's information level."
+      - "Information reduction should occur only for experiments requiring a common representation."
+
+unique_contribution:
+  - recorded_no_drone_background
+  - multi_manufacturer_uav_data
+  - Parrot_uav_data
+  - legacy_acquisition_domain
+  - simple_detection_benchmark
+  - operational_mode_labels
+  - paired_lower_upper_band_representation
+  - empirically_observed_bursty_positive_activity
+
+claim_ceiling:
+  supported:
+    - "Benchmark UAV detection within the DroneRF acquisition domain."
+    - "Identification among the three represented UAV models."
+    - "Flight-mode experiments for represented operating modes."
+    - "Amplitude and spectral-feature experiments."
+    - "Cross-dataset experiments using compatible reduced representations."
+
+  unsupported:
+    - "Universal non-UAV rejection."
+    - "Manufacturer-independent UAV detection."
+    - "Generalization to custom or unseen UAV RF systems."
+    - "Physical-unit fingerprint generalization."
+    - "Long-range operational detection."
+    - "Phase-dependent RF analysis."
+    - "RF-silent or fiber-optic UAV detection."
+
+empirical_checks_remaining:
+  - exact_sample_rate
+  - complete_negative_environment_characterization
+  - physical_unit_identity_if_recoverable
+  - acquisition_gain_metadata_if_recoverable
+
+droneacharya:
+  acquired: true
+  inspected: true
   adapter_implemented: false
+
+  provisional_role:
+    - baseline_detection
+    - classical_ml_baseline
+    - historical_domain_test
+    - cross_dataset_magnitude_experiments
+    - temporal_burst_analysis
+
+  primary_detection_foundation: false
+  full_download_justified: true

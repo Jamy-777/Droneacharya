@@ -1,0 +1,353 @@
+dataset:
+  id: rfuav
+  name: "RFUAV"
+  full_name: "RFUAV: A Benchmark Dataset for Unmanned Aerial Vehicle Detection and Identification"
+  year: 2025
+
+provenance:
+  primary_paper: "arXiv:2503.09033"
+  official_repository: "kitoweeknd/RFUAV"
+
+license:
+  huggingface_artifact: "Apache-2.0"
+  raw_data_license_status: "verify_scope_before_commercial_use"
+
+modality:
+  - rf
+
+primary_tasks:
+  - uav_identification
+  - rf_signal_classification
+
+secondary_tasks:
+  - uav_detection
+  - rf_fingerprinting
+  - snr_robustness
+  - signal_characterization
+
+reported_full_corpus:
+  approximate_raw_size_tb: 1.3
+  distinct_uavs_reported_by_paper: 37
+
+public_release:
+  status: partial
+  public_raw_clips_reported: 37
+  drone_types_reported_by_repository: 35
+
+  population_interpretation:
+    status: unresolved
+    notes:
+      - "The paper describes 37 distinct UAVs/types."
+      - "The repository separately describes recordings from 35 drone types and a public subset of 37 raw clips."
+      - "Public class names include integrated UAV models and apparent RC/controller product families."
+      - "Do not currently interpret all 37 public classes as 37 physical UAV airframe models."
+
+artifacts:
+  raw_rf:
+    available: true
+    format:
+      archive: rar
+      signal_file: iq
+      metadata_file: xml
+
+  spectrograms:
+    available: true
+
+  image_classification_dataset:
+    available: true
+    public_classes: 37
+
+  detection_subset:
+    available: true
+    distribution: "separate curated subset"
+    negative_class_definition:
+      status: requires_verification
+
+signal:
+  representation: complex_iq
+  domain: time
+
+  storage:
+    scalar_dtype: float32
+    iq_layout: interleaved
+    ordering: "I0,Q0,I1,Q1,..."
+    bytes_per_complex_sample: 8
+
+  empirical_status: verified
+
+raw_chunk_structure:
+  empirical:
+    complex_samples_per_file: 100000000
+    duration_seconds: 1.0
+    file_size_bytes: 800000000
+
+  notes:
+    - "Verified against DEVENTION DEVO pack1_0-1s.iq."
+    - "Consistent with XML SampleCount and SampleRate."
+
+per_pack_metadata:
+  available: true
+
+  source_fields:
+    - DeviceType
+    - Drone
+    - SerialNumber
+    - DataType
+    - ReferenceSNRLevel
+    - CenterFrequency
+    - SampleRate
+    - IFBandwidth
+    - ScaleFactor
+    - IQFileName
+    - SampleCount
+
+  droneacharya_mapping:
+    DeviceType: acquisition_device_type
+    Drone: source_class_label
+    SerialNumber: source_pack_serial
+    DataType: source_data_type
+    ReferenceSNRLevel: reference_snr_db
+    CenterFrequency: center_frequency_hz
+    SampleRate: sample_rate_sps
+    IFBandwidth: if_capture_bandwidth_hz
+    ScaleFactor: acquisition_scale_factor_db
+    IQFileName: source_iq_filename
+    SampleCount: complex_sample_count
+
+acquisition:
+  parameters_are_per_pack: true
+
+  acquisition_device:
+    sampled_value: "USRPX310"
+    status: empirically_verified_for_sampled_packs
+
+  sample_rate_sps:
+    sampled_value: 100000000
+    status: empirically_verified_for_sampled_packs
+
+  if_capture_bandwidth_hz:
+    sampled_value: 100000000
+    status: empirically_verified_for_sampled_packs
+
+  scale_factor_db:
+    sampled_value: 60
+    status: empirically_verified_for_sampled_packs
+
+  center_frequency_hz:
+    status: per_pack
+    sampled_values:
+      devention_devo: 2440000000
+      dji_mini4_pro: 2450000000
+
+  reference_snr_db:
+    status: per_pack
+    sampled_values:
+      devention_devo_pack1: 15
+      dji_mini4_pro_vtsbw10_pack1: 29
+      dji_mini4_pro_vtsbw20_pack2: 31
+
+signal_characteristics:
+  capture_bandwidth_field:
+    name: if_capture_bandwidth_hz
+    notes:
+      - "Represents receiver/acquisition bandwidth."
+
+  occupied_signal_bandwidth:
+    status: class_or_condition_specific
+    notes:
+      - "Must remain distinct from IF/capture bandwidth."
+
+  published_characteristics:
+    - frequency_hopping_signal_bandwidth
+    - frequency_hopping_signal_duration
+    - frequency_hopping_signal_duty_cycle
+    - frequency_hopping_signal_pattern_period
+    - video_transmission_signal_bandwidth
+
+  video_transmission_bandwidth:
+    condition_specific: true
+
+    empirically_observed_conditions:
+      dji_mini4_pro:
+        - 10
+        - 20
+
+population:
+  public_image_classes: 37
+
+  physical_uav_units:
+    status: unknown
+
+  manufacturers:
+    status: requires_mapping
+
+  taxonomy:
+    status: ambiguous
+
+    notes:
+      - "Public taxonomy includes names corresponding to integrated UAV products and apparent RC/controller product families."
+      - "RFUAV XML nevertheless stores these values in the Drone field."
+      - "Treat public labels as RF system/source classes until taxonomy is resolved."
+
+image_dataset:
+  train:
+    class_support: 37
+    minimum_observed_samples_per_class: 63
+    maximum_observed_samples_per_class: 499
+    approximate_max_min_imbalance_ratio: 7.9
+
+  validation:
+    class_support: 37
+
+  class_balance:
+    status: imbalanced
+
+negative_data:
+  raw_corpus_negative_availability:
+    status: unresolved
+
+  detection_subset:
+    status: requires_separate_investigation
+
+  representative_non_uav_corpus:
+    status: not_established
+
+snr:
+  reference_snr_per_pack: true
+  synthetic_adjustment_tools_available: true
+
+  potential_confound:
+    status: high_priority
+    notes:
+      - "Sampled classes/conditions have materially different ReferenceSNRLevel values."
+      - "Class-conditioned SNR distributions must be audited before identification experiments."
+
+frequency:
+  center_frequency_per_pack: true
+
+  potential_confound:
+    status: high_priority
+    notes:
+      - "Sampled classes used different center frequencies."
+      - "Center frequency must not be allowed to become a class shortcut."
+
+conditions:
+  multiple_signal_bandwidth_conditions: true
+  frequency_hopping_characterization: true
+  video_transmission_characterization: true
+
+empirical_samples:
+  devention_devo:
+    source_pack_serial: "00002"
+    acquisition_device_type: "USRPX310"
+    source_data_type: "Complex Float"
+    reference_snr_db: 15
+    center_frequency_hz: 2440000000
+    sample_rate_sps: 100000000
+    if_capture_bandwidth_hz: 100000000
+    acquisition_scale_factor_db: 60
+    complex_sample_count: 100000000
+
+    raw_iq_inspection:
+      performed: true
+      interleaved_iq_verified: true
+      temporal_activity_sanity_check: passed
+
+  dji_mini4_pro:
+    vtsbw_10:
+      source_pack_serial: "00014"
+      acquisition_device_type: "USRPX310"
+      source_data_type: "Complex Float"
+      reference_snr_db: 29
+      center_frequency_hz: 2450000000
+      sample_rate_sps: 100000000
+      if_capture_bandwidth_hz: 100000000
+      acquisition_scale_factor_db: 60
+      complex_sample_count: 100000000
+
+    vtsbw_20:
+      source_pack_serial: "00015"
+      acquisition_device_type: "USRPX310"
+      source_data_type: "Complex Float"
+      reference_snr_db: 31
+      center_frequency_hz: 2450000000
+      sample_rate_sps: 100000000
+      if_capture_bandwidth_hz: 100000000
+      acquisition_scale_factor_db: 60
+      complex_sample_count: 100000000
+
+potential_shortcuts:
+  - reference_snr
+  - center_frequency
+  - source_pack_identity
+  - signal_bandwidth_condition
+  - dataset_source
+
+known_limitations:
+  - "Public release is only a subset of the reported full corpus."
+  - "Paper/repository/public-artifact population terminology is not fully consistent."
+  - "Public class taxonomy must not yet be interpreted as physical UAV airframe identity."
+  - "Physical-unit identity is not established."
+  - "Raw-corpus negative/background construction remains unresolved."
+  - "Reference SNR varies between sampled classes and conditions."
+  - "Center frequency varies between sampled classes."
+  - "Image training classes are substantially imbalanced."
+
+compatible_experiments:
+  complex_iq: true
+  phase_dependent: true
+  magnitude_only: true
+  spectrogram: true
+  engineered_rf_features: true
+  frequency_hopping_features: true
+  video_transmission_features: true
+
+unique_contribution:
+  - large_scale_raw_rf
+  - broad_rf_system_diversity
+  - complex_iq
+  - per_pack_acquisition_metadata
+  - frequency_hopping_characterization
+  - video_transmission_characterization
+  - multiple_signal_bandwidth_conditions
+  - snr_robustness_tooling
+  - engineered_rf_fingerprint_features
+
+claim_ceiling:
+  supported:
+    - "Identification and RF-representation experiments across represented public classes."
+    - "SNR robustness experiments."
+    - "Frequency-hopping and video-transmission feature analysis."
+    - "Cross-class RF representation experiments."
+
+  unsupported_without_additional_evidence:
+    - "Universal UAV-vs-non-UAV detection."
+    - "Manufacturer-independent UAV detection."
+    - "Generalization to custom or unseen RF systems."
+    - "Physical-unit generalization."
+    - "Battlefield detection range."
+    - "RF-silent or fiber-optic UAV detection."
+
+empirical_checks_required:
+  - complete_class_to_manufacturer_mapping
+  - complete_class_taxonomy
+  - physical_unit_identity
+  - negative_class_construction
+  - detection_subset_provenance
+  - class_conditioned_snr_distribution
+  - class_conditioned_center_frequency_distribution
+  - train_validation_grouping
+  - acquisition_parameter_distribution_across_all_classes
+
+droneacharya:
+  acquired: true
+  inspected: true
+  adapter_implemented: false
+
+  candidate_roles:
+    - rf_representation_training
+    - identification
+    - engineered_feature_research
+    - snr_robustness
+    - cross_dataset_evaluation
+    - auxiliary_detection
