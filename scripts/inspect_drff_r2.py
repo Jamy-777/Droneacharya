@@ -50,7 +50,6 @@ def inspect_file(file_path):
                     row[field] = read_scalar(dataset)
                 else:
                     row[field] = dataset[()]
-        
         window_samples = 1_000_000
         window_times_s = [
             0.0,
@@ -88,9 +87,6 @@ def inspect_file(file_path):
         row["window_statistics"] = window_statistics
 
         return row
-
-        
-
 
 files = [
     "mavic3C_1_hover_c1_u1_d2.mat",
