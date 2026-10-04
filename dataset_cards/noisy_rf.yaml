@@ -1,0 +1,153 @@
+# Noisy Drone RF Signal Classification (ZHAW) dataset card
+#
+# Evidence levels:
+#   REPO_METADATA     Kaggle dataset API (files, sizes, description, license, version) and ZHAW record
+#   PAPER_2024        arXiv:2406.18624 v3 (same authors). Describes acquisition, but its development
+#                     set (16,648 vectors x 1,048,576 samples) differs from the Kaggle release.
+#   EMPIRICAL (n=..)  measured by us — nothing yet (single 25.9 GB file, not downloaded)
+#   INFERRED / UNKNOWN as usual
+#
+# The NCTA 2023 paper that accompanies the Kaggle release (doi:10.5220/0012176800003595)
+# was not accessible beyond its abstract.
+
+dataset:
+  id: noisy_rf
+  name: "Noisy Drone RF Signal Classification"
+  version: "1 (Kaggle, 2023-06-08)"
+  status: REPO_METADATA
+
+provenance:
+  authors: ["Stefan Glüge", "Matthias Nyfeler", "Nicola Ramagnano", "Claus Horn", "Christoph Schüpbach"]
+  institution: "ZHAW (Zurich University of Applied Sciences), ICLS"
+  hosting: "kaggle.com/datasets/sgluege/noisy-drone-rf-signal-classification"
+  record: "digitalcollection.zhaw.ch/handle/11475/29276"
+  related_publications:
+    - "Robust Drone Detection and Classification from RF Signals Using CNNs, NCTA 2023, doi:10.5220/0012176800003595 (abstract only seen)"
+    - "Robust Low-Cost Drone Detection and Classification in Low SNR Environments, arXiv:2406.18624"
+  related_releases:
+    - "Zenodo 10.5281/zenodo.21428081 (2026): same group, spectrogram images + YOLO boxes, 101 GB main archive, 8.2 TB across SNR versions. Separate dataset."
+
+license:
+  type: "CC BY 4.0"
+  status: REPO_METADATA
+
+modality:
+  - rf
+
+primary_tasks:
+  - low_snr_detection
+  - rc_link_classification
+
+files:  # REPO_METADATA
+  dataset.pt: {bytes: 25876504771, note: "single PyTorch file; no partial download possible"}
+  SNR_stats.csv: {bytes: 288}
+  class_stats.csv: {bytes: 143}
+  loading_note: "Load with torch.load(..., weights_only=True, mmap=True) to avoid executing pickled code and to avoid needing ~26 GB of RAM."
+
+population:
+  status: PAPER_2024
+  transmitters:  # all are remote controllers (uplink); DJI is the Phantom remote
+    - "DJI Phantom GL300F remote (with Phantom 4 Pro)"
+    - "Futaba T7C"
+    - "Futaba T14SG (R7008SB receiver)"
+    - "Graupner mx-16 (GR-16 receiver)"
+    - "FrSky Taranis ACCST (X8R receiver)"
+    - "Turnigy 9X"
+  kaggle_subtitle_conflict: "Subtitle says '6 consumer grade drones'; the signals are 6 remote-controller links."
+  physical_units_per_class: {value: 1, status: INFERRED}
+
+signal:
+  representation: complex_iq  # mixed with noise; clean recordings not released
+  vector_length_samples: {value: 16384, status: REPO_METADATA}
+  vector_duration_ms: {value: 1.17, status: INFERRED}  # 16384 / 14e6
+  sample_rate_sps: {value: 14000000, status: REPO_METADATA}
+  original_sample_rate_sps: {value: 56000000, status: PAPER_2024}
+  downsampling: {filter: "8th-order Chebyshev type I", factor: 4, status: PAPER_2024}
+  center_frequency_hz:
+    value: 2441750000
+    per_transmitter_exceptions: "some at 2.440 GHz and 2.445 GHz"
+    status: PAPER_2024
+  storage: {format: "PyTorch .pt", dtype: UNKNOWN, layout: UNKNOWN}
+
+acquisition:
+  receiver: {model: "Ettus USRP B210", count: 1, status: PAPER_2024}
+  antenna: {type: "log-periodic", status: PAPER_2024}
+  positives_environment: "anechoic chamber"
+  negatives_environment: "public, busy university building (uncontrolled devices)"
+  status: PAPER_2024
+
+construction:
+  status: REPO_METADATA + PAPER_2024
+  normalization: "drone signal to unit carrier power per sample; noise to unit mean power"
+  mixing: "x_mix = (sqrt(k) * x_drone + n) / sqrt(k + 1), k = 10^(SNR/10)"
+  drone_vectors: "50% mixed with Labnoise, 50% with Gaussian noise"
+  noise_class: "Labnoise and Gaussian noise mixed in all combinations"
+  labnoise_content: "Bluetooth + Wi-Fi + amplifier noise (unlabelled mix)"
+  snr_db: {min: -20, max: 30, step: 2, per_level: "3,792–3,800 vectors"}
+  vectors: "non-overlapping 16384-sample segments"
+
+class_counts:  # REPO_METADATA, total 98,705
+  DJI: 2194
+  FutabaT14: 6938
+  FutabaT7: 3661
+  Graupner: 6481
+  Taranis: 16546
+  Turnigy: 10333
+  Noise: 52552
+
+split:
+  published: "none in the release; PAPER_2024 uses stratified random 5-fold over vectors"
+  recording_or_snippet_id_available: false
+  risk: >
+    Vectors cut from the same recording, and possibly the same noise snippet,
+    can land in both train and test. No key exists to prevent this.
+
+negative_data:
+  available: true
+  type: "Labnoise (real Wi-Fi/Bluetooth/amplifier traffic) + Gaussian, mixed"
+  device_labels: false
+  site_differs_from_positives: true
+  notes:
+    - "Real busy-building traffic is a genuinely new negative domain for us (CardRF negatives are single deliberate devices)."
+    - "Positives were recorded in a chamber and negatives in a building: recording site differs by class."
+
+potential_shortcuts:
+  - center_frequency_offset_per_transmitter
+  - recording_site_chamber_vs_building
+  - noise_snippet_reuse
+  - adjacent_vector_leakage
+  - dataset_source_in_cross_dataset_training
+
+known_limitations:
+  - "Only noise-mixed vectors are released; clean recordings and noise snippets are not."
+  - "No recording or segment IDs: leakage-safe splits are impossible."
+  - "SNR is synthetic, not measured."
+  - "14 MHz capture window: Wi-Fi (20 MHz) only partly visible; RC hops outside the window are missed."
+  - "One 25.9 GB file: all or nothing."
+  - "All 'drone' classes are remote-controller uplinks."
+
+claim_ceiling:
+  supported:
+    - "Detection/classification of the 6 represented RC links against mixed building noise and Gaussian noise, under synthetic SNR from -20 to 30 dB, in a 14 MHz window at 2.44 GHz."
+  unsupported:
+    - "Any result trained and tested within this dataset as evidence of generalization (no leakage-safe split)."
+    - "Measured-SNR or over-the-air interference robustness."
+    - "Aircraft (downlink) detection."
+
+empirical_checks_required:
+  - pt_structure_and_keys
+  - iq_dtype_and_layout
+  - snr_and_noise_type_fields
+  - any_hidden_recording_or_index_field
+  - duplicate_noise_snippet_detection
+  - per_class_center_frequency_offset
+
+droneacharya:
+  acquired: false
+  inspected: false
+  adapter_implemented: false
+  provisional_role:
+    - low_snr_stress_test  # evaluation only
+    - real_building_rf_negative_domain
+  primary_detection_foundation: false
+  full_download_justified: "only as an external low-SNR test set; all-or-nothing 25.9 GB"
