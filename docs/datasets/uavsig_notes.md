@@ -186,3 +186,17 @@ Before closing UAVSig:
 9. Can RF channel and transmitter identity be independently crossed?
 10. How do directory dates map to capture types?
 11. What constitutes an independent recording/session?
+
+## Empirical findings (2026-10-05, 8 diagnostic captures)
+
+Script: `scripts/inspect_uavsig.py`; summary in `interim/uavsig/inspection/`.
+
+- **Version is 4.0** (released 2026-01-28), 726 files, 238.9 GB, MD5 per file. All directories dated 2024-05-09, which conflicts with the paper's two collection days.
+- **Format:** MAT v5 (compressed). `data` is a complex row vector of exactly 50,000,000 samples (1 s at 50 MS/s). Values are int16 codes / 32767 stored as double (the paper says float32; the values are the same).
+- **Labels live in each file:** `start`, `end` (int32 sample indices), `fc` (baseband offset in Hz, within ±25 MHz), `bw` (Hz), `id`, `num_transmission`. The file stores `end`; MATLAB shows it as `end_`.
+- **Filename grammar (decoded against the label ids):** in `drone_ABCD`, digit position k is drone k and the digit value is its channel (0 = off). Channel 1 sits at −17 MHz, channel 2 at −7 MHz. Controllers: `controller_pP_ABCD`, P = arrangement, digit k = controller k on/off. Earlier notes had the drone grammar reversed.
+- **There is an empty-band negative:** `controller_p*_0000` has zero transmissions (label "none" in `metadata.json`), 12 captures in total. The card previously said no background class.
+- **Dropped-sample signature:** 600–730 blocks of 10–13 exact zeros per second in every file, including where strong signal fills the band. These are pipeline-inserted gap markers. The number of samples lost at each marker is unknown, so no timing feature should span one.
+- **Labels are good:** power inside WHIRLS boxes is 34–38 dB above outside in single-transmitter files.
+- **Power differs by unit:** on the same channel, drone 4 is ~2.7 dB stronger than drone 1 (n=1). For unit fingerprinting, power must be normalised or controlled.
+- Occupancy: one drone 67–70% of the time; one controller 9.5%; four controllers 41%.

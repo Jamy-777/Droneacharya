@@ -3,7 +3,7 @@ dataset:
   name: "UAVSig"
   full_name: "UAVSig: Drone RF Signal Detection and Fingerprinting Dataset"
   year: 2024
-  version: "3.0"
+  version: "4.0"  # REPO_METADATA: v4.0 released 2026-01-28 (earlier card said 3.0)
   doi: "10.25346/S6/LVRRAE"
 
 provenance:
@@ -31,8 +31,10 @@ secondary_tasks:
   - same_model_physical_unit_identification
 
 public_release:
-  version: "3.0"
+  version: "4.0"
   file_count: 726
+  total_size_gb: 238.91  # REPO_METADATA; MD5 for every file
+  directories: {one_drone/2024-05-09: 96, two_drone/2024-05-09: 432, controllers/2024-05-09: 192, root_docs: 6}
   bulk_download_warning: true
   automated_downloader_available: true
 
@@ -59,12 +61,16 @@ signal:
     iq_component_bits: 16
 
   storage:
+    format: "MAT v5 (compressed)"
+    variable: "data, shape (1, 50000000), complex"
     scalar_dtype:
-      value: float32
-      status: SOURCE_VERIFIED
+      value: "complex double holding int16 codes / 32767 (float32-representable)"
+      status: "EMPIRICAL (n=8)"
+      note: "Paper says GNU Radio stored float32; the released MAT stores double. Values are identical either way."
     iq_layout:
-      value: UNKNOWN
-      status: EMPIRICAL_CHECK_REQUIRED
+      value: "complex row vector"
+      status: "EMPIRICAL (n=8)"
+    noise_floor_rms_int16_codes: "40.8–41.9 in every file (EMPIRICAL n=7)"
 
   sample_rate_sps:
     value: 50000000
@@ -82,9 +88,21 @@ signal:
     value: 1.0
     status: SOURCE_VERIFIED
 
-  expected_complex_samples_per_capture:
+  complex_samples_per_capture:
     value: 50000000
-    status: INFERRED_FROM_SOURCE_PARAMETERS
+    status: "EMPIRICAL (n=8)"
+
+filename_grammar:
+  status: "EMPIRICAL (n=5 drone files, decoded against stored label ids)"
+  drones: "drone_ABCD_NN.mat: digit position k = drone k; digit value = channel (0 = off); NN = capture 00–05"
+  channel_offsets_mhz: {1: -17, 2: -7, 3: "+3 (INFERRED)", 4: "+13 (INFERRED)"}
+  controllers: "controller_pP_ABCD_NN.mat: P = physical arrangement (1, 2); digit k = controller k on/off"
+  examples:
+    drone_1000: "drone 1 on channel 1"
+    drone_2000: "drone 1 on channel 2"
+    drone_0001: "drone 4 on channel 1"
+    drone_1200: "drone 1 on channel 1 + drone 2 on channel 2"
+    controller_p1_0000: "no controller on (empty band)"
 
 acquisition:
   receiver:
@@ -162,6 +180,15 @@ labels:
     - bandwidth
     - transmitter_identity_or_active_set
 
+  storage:
+    status: "EMPIRICAL (n=8)"
+    variables: "start, end (int32 sample indices, 0-based INFERRED), fc and bw (Hz, fc as baseband offset within +/-25 MHz), id, num_transmission"
+    loading_note: "Stored as `end`; MATLAB exposes it as `end_` after load (visualize.m)."
+    id_vocabulary: "metadata.json DroneIndex: 0–3 drone_1–4, 4–7 controller_1–4, 8–18 controller sets, 19 none"
+  label_vs_energy:
+    inside_vs_outside_power_db: "34–38 dB in single-transmitter files"
+    status: "EMPIRICAL (n=6)"
+
   identity_assignment:
     single_transmitter:
       status: deterministic_from_scenario
@@ -178,9 +205,15 @@ labels:
 known_acquisition_defects:
   dropped_samples:
     present: true
-    status: OFFICIAL_LAB_WARNING
+    status: "OFFICIAL_LAB_WARNING + EMPIRICAL (n=8)"
     cause: "sample segments dropped by B205mini SDR collection setup"
     behavior: "random gaps in posted raw IQ"
+    empirical_signature: >
+      600–730 blocks of 10–13 consecutive exact-zero samples per 1 s file
+      (one every ~1.2–1.7 ms), present even where strong signal fills the band,
+      first block often at sample 52,885. Treated as gap markers (INFERRED);
+      the number of samples actually lost at each marker is UNKNOWN.
+    detection_rule: "runs of >= 8 exact-zero complex samples"
     implications:
       - "Raw sample index may not represent uninterrupted elapsed time."
       - "Long temporal and inter-arrival measurements across gaps require caution."
@@ -194,7 +227,9 @@ known_acquisition_defects:
 
 negative_data:
   explicit_background_class:
-    available: false
+    available: true  # corrected: metadata.json label 19 'none'; controller_p1_0000 / p2_0000 have 0 transmissions
+    captures: 12  # 2 arrangements x 6 captures
+    status: "EMPIRICAL (n=1) + metadata.json"
 
   explicit_wifi_class:
     available: false
@@ -244,7 +279,8 @@ split_structure:
 
 day_metadata:
   available: true
-  reported_collection_days: 2
+  reported_collection_days: 2  # paper
+  directory_dates: "all three categories under 2024-05-09 (REPO_METADATA) — CONFLICTING with the paper"
 
   cross_day_same_task:
     status: UNKNOWN
@@ -311,22 +347,29 @@ claim_ceiling:
     - "Continuous hopping timing across dropped-sample gaps."
     - "RF-silent UAV detection."
 
+empirical_findings:
+  status: "EMPIRICAL (n=8 diagnostic captures); scripts/inspect_uavsig.py, summary in interim/uavsig/inspection/"
+  time_occupancy_pct:
+    one_drone: "67–70% (transmissions 27 us to 24 ms)"
+    two_drone: "~100%"
+    one_controller: 9.5
+    four_controllers: 41
+  controller_hops: "bw 0.03–3 MHz, centres spread across the full +/-25 MHz"
+  received_power_by_transmitter:
+    note: "median 1 ms window RMS: drone 1 ch1 0.159, drone 1 ch2 0.178, drone 4 ch1 0.218"
+    interpretation: "Drone 4 is ~2.7 dB stronger than drone 1 on the same channel: power alone can separate units (fixed geometry)."
+    status: "EMPIRICAL (n=1 per condition)"
+
 empirical_checks_required:
-  - raw_mat_schema
-  - stored_iq_layout
-  - actual_sample_count_per_file
-  - dropped_sample_gap_representation
-  - label_storage_schema
-  - complete_directory_structure
-  - capture_day_mapping
-  - scenario_filename_decoding
+  - samples_lost_per_gap_marker
+  - channels_3_and_4_offsets
   - physical_position_encoding
-  - transmitter_channel_mapping
-  - independent_capture_grouping
+  - day_mapping  # paper says 2 days, directories say 1
+  - power_by_transmitter_across_more_captures
 
 droneacharya:
-  acquired: false
-  inspected: false
+  acquired: partial  # 8 diagnostic captures + documentation
+  inspected: true
   adapter_implemented: false
 
   provisional_role:

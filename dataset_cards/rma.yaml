@@ -97,17 +97,26 @@ signal:
   storage:
     format: "MAT v7.3 (HDF5)"
     variable: "uhd_samps"
-    stored_type: "complex double (HDF5 compound real/imag, float64)"
+    stored_type: "complex double (HDF5 compound real/imag, float64) holding int16 codes / 32768"
     shape: "(1, N)"
-    status: "EMPIRICAL (n=1: SJRC_pro/sjrc__0.mat)"
+    status: "EMPIRICAL (n=9: 8 audited archives + SJRC_pro)"
   samples_per_file:
-    value: 10000000
-    duration_ms: 100
-    status: "EMPIRICAL (n=1)"
-    caveat: "Mavic files are 8–12x larger on disk (260–360 MB vs ~30 MB); their length is UNKNOWN."
+    status: "EMPIRICAL (n=9)"
+    by_archive:
+      Frysky: {samples: 10000000, duration_ms: 100}
+      Spektrum_DX4e: {samples: 10000000, duration_ms: 100}
+      SJRC_pro: {samples: 10000000, duration_ms: 100}
+      mini2RC: {samples: 10000000, duration_ms: 100}
+      matricevid: {samples: 10000000, duration_ms: 100}
+      mini2vid: {samples: 20000000, duration_ms: 200}
+      MavicRC1: {samples: 100000000, duration_ms: 1000}
+      MavicVid1: {samples: 100000000, duration_ms: 1000}
+    consequence: "Capture length differs by class (100 ms to 1 s). Fixed-length windows must be cut from every file; never use file length as a feature."
   file_created:
-    example: "2022-05-05 (MAT header, Linux)"
-    status: "EMPIRICAL (n=1)"
+    status: "EMPIRICAL (n=9, MAT header)"
+    april_2022_session: "Apr 4–6 2022: Mini 2, Matrice, Spektrum DX4e, Frysky (SJRC_pro: May 5 2022)"
+    mavic_session: "Oct 30 2022 (MavicVid1), Nov 2 2022 (MavicRC1)"
+    consequence: "Mavic was recorded ~7 months after the rest and is absent from the README: session and class are confounded for Mavic."
 
 acquisition:
   receiver: {model: "Ettus USRP X310", count: 1, status: AUTHOR_README}
@@ -132,11 +141,24 @@ published_preprocessing:  # AUTHOR_CODE (get_spectrogram2.m)
   frequency_axis: "fc +/- Fs/2"
 
 empirical_findings:
-  sjrc__0:
-    window_rms_100_windows: "min 4.6e-4, median 4.66e-4, p90 3.06e-3, max 4.25e-3"
-    interpretation: "Bursty: most 1 ms windows are noise-level; activity is intermittent (as in DroneRF)."
-    exact_zero_samples: 12514  # of 10M; likely quantization of low-level noise, not gaps — audit
-    status: "EMPIRICAL (n=1)"
+  status: "EMPIRICAL (n=9); audit script scripts/inspect_rma.py, summary in interim/rma/inspection/"
+  activity_1ms_windows_pct:  # windows >10 dB above the file's quietest 5%
+    Spektrum_DX4e: 23
+    Frysky: 65
+    mini2RC: 20
+    MavicRC1: 12.5
+    mini2vid: 40
+    matricevid: 93
+    MavicVid1: 93
+  interpretation: "RC links are bursty (12–65% active); video links are mostly continuous (Matrice, Mavic) except Mini 2 (40%)."
+  active_vs_noise_db: "15–29 dB"
+  noise_floor:
+    min_window_rms: "4.5e-4 to 4.6e-4 in every file, April and November sessions alike"
+    interpretation: "Receiver gain appears unchanged across sessions (INFERRED)."
+  exact_zero_samples: "0.03–0.13% per file; consistent with int16 quantization of weak noise, no runs suggesting gaps"
+  consecutive_files:
+    pair: "mini2RC/mini2_0 (13:57:11) and mini2_1 (13:57:08)"
+    interpretation: "Separate 100 ms captures a few seconds apart in one session, not one continuous recording. File order is not time order."
 
 negative_data:
   available: false
@@ -145,12 +167,14 @@ negative_data:
 
 leakage_safe_group_keys:
   available: [archive, file_index]
-  session: UNKNOWN  # are consecutive file indices slices of one continuous recording?
+  session: "archive = one recording session (INFERRED from MAT creation times); captures within it are seconds apart"
+  policy: "Split by archive/session for generalization claims; file-level splits within an archive are same-session."
 
 potential_shortcuts:
   - signal_type_vs_system  # only some systems have Vid archives
-  - received_power_and_file_length
-  - recording_session
+  - capture_length_by_class  # 100 ms / 200 ms / 1 s
+  - received_power
+  - recording_session  # Mavic recorded ~7 months later
   - dataset_source_in_cross_dataset_training
 
 cross_dataset_note: >
@@ -176,16 +200,19 @@ claim_ceiling:
     - "Unit-level generalization."
 
 empirical_checks_required:
-  - samples_per_file_per_archive  # especially Mavic
-  - rc_vs_vid_power_and_bandwidth
-  - consecutive_file_continuity
+  - samples_per_file_for_unaudited_archives  # inspire2RC/Vid, matriceRC, NineEagles, wltoys, Q205
   - mavic_model_identity
   - sjrc_signal_type
-  - zero_sample_pattern
+  - per_class_received_power
+
+resolved_checks:
+  - "Mavic files are 8–12x larger because each is 1 s (100M samples), not 100 ms."
+  - "Consecutive file indices are separate captures seconds apart, not a continuous stream."
+  - "Exact zeros are quantization, not gaps."
 
 droneacharya:
-  acquired: partial  # 1 capture fetched for format verification
-  inspected: partial
+  acquired: partial  # 9 diagnostic captures
+  inspected: true
   adapter_implemented: false
   provisional_role:
     - clean_reference_identification

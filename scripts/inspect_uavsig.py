@@ -24,10 +24,12 @@ FS_HZ = 50e6
 EXPECTED_SAMPLES = 50_000_000
 
 LABEL_FIELDS = ["start", "end_", "bw", "fc", "id"]
+# Files store the end index as `end`; MATLAB exposes it as `end_` after load (visualize.m).
+STORED_NAMES = ["start", "end", "end_", "bw", "fc", "id", "num_transmission"]
 
 # A run of at least this many exact-zero complex samples is reported as a
 # candidate dropped-sample gap. Real noise is never exactly zero for long.
-MIN_ZERO_RUN = 16
+MIN_ZERO_RUN = 8
 
 N_WINDOWS = 1000
 
@@ -42,9 +44,15 @@ def mat_format(path):
 
 def load_v5(path):
     variables = {name: {"shape": list(shape), "class": cls} for name, shape, cls in scipy.io.whosmat(path)}
-    wanted = [name for name in ["data", *LABEL_FIELDS] if name in variables]
+    wanted = [name for name in ["data", *STORED_NAMES] if name in variables]
     loaded = scipy.io.loadmat(path, variable_names=wanted)
-    return variables, loaded
+    return variables, normalise_names(loaded)
+
+
+def normalise_names(loaded):
+    if "end" in loaded and "end_" not in loaded:
+        loaded["end_"] = loaded.pop("end")
+    return loaded
 
 
 def load_v73(path):
@@ -58,12 +66,12 @@ def load_v73(path):
                 continue
             # MATLAB stores arrays transposed in HDF5.
             variables[name] = {"shape": list(obj.shape[::-1]), "dtype": str(obj.dtype)}
-            if name in ["data", *LABEL_FIELDS]:
+            if name in ["data", *STORED_NAMES]:
                 array = obj[()]
                 if array.dtype.names and {"real", "imag"} <= set(array.dtype.names):
                     array = array["real"] + 1j * array["imag"]
                 loaded[name] = array.T
-    return variables, loaded
+    return variables, normalise_names(loaded)
 
 
 def zero_runs(x, min_run):
@@ -83,6 +91,8 @@ def label_table(loaded, n_samples):
 
     start, end, bw, fc, ids = (np.asarray(loaded[name]).reshape(-1) for name in LABEL_FIELDS)
     table = {"present": True, "count": int(start.size)}
+    if "num_transmission" in loaded:
+        table["num_transmission_field"] = float(np.asarray(loaded["num_transmission"]).reshape(-1)[0])
     if start.size == 0:
         return table
 
@@ -124,6 +134,16 @@ def inspect(path):
         "twice_expected_maybe_interleaved": n == 2 * EXPECTED_SAMPLES,
     }
 
+    # Quantization: if values are int16 codes scaled to [-1, 1], every component is a
+    # multiple of 1/32767 (UHD sc16 scaling). Many exact zeros then come from quantizing low-level noise.
+    sample_components = np.concatenate([x[:200_000].real, x[:200_000].imag])
+    codes = sample_components * 32767  # UHD sc16 -> float scaling
+    report["quantization"] = {
+        "int16_scaled": bool(np.allclose(codes, np.round(codes), atol=1e-6)),
+        "noise_window_rms_in_int16_codes": float(np.min(np.sqrt(
+            (np.abs(x[: n - n % N_WINDOWS]) ** 2).reshape(N_WINDOWS, -1).mean(axis=1))) * 32767),
+    }
+
     starts, lengths = zero_runs(x, MIN_ZERO_RUN)
     report["gap_signature"] = {
         "nan_count": int(np.isnan(x).sum()),
@@ -160,7 +180,7 @@ def inspect(path):
 def print_report(report):
     print("=" * 80)
     print(f"{report['category']}/{report['file']}  [{report['mat_format']}]")
-    for key in ["variables", "data_stored", "samples", "gap_signature", "power", "labels", "error"]:
+    for key in ["variables", "data_stored", "samples", "quantization", "gap_signature", "power", "labels", "error"]:
         if key in report:
             print(f"  {key}: {json.dumps(report[key], default=str)}")
 

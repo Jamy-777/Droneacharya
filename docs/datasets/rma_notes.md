@@ -69,3 +69,15 @@ README lists 9 systems: Spektrum DX4e, DJI Mini 2, DJI Inspire 2, DJI Matrice 30
 - Do the papers use negatives or synthetic interference? (Read TCCN 2022 and ICACT 2023.)
 - Gain setting and whether it changed between recordings.
 - Recording dates per system (MAT header gives creation time per file).
+
+## Empirical findings (2026-10-05, 9 captures)
+
+Script: `scripts/inspect_rma.py`; summary in `interim/rma/inspection/`.
+
+- **Format confirmed in all 9:** MAT v7.3, `uhd_samps`, complex double holding int16 codes / 32768.
+- **Capture length differs by class:** 100 ms for most archives, 200 ms for Mini 2 video, **1 s for Mavic** (RC and video). That is why Mavic files are 8–12× larger. Windows must be cut to a fixed length; file length must never reach a model.
+- **Two recording campaigns:** most archives were created Apr 4–6 2022 (SJRC in May 2022); **Mavic on Oct 30 / Nov 2 2022**. Mavic is also missing from the README. Treat Mavic as a separate session; class and session are confounded for it.
+- **Consecutive files are separate captures** a few seconds apart in one session (mini2_0 at 13:57:11, mini2_1 at 13:57:08), not one continuous stream. File order is not time order.
+- **Activity:** RC links are bursty (12–65% of 1 ms windows active); Matrice and Mavic video are near-continuous (93%); Mini 2 video 40%. Active signal sits 15–29 dB above noise.
+- **Noise floor is identical** across April and November files, so receiver gain looks unchanged.
+- **No gap markers:** exact zeros are 0.03–0.13% and come from int16 quantization.
