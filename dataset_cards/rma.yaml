@@ -47,7 +47,7 @@ secondary_tasks:
 public_release:
   archives: 16
   mat_files: 812
-  total_size_gb: 46.7
+  total_size_gb: 46.7  # decimal GB; = 43.5 GiB, which is what the KU Leuven page shows
   checksums: "MD5 per archive (REPO_METADATA)"
   zip_compression_ratio: "~0.96 (MAT payload already compressed)"
   extras: ["README.txt", "signal_visualize.m", "get_spectrogram2.m"]
@@ -152,7 +152,7 @@ empirical_findings:
     MavicVid1: 93
   interpretation: "RC links are bursty (12–65% active); video links are mostly continuous (Matrice, Mavic) except Mini 2 (40%)."
   active_vs_noise_db: "15–29 dB"
-  noise_floor:
+  noise_floor:  # n=9 inspected captures, not the whole dataset
     min_window_rms: "4.5e-4 to 4.6e-4 in every file, April and November sessions alike"
     interpretation: "Receiver gain appears unchanged across sessions (INFERRED)."
   exact_zero_samples: "0.03–0.13% per file; consistent with int16 quantization of weak noise, no runs suggesting gaps"

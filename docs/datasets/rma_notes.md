@@ -79,5 +79,5 @@ Script: `scripts/inspect_rma.py`; summary in `interim/rma/inspection/`.
 - **Two recording campaigns:** most archives were created Apr 4–6 2022 (SJRC in May 2022); **Mavic on Oct 30 / Nov 2 2022**. Mavic is also missing from the README. Treat Mavic as a separate session; class and session are confounded for it.
 - **Consecutive files are separate captures** a few seconds apart in one session (mini2_0 at 13:57:11, mini2_1 at 13:57:08), not one continuous stream. File order is not time order.
 - **Activity:** RC links are bursty (12–65% of 1 ms windows active); Matrice and Mavic video are near-continuous (93%); Mini 2 video 40%. Active signal sits 15–29 dB above noise.
-- **Noise floor is identical** across April and November files, so receiver gain looks unchanged.
-- **No gap markers:** exact zeros are 0.03–0.13% and come from int16 quantization.
+- **Noise floor is similar** in the 9 inspected captures from both campaigns, so receiver gain looks unchanged (n=9, not proven for the whole dataset).
+- **No zero-gap pattern in the 9 inspected captures:** exact zeros are 0.03–0.13%, consistent with int16 quantization. This is not evidence that the whole dataset is defect-free.

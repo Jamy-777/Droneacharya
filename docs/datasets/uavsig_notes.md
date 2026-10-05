@@ -195,8 +195,18 @@ Script: `scripts/inspect_uavsig.py`; summary in `interim/uavsig/inspection/`.
 - **Format:** MAT v5 (compressed). `data` is a complex row vector of exactly 50,000,000 samples (1 s at 50 MS/s). Values are int16 codes / 32767 stored as double (the paper says float32; the values are the same).
 - **Labels live in each file:** `start`, `end` (int32 sample indices), `fc` (baseband offset in Hz, within ±25 MHz), `bw` (Hz), `id`, `num_transmission`. The file stores `end`; MATLAB shows it as `end_`.
 - **Filename grammar (decoded against the label ids):** in `drone_ABCD`, digit position k is drone k and the digit value is its channel (0 = off). Channel 1 sits at −17 MHz, channel 2 at −7 MHz. Controllers: `controller_pP_ABCD`, P = arrangement, digit k = controller k on/off. Earlier notes had the drone grammar reversed.
-- **There is an empty-band negative:** `controller_p*_0000` has zero transmissions (label "none" in `metadata.json`), 12 captures in total. The card previously said no background class.
-- **Dropped-sample signature:** 600–730 blocks of 10–13 exact zeros per second in every file, including where strong signal fills the band. These are pipeline-inserted gap markers. The number of samples lost at each marker is unknown, so no timing feature should span one.
+- **There is a no-transmitter baseline:** `controller_p*_0000` (12 captures) has zero labelled transmissions; `metadata.json` calls it "none" and the authors' info PDF lists it as "No TX — baseline to show interference". No experimental transmitter is on, but ambient RF is still present, so this is not a curated negative corpus like CardRF's.
+- **Candidate dropped-sample marker:** 600–730 runs of 10–13 exact zeros per second in every inspected file (n=8), including where strong signal fills the band, so they are not quantized noise. Several positions recur across files and categories (e.g. sample 52,885 in 5 of 8). This is strongly consistent with UCLA's dropped-sample warning, but the link is not proven without the acquisition code, and the samples lost per marker are unknown. Treat each run as a discontinuity: no timing feature should span one. Audit whether gap positions differ by class before training.
 - **Labels are good:** power inside WHIRLS boxes is 34–38 dB above outside in single-transmitter files.
 - **Power differs by unit:** on the same channel, drone 4 is ~2.7 dB stronger than drone 1 (n=1). For unit fingerprinting, power must be normalised or controlled.
 - Occupancy: one drone 67–70% of the time; one controller 9.5%; four controllers 41%.
+
+## Corrections from the authors' documents (read 2026-10-05)
+
+`UAVSig Readme.pdf` and `uavsig_dataset_info.pdf` were on disk but had not been read before the audit above. They settle:
+
+- **Filename grammar** — README confirms the decoding above.
+- **Environment is outdoor:** neighbouring campus building roofs. RX (20 dBi panel, 6 ft coax, no LNA) and drones on the upper roof, controllers on the lower roof. Earlier notes and the card said "controlled lab-like".
+- **Capture days:** 2024-05-09 for no-TX, controllers and one-drone; **2024-05-10 for all two-drone captures**, although the directory says 2024-05-09. Category and day are confounded for two-drone.
+- **Drone units** are DJI Matrice 100 #15–#18; channels are ~10 MHz wide; the 2.4435 GHz centre is slightly offset from the middle of the four channels.
+- **Version:** Dataverse API reports 4.0 (2026-01-28); a cached web index still shows 3.0. Evidence saved in `manifests/uavsig_dataverse_versions.json`.

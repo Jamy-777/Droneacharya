@@ -88,3 +88,23 @@ Inspect without extracting the whole archive: one file each from LOS UAV, LOS co
 - Whether vertical scale or trigger settings differ by category.
 - Whether Wi-Fi/Bluetooth captures saturate like UAV captures.
 - What `system_model.pdf` (176 KB, not yet downloaded) adds.
+
+## Raw audit (2026-10-05)
+
+Archive verified at 71,139,787,221 bytes (the size the server reported). `scripts/inspect_cardrf_raw.py`: inventory of every entry plus 135 captures read in full (3 per folder). Results in `interim/cardrf/inspection/`.
+
+**Inventory.** 9,600 captures: 6,090 LOS train, 2,610 LOS test, 900 NLOS (300 each for Inspire, M600, Phantom). Plus 500 zero-byte `__MACOSX` entries that end in `.mat` but are not captures — adapters must skip them. Wi-Fi: 500 per router. Bluetooth: 500 per device (Motorola 350). Per-class counts are exactly the Processed_CardRF counts divided by 100, so **100 slices per raw capture is confirmed from both ends**.
+
+**Acquisition settings are identical everywhere** (n=135): 20 GSa/s, 5M int16 samples, trigger at the midpoint, YInc 6.5841e-06 V/code, 0.4 V display range, quantization step 4. Instrument: Keysight MSOS604A, one serial. The vertical-scale shortcut is ruled out.
+
+**Clipping is not a UAV marker.** Hard negatives clip too: Wi-Fi 7–18%, Bluetooth 0–22.5%, LOS aircraft 0–41%, controllers 0–42%, NLOS ~0%. Levels differ strongly by device (iPad 3 and iPhone 6S ~0%, Mavic Pro ~37%), so clipping is still a device-identity shortcut.
+
+**Trigger content depends on class.** Burst emitters (Wi-Fi, Bluetooth, controllers, Beebeerun) show noise before the trigger (~1,180 codes RMS) and a ~5 µs turn-on transient after it. DJI aircraft usually transmit continuously, so their pre-trigger half already contains signal (75–100% of captures). Processed_CardRF slices cover 0–5.12 µs after the trigger: the transient for burst classes, steady signal for DJI aircraft.
+
+**Sessions (Frame.Date).** Each device was recorded in one 10–40 minute block, and the official Train and Test captures are interleaved seconds apart inside that block. Wi-Fi was recorded on Aug 25, Bluetooth on Aug 25–26, LOS aircraft on Aug 25–29, controllers on Aug 28–29, and **3DR Iris on Nov 1 2020**. So:
+
+- the official split is same-session (repeatability, not generalization);
+- class and session are entangled — hold out whole devices;
+- shortcut test: if a classifier can predict the class from pre-trigger noise of burst captures alone, the session is leaking.
+
+**NLOS** captures are ~13 dB weaker than LOS (median post-trigger RMS 5,004 vs ~23,000 codes) and essentially unclipped. LOS→NLOS is partly an amplitude shift; compare with and without power normalisation.

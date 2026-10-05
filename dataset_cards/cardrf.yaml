@@ -112,28 +112,37 @@ signal:
     waveform_field: "Channel_1.Data"
     scalar_dtype:
       value: int16
-      status: AUTHOR_DOC  # Fig. 7, one example file
+      status: "EMPIRICAL (n=135)"
+    quantization_step_codes: 4
+    rail_codes: [-32736, 30720]
     voltage_conversion:
       formula: "volts = Data * YInc + YOrg"
-      example_YInc_v_per_code: 6.5841e-06
-      example_YOrg_v: 0.0066
-      status: AUTHOR_DOC  # Fig. 7, one example file
-      documentation_conflict: "Body text gives scale factor 6.581e-06; Fig. 7 struct shows YInc 6.5841e-06."
+      YInc_v_per_code: 6.58411815e-06  # identical in all 135
+      status: "EMPIRICAL (n=135)"
+      documentation_conflict: "Body text says 6.581e-06; files say 6.5841e-06 (files govern)."
 
   sample_rate_sps:
     value: 20000000000
-    status: AUTHOR_DOC  # Fig. 7 XInc = 5.0e-11 s, one example file; raw audit pending
+    status: "EMPIRICAL (n=135: XInc = 5e-11 s in every file)"
   samples_per_capture:
     value: 5000000
-    status: AUTHOR_DOC  # Fig. 7 NumPoints
+    status: "EMPIRICAL (n=135)"
   capture_duration_seconds:
     value: 0.00025
-    status: INFERRED  # 5,000,000 x 5e-11 s
+    status: "EMPIRICAL (n=135)"
 
   trigger:
-    example_XOrg_seconds: -1.25e-4
-    interpretation: "Trigger at the capture midpoint; first ~2.5M samples are pre-trigger."
-    status: INFERRED  # from Fig. 7 XOrg and Fig. 6 (noise, then transient at ~midpoint, then steady state)
+    XOrg_seconds: -1.25e-4  # identical in all 135: trigger at the capture midpoint
+    status: "EMPIRICAL (n=135)"
+    pre_trigger_content:
+      burst_classes: "noise only (RMS ~1,120–1,300 codes) — Wi-Fi, Bluetooth, controllers, Beebeerun aircraft"
+      dji_aircraft: "signal already present before the trigger in 75–100% of captures (continuous downlink)"
+      status: "EMPIRICAL (n=135)"
+      consequence: "Whether the first half of a capture contains signal depends on the class. Never feed the pre-trigger half as if it were background."
+    transient:
+      post_trigger_median_rms_codes: {0-1us: 15982, 1-5us: 21510, 5-10us: 23612, 10-50us: 23548, 50-125us: 23609}
+      interpretation: "Turn-on transient lasts ~5 us after the trigger for burst classes."
+      status: "EMPIRICAL (n=~90 triggered captures)"
 
   center_frequency_hz:
     value: null
@@ -145,18 +154,35 @@ signal:
 acquisition:
   capture_system:
     name: "RFSSCS (RF signal sensing and capturing system)"
-    instrument: "oscilloscope (Keysight per AERPAW record — UNVERIFIED)"
+    instrument: "Keysight MSOS604A, serial MY55510227"
+    status: "EMPIRICAL (n=135, Frame struct)"
     count: 1
-  example_vertical_settings:
+  vertical_settings:
     YDispRange_v: 0.4
     YDispOrigin_v: 0
-    status: AUTHOR_DOC  # Fig. 7, one example file
+    status: "EMPIRICAL (n=135)"
   per_file_settings_vary:
-    status: UNKNOWN  # raw audit: XInc, YInc, YOrg, YDispRange per class
+    value: false  # XInc, XOrg, YInc, YDispRange identical across every category, LOS and NLOS
+    status: "EMPIRICAL (n=135, 3 per folder)"
   environment: outdoor
   distance_m:
     los_range: [8, 12]
     status: AUTHOR_DOC
+    filename_hint: "LOS UAV filenames contain '10M' (e.g. INSPIRE_10M_FLYING_ABOVE...)"
+
+  sessions:  # EMPIRICAL (n=135): Frame.Date per capture
+    per_device: "each device recorded in one block of ~10–40 minutes"
+    train_test: "official Train and Test captures are interleaved seconds apart inside the same block"
+    dates:
+      wifi: "2020-08-25"
+      bluetooth: "2020-08-25 / 2020-08-26"
+      uav_aircraft_los: "2020-08-25 to 2020-08-29"
+      uav_controllers: "2020-08-28 / 2020-08-29, except 3DR Iris on 2020-11-01"
+      nlos: "2020-08-26 / 2020-08-28"
+    consequences:
+      - "The official Train/Test split is same-session: it measures repeatability, not generalization."
+      - "Class and session/day are entangled (Wi-Fi only on Aug 25; 3DR Iris two months later)."
+      - "Shortcut test: train a classifier on pre-trigger noise of burst captures only; if it predicts class, the session is leaking."
   conditions:
     los:
       categories: [UAV, UAV_Controller, WiFi, Bluetooth]
@@ -229,7 +255,7 @@ processed_artifact:
       test: 150
       exception: "BEEBEERUN controller: 245 train / 105 test"
     flight_mode_balance: "exactly 50/50 where a device has two modes"
-    session_independence: NOT_ESTABLISHED  # captures may come from the same flight
+    session_independence: false  # EMPIRICAL: raw train/test captures are interleaved within one session per device
 
 known_acquisition_defects:
   adc_saturation:
@@ -251,8 +277,17 @@ known_acquisition_defects:
         DJI_MAVICPRO: "37.4% / 37.0%"
         3DR_IRIS: "40.1% / 40.1%"
     author_doc_evidence: "Fig. 6 (Phantom 4 controller) is flat-topped at about +/-0.2 V, equal to YDispRange/2."
-    consequence: "Clipping fraction alone separates several classes. Must be controlled before any CardRF result is trusted."
-    raw_audit_required: true
+    raw_captures:  # EMPIRICAL (n=135): % of samples at the file's min or max code
+      wifi: "7–18% (Cisco median 16%, TP-Link 8%)"
+      bluetooth: "0–22.5% (iPad 3 and iPhone 6S ~0%; iPhone 7 22%; Fitbit 21%; Motorola 17%)"
+      uav_aircraft_los: "0–41% (Mavic Pro median 37%)"
+      uav_controllers: "0–42% (Beebeerun 0%; Mavic Pro 29%)"
+      nlos_uav: "~0%"
+    consequence: >
+      Clipping occurs in hard negatives as well as UAS captures, so it does not
+      cleanly separate UAV from non-UAV, but its level differs strongly by device
+      and by LOS/NLOS. Run a clipping-fraction-only baseline; mask or model
+      clipped samples before trusting any CardRF result.
 
   temporal_discontinuity:
     description: "Each capture is an independent 250 us trigger; consecutive files are not a continuous stream."
@@ -262,25 +297,29 @@ negative_data:
   explicit_hard_negatives:
     available: true
     location: "raw CARDRF.zip only (LOS Train/Test WiFi and Bluetooth)"
-    status: AUTHOR_DOC  # not yet empirically inspected
+    counts: {wifi: "500 per router (350 train / 150 test)", bluetooth: "500 per device, Motorola 350 (245 / 105)"}
+    status: "EMPIRICAL (inventory of all 9,600 captures; 42 negative captures audited)"
   no_emitter_background_class:
     available: false
     notes:
       - "Captures are triggered by a transmission; there is no 'empty band' class."
-      - "The pre-trigger half of each capture is in-capture noise, not an independent negative recording."
+      - "For burst classes the pre-trigger half is in-capture noise from the same session, not an independent negative recording. For DJI aircraft it usually contains signal."
   acquisition_matching_with_positives:
-    status: EMPIRICAL_CHECK_REQUIRED
-    compare_fields: [XInc, YInc, YOrg, YDispRange, XOrg, clipping_fraction, rms]
+    scope_settings: "identical (EMPIRICAL n=135)"
+    post_trigger_rms_median_codes: {wifi: 22739, bluetooth: 23737, uav_los: 22984, controllers: 24756, nlos_uav: 5004}
+    session: "NOT matched — negatives and positives were recorded on different days/blocks"
 
 leakage_safe_group_keys:
-  raw: [capture_file, device, flight_mode, los_nlos]
+  raw: [device_session_block, capture_file, flight_mode, los_nlos]
   processed: "100-row chained run = one capture"
-  session_level: UNKNOWN
+  session_level: "one block per device (Frame.Date); the device is the session"
+  policy: "Hold out whole devices for generalization claims; never split a device's captures across train/test and call it independent."
 
 potential_shortcuts:
   - adc_clipping_fraction
-  - vertical_scale_setting
-  - received_amplitude_and_distance
+  - received_amplitude_and_distance  # NLOS ~13 dB weaker than LOS
+  - signal_present_before_trigger  # DJI aircraft vs burst classes
+  - session_and_day  # one block per device; 3DR Iris recorded 2 months later
   - trigger_alignment
   - device_unit_identity_equals_model
   - dataset_source_in_cross_dataset_training
@@ -295,12 +334,14 @@ compatible_experiments:
 
 known_limitations:
   - "One physical unit per model: model and unit cannot be separated."
-  - "Single site, single month, single capture system."
+  - "Single site, single capture system (Keysight MSOS604A); Aug 25–29 2020 plus Nov 1 2020."
   - "250 us captures: no burst timing, hopping period or packet-sequence information."
   - "Captures are signal-triggered: no empty-band negative class."
   - "Processed artifact omits Wi-Fi, Bluetooth and NLOS; it cannot serve as the hard-negative source."
   - "Class-correlated ADC saturation (0.001% to 40% of samples) in processed data."
-  - "Processed slices start at the trigger, so they likely contain transient rather than steady-state signal, contrary to the PDF wording."
+  - "Processed slices span 0–5.12 us after the trigger; for burst classes that is the turn-on transient (~5 us), not the steady state the PDF describes."
+  - "Official Train/Test is same-session (captures interleaved seconds apart)."
+  - "Each device recorded in its own session block; 3DR Iris two months after the rest."
   - "Shipped processing notebook does not reproduce the released processed artifact."
   - "License not yet established."
 
@@ -317,22 +358,26 @@ claim_ceiling:
     - "Any claim before clipping/scale confounds are controlled."
 
 empirical_checks_required:
-  - raw_mat_schema_per_category
-  - xinc_yinc_yorg_ydisprange_per_class
-  - clipping_fraction_per_class_in_raw
-  - trigger_position_and_transient_extent
-  - wifi_and_bluetooth_capture_counts
-  - raw_train_test_capture_counts
-  - nlos_capture_counts
   - license
+  - session_shortcut_test_on_pre_trigger_noise
+  - clipping_only_baseline
+
+resolved_checks:  # raw audit 2026-10-05 (inventory of all 9,600 captures + 135 audited, 3 per folder)
+  - "Archive integrity: CRC of all 10,172 members verified (zipfile.testzip, no bad members)."
+  - "Archive: 71,139,787,221 bytes; 9,600 captures (6,090 LOS train, 2,610 LOS test, 900 NLOS) + 500 zero-byte __MACOSX junk entries."
+  - "Per-class counts equal Processed_CardRF counts / 100 -> 100 slices per raw capture confirmed."
+  - "Scope settings identical across all categories (no vertical-scale shortcut)."
+  - "Instrument: Keysight MSOS604A, single serial."
+  - "Clipping measured per category in raw captures."
+  - "Train/Test and session structure from Frame.Date."
 
 droneacharya:
-  acquired: partial  # processed + code + doc; raw downloading
-  inspected: partial
+  acquired: true
+  inspected: true
   adapter_implemented: false
   provisional_role:
-    - hard_negative_source  # pending raw audit
+    - hard_negative_source
     - uav_vs_controller_discrimination
     - los_to_nlos_check
-  primary_detection_foundation: "hard-negative component only, pending raw audit"
+  primary_detection_foundation: "hard-negative component only; evaluate by holding out whole devices, with clipping and session controls"
   full_download_justified: true  # Wi-Fi, Bluetooth and NLOS exist only in the raw archive

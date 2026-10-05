@@ -136,7 +136,11 @@ def main():
     with archive:
         infos = archive.infolist()
         extensions = collections.Counter(PurePosixPath(i.filename).suffix.lower() for i in infos if not i.is_dir())
-        mats = sorted((i for i in infos if i.filename.lower().endswith(".mat")), key=lambda i: i.filename)
+        # __MACOSX/ holds zero-byte AppleDouble files that end in .mat but are not captures.
+        junk = [i for i in infos if i.filename.startswith("__MACOSX/")]
+        mats = sorted((i for i in infos if i.filename.lower().endswith(".mat") and i not in junk),
+                      key=lambda i: i.filename)
+        print(f"Excluded {len(junk)} __MACOSX entries")
         by_dir = collections.defaultdict(list)
         for info in mats:
             by_dir[str(PurePosixPath(info.filename).parent)].append(info)

@@ -3,7 +3,11 @@ dataset:
   name: "UAVSig"
   full_name: "UAVSig: Drone RF Signal Detection and Fingerprinting Dataset"
   year: 2024
-  version: "4.0"  # REPO_METADATA: v4.0 released 2026-01-28 (earlier card said 3.0)
+  version: "4.0"
+  version_provenance:
+    dataverse_api: "4.0 released 2026-01-28; history 1.0, 1.1, 2.0, 3.0, 4.0 (manifests/uavsig_dataverse_versions.json)"
+    cached_web_index: "3.0 (search-engine snapshot; stale)"
+    author_dataset_info_pdf: "~222 GB full dataset (2024-09-30); v4.0 listing is 238.9 GB"
   doi: "10.25346/S6/LVRRAE"
 
 provenance:
@@ -93,7 +97,7 @@ signal:
     status: "EMPIRICAL (n=8)"
 
 filename_grammar:
-  status: "EMPIRICAL (n=5 drone files, decoded against stored label ids)"
+  status: "AUTHOR_README + EMPIRICAL (n=5 drone files, label ids agree)"
   drones: "drone_ABCD_NN.mat: digit position k = drone k; digit value = channel (0 = off); NN = capture 00–05"
   channel_offsets_mhz: {1: -17, 2: -7, 3: "+3 (INFERRED)", 4: "+13 (INFERRED)"}
   controllers: "controller_pP_ABCD_NN.mat: P = physical arrangement (1, 2); digit k = controller k on/off"
@@ -122,7 +126,9 @@ acquisition:
     value: "2.4 GHz ISM"
 
   environment:
-    description: "controlled lab-like OTA setting"
+    description: "outdoor, neighbouring campus building roofs: RX and drones on the upper roof, controllers on the lower roof; RX antenna angled upward to avoid interference"
+    status: AUTHOR_DOC  # uavsig_dataset_info.pdf; corrects the earlier 'controlled lab-like OTA setting'
+  front_end: "6 ft coax, no LNA (AUTHOR_DOC)"
 
   synthetic_signal_mixing:
     used: false
@@ -208,12 +214,16 @@ known_acquisition_defects:
     status: "OFFICIAL_LAB_WARNING + EMPIRICAL (n=8)"
     cause: "sample segments dropped by B205mini SDR collection setup"
     behavior: "random gaps in posted raw IQ"
-    empirical_signature: >
-      600–730 blocks of 10–13 consecutive exact-zero samples per 1 s file
-      (one every ~1.2–1.7 ms), present even where strong signal fills the band,
-      first block often at sample 52,885. Treated as gap markers (INFERRED);
-      the number of samples actually lost at each marker is UNKNOWN.
-    detection_rule: "runs of >= 8 exact-zero complex samples"
+    empirical_candidate_marker:
+      pattern: "runs of 10–13 consecutive exact-zero complex samples"
+      observed_files_n: 8
+      runs_per_second: "600–730 (one every ~1.2–1.7 ms)"
+      present_under_strong_signal: true  # cannot be quantized noise
+      positions_recur_across_files: "e.g. first run at sample 52,885 in 5 of 8 files; 115,770 in 4 files, across controller, one-drone and two-drone categories"
+      interpretation: "strongly consistent with the documented dropped-sample defect"
+      causal_mapping_status: "NOT PROVEN — acquisition/storage code not seen; samples lost per marker UNKNOWN"
+      detection_rule: "runs of >= 8 exact-zero complex samples"
+    shortcut_audit: "Check whether gap positions or counts differ by class/scenario; if so, mask gaps before training."
     implications:
       - "Raw sample index may not represent uninterrupted elapsed time."
       - "Long temporal and inter-arrival measurements across gaps require caution."
@@ -227,9 +237,12 @@ known_acquisition_defects:
 
 negative_data:
   explicit_background_class:
-    available: true  # corrected: metadata.json label 19 'none'; controller_p1_0000 / p2_0000 have 0 transmissions
-    captures: 12  # 2 arrangements x 6 captures
-    status: "EMPIRICAL (n=1) + metadata.json"
+    available: false  # not a curated negative corpus
+  no_tx_baseline:
+    available: true
+    files: "controller_p1_0000_*, controller_p2_0000_* (12 captures)"
+    interpretation: "no experimental transmitter on; ambient RF still present (authors: 'baseline to show interference')"
+    status: "AUTHOR_DOC (dataset_info 'No TX', 2 scenarios) + metadata.json label 19 'none' + EMPIRICAL (n=1: 0 transmissions)"
 
   explicit_wifi_class:
     available: false
@@ -279,8 +292,13 @@ split_structure:
 
 day_metadata:
   available: true
-  reported_collection_days: 2  # paper
-  directory_dates: "all three categories under 2024-05-09 (REPO_METADATA) — CONFLICTING with the paper"
+  reported_collection_days: 2
+  day_by_category:  # AUTHOR_DOC: uavsig_dataset_info.pdf
+    2024-05-09: [no_tx, controllers, one_drone]
+    2024-05-10: [two_drone]
+  directory_dates: "all three directories labelled 2024-05-09 (REPO_METADATA); for two_drone this disagrees with the authors' table"
+  status: CONFLICTING  # author doc vs directory label; author doc is the more specific source
+  confound: "Category and capture day are entangled: every two-drone capture is from day 2."
 
   cross_day_same_task:
     status: UNKNOWN
@@ -366,6 +384,14 @@ empirical_checks_required:
   - physical_position_encoding
   - day_mapping  # paper says 2 days, directories say 1
   - power_by_transmitter_across_more_captures
+  - gap_positions_by_class
+
+resolved_by_author_docs:  # UAVSig Readme.pdf + uavsig_dataset_info.pdf, read 2026-10-05
+  - "Filename grammar (matches our empirical decoding)."
+  - "Capture days: two-drone on 2024-05-10, everything else on 2024-05-09."
+  - "Environment is outdoor rooftops, not a lab."
+  - "Drone units are DJI Matrice 100 #15–#18; channels are ~10 MHz wide, capture centre 2.4435 GHz slightly offset from the four channels."
+  - "Authors' training spectrograms: 5.2 ms, 512x512."
 
 droneacharya:
   acquired: partial  # 8 diagnostic captures + documentation
