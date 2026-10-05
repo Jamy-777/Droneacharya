@@ -37,8 +37,8 @@ signal:
     status: verified
 
   dtype:
-    value: null
-    status: empirical_check_required
+    value: float32
+    status: "EMPIRICAL (n=5 files)"
 
 acquisition:
   center_frequencies_hz:
@@ -67,8 +67,9 @@ acquisition:
     orientation_controlled: true
 
   receiver_gain:
-    stored_per_file: true
-    fixed_globally: false
+    stored_per_file: "paper says yes; not found in inspected Dataset-3/7 files"
+    fixed_globally: UNKNOWN
+    status: CONFLICTING
 
 population:
   manufacturer:
@@ -142,7 +143,7 @@ negative_data:
   representative_of_universal_non_uav_rf: false
 
   acquisition_matching:
-    status: empirical_check_required
+    status: "partial — Fs, Fc, dtype, length matched (EMPIRICAL n=1 vs 1); receiver, gain, day UNKNOWN"
     compare_fields:
       - center_frequency
       - sample_rate
@@ -325,8 +326,8 @@ empirical_checks_required:
   - day_distribution_by_model
 
 droneacharya:
-  acquired: false
-  inspected: false
+  acquired: "5 diagnostic files on D:; full dataset reported on an external drive (location not yet recorded)"
+  inspected: true
   adapter_implemented: false
 
   candidate_roles:
@@ -363,3 +364,5 @@ empirical_findings:
         Sampled environmental windows after the initial transient exhibited
         substantially lower mean power than sampled UAV-positive windows.
         Dataset 7 must not be treated as a sufficient hard-negative corpus.
+      evidence: "~30 dB (about 1000x) mean-power gap: 1 positive file vs 1 environment file, 7 x 10 ms windows each"
+      cause: "UNRESOLVED — receiver gain unknown; a gain difference alone could explain the gap"

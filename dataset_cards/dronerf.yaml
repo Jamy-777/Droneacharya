@@ -50,6 +50,11 @@ dataset_structure:
 signal:
   domain: time
   representation: amplitude_time_series
+  representation_note: >
+    Values are signed real samples (negative values present, EMPIRICAL n=4),
+    not an envelope. Most likely the I component of the USRP IQ stream
+    (INFERRED). Not equivalent to |I + jQ|: magnitude-common experiments with
+    IQ datasets are invalid; spectral-common only, after frequency alignment.
   complex_iq_available: false
 
   storage:
@@ -77,7 +82,16 @@ signal:
 
 sampling:
   sample_rate_sps:
-    status: unresolved
+    value: 40000000
+    status: INFERRED
+    derivation: >
+      Paper (verified via Europe PMC full text): ~5.25 s of drone RF per flight
+      mode and ~10.25 s of background; 21 segments per mode (41 background)
+      -> 0.25 s per segment; 10,000,000 samples per file (EMPIRICAL) -> 40 MS/s.
+    open_question: >
+      If the files hold only real (I) samples at 40 MS/s, a 40 MHz receiver band
+      cannot be represented without spectral folding. Check against the authors'
+      code before building spectral features.
 
   notes:
     - "Do not infer sample rate directly from receiver instantaneous bandwidth."
@@ -181,6 +195,7 @@ positive_signal_composition:
 
   temporal_activity:
     status: bursty_activity_empirically_observed
+    scope: "Observed in BUI 10000 = Bebop 'on and connected' (its least active mode). Occupancy likely differs by mode; check 10011 (flying + video)."
 
 empirical_inspection:
   performed: true
@@ -253,6 +268,12 @@ window_safe_splitting:
   rule: >
     All derived windows from both L and H components of one logical
     segment must remain in the same train/validation/test partition.
+  insufficient: >
+    Each flight mode is ~5.25 s cut into 21 consecutive 0.25 s segments,
+    most likely from one recording (INFERRED). Splitting by segment still
+    puts adjacent slices of the same session in train and test. Group by BUI
+    (session) for generalization claims; segment-level splits measure
+    within-session repeatability only.
 
 published_derived_representations:
   normalized_time_domain_visualization:
@@ -336,7 +357,7 @@ claim_ceiling:
     - "RF-silent or fiber-optic UAV detection."
 
 empirical_checks_remaining:
-  - exact_sample_rate
+  - exact_sample_rate  # 40 MS/s INFERRED; confirm from authors' code
   - complete_negative_environment_characterization
   - physical_unit_identity_if_recoverable
   - acquisition_gain_metadata_if_recoverable
