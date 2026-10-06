@@ -42,7 +42,10 @@ sessions:
   - 2021-03-29 (Mini 2 only)
   - 2021-03-31 (Phantom 4 Pro 17:14-18:20, Mini 2 18:24-19:10)
   recording_segments: 36
-  site_note: Both drones on 31 Mar at the same site (no time to travel between sites); the paper figure implied separate sites.
+  site_note: 'Both drones on 31 Mar likely at the same site (INFERRED: 4 min between Phantom end 18:20 and Mini start 18:24);
+    the paper figure implied separate sites.'
+  missing_segment_numbers: 29 Mar starts at T004; 31 Mar lacks T001, T002, T005, T028 - possibly where the environment-only
+    sessions were removed (INFERRED)
 geometry:
   range_m:
   - 0
@@ -56,19 +59,29 @@ defects:
   garbled_filenames: 11
   low_frequency_comb: 58/70/82/93/105 Hz lines (~11.7 Hz spacing) in both drones on both days; likely site or equipment (INFERRED)
 level_audit:
-  n_clips: 1945
-  by_day_dbfs:
-    '2021-03-29': -34 to -42 (session medians)
-    '2021-03-31': -49 to -60
-  range_correlation:
-    MINI: 0.2
-    PRO4: -0.55
-  interpretation: Recording day/gain dominates level; range barely shows. Normalise per session; never use raw level.
+  broadband:
+    n_clips: 1945
+    by_day_dbfs:
+      '2021-03-29': -34 to -42 (session medians)
+      '2021-03-31': -49 to -60
+  band_300_8000_hz:
+    n_clips: 720
+    day_medians_db:
+      '2021-03-29': -67.1
+      '2021-03-31': -67.9
+    corr_log_range:
+      2021-03-31 PRO4: -0.89
+      2021-03-31 MINI: -0.59
+      2021-03-29 MINI: 0.12
+  interpretation: The 15-20 dB day difference is low-frequency content below 300 Hz (hum comb or wind), not recorder gain.
+    In the drone band, level falls with range as expected, except the 29 Mar Mini sessions (no range trend - unexplained).
+  correction: Earlier same-day claim 'level follows recording day, not range' was based on broadband RMS and is withdrawn
+    (2026-10-06).
 published_split: random by sample (leaky)
 leakage_safe_keys:
 - flight_day
 - recording_segment
-role: 'Positives with range metadata (after per-session normalisation); future localization. Not a detection backbone: no
+role: 'Range-labelled positives (high-pass or band-limit below ~300 Hz); future localization. Not a detection backbone: no
   negatives.'
 open_actions:
 - Ask the authors whether the XXXX / environment sessions can be released.

@@ -30,11 +30,11 @@ All archives matched their published MD5. Scripts: `scripts/inspect_acoustic.py`
 ### What changed after inspection
 
 - **DDL has no negatives.** All 62,092 decodable clips are Mini 2 or Phantom 4 Pro; the `XXXX` class and the two environment-only sessions in the paper are not in the release. 3,945 clips (6.4%) are empty 44-byte files.
-- **DDL level follows the recording day, not range** (29 Mar −34…−42 dBFS, 31 Mar −49…−60 dBFS). A 58–105 Hz comb appears for both drones on both days. → DDL is demoted from detection backbone to range-labelled positives (per-session normalisation required).
+- **DDL broadband level differs 15–20 dB by day, but only below 300 Hz** (a 58–105 Hz comb and/or wind on both drones, both days). In 300–8000 Hz the days match (−67.1 / −67.9 dB) and level falls with range (r = −0.89 Phantom, −0.59 Mini on 31 Mar); the 29 Mar Mini sessions show no range trend. *Correction: an earlier same-day note said level followed the day, not range — that was broadband RMS and is withdrawn.* → DDL is demoted to range-labelled positives because it has no negatives; high-pass below ~300 Hz.
 - **DDL site correction:** both drones flew on 31 Mar at the same site (Phantom 17:14–18:20, Mini 18:24–19:10); model and site are not fully confounded.
 - **UaVirBASE becomes the detection backbone.** Same 8-mic array for drone and ambient, and the urban ambient (−24…−14 dBFS) is as loud as the drone (−28…−13 dBFS): no loudness shortcut. Limits: one drone, one day, 4 ambient recordings.
 - **Svanström has a strong loudness shortcut** (background −35.8, drone −24.8, helicopter −19.2 dBFS median). Use with level normalisation and always report an energy baseline.
-- **DroneNoise is calibrated in pascals** (50 kHz float). Flyovers sweep ~48→71→49 dB SPL: a natural detection-vs-distance test. No negatives.
+- **DroneNoise** (50 kHz float): channels M6–M9 are consistent with pascals; M1–M5 calibration recordings are unsteady, so their absolute level is uncertain by up to ~5 dB. Flyovers sweep ~48→71→49 dB SPL: a natural detection-vs-distance test. No negatives.
 - **Mięsikowska** is a clean 9-position × 10-take grid per drone; half the files contain speech commands. No negatives. Same-model units differ 2–5 dB in level.
 
 ### The structural problem

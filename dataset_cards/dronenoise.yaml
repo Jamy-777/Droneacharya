@@ -15,11 +15,15 @@ local_artifact:
   file: 22133411.zip
   bytes: 742153893
 signal:
-  format: WAV, 32-bit float, values in pascals
+  format: WAV, 32-bit float
   sample_rate_hz: 50000
   channels: 1
   microphones: 9
-  calibration: 9 calibration tones (about 94 dB SPL)
+  calibration:
+    channels_6_to_9: calibration tones read ~0 dB re 1 Pa with <=0.7 dB variation -> data in pascals (EMPIRICAL)
+    channels_1_to_5: calibration recordings unsteady (7-18 dB variation, +0.6 to +5.3 dB) -> absolute level uncertain by up
+      to ~5 dB
+    correction: Earlier blanket claim 'all data in pascals' narrowed (2026-10-06).
   status: EMPIRICAL (n=174)
 content:
   drones:
@@ -38,7 +42,7 @@ sessions:
   date: '2022-08-17'
   site: Edzell, Scotland
 level_audit:
-  flyover_profile: Mavic 3 pass about 48 -> 71 -> 49 dB SPL over 20 s
+  flyover_profile: 'Mavic 3 pass about 48 -> 71 -> 49 dB SPL over 20 s (channel M5: absolute level +/- ~5 dB)'
 defects:
 - Filename dw vs metrics-sheet uw for Mini 3 Pro flyovers
 - Weight column inconsistent between rows
