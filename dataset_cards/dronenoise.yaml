@@ -1,0 +1,46 @@
+dataset:
+  id: dronenoise
+  name: DroneNoise Database
+  doi: figshare 22133411
+  modality: acoustic
+provenance:
+  authors:
+  - Carlos Ramos-Romero
+  - Nathan Green
+  - César Asensio
+  - Antonio J. Torija Martinez
+  institution: University of Salford (EPSRC DroneNoise)
+license: CC BY 4.0
+local_artifact:
+  file: 22133411.zip
+  bytes: 742153893
+signal:
+  format: WAV, 32-bit float, values in pascals
+  sample_rate_hz: 50000
+  channels: 1
+  microphones: 9
+  calibration: 9 calibration tones (about 94 dB SPL)
+  status: EMPIRICAL (n=174)
+content:
+  drones:
+    3p: DJI Mini 3 Pro (INFERRED)
+    Fp: UNKNOWN
+    M3: DJI Mavic 3
+    Yn: Yuneec
+  operations:
+    F15: flyover 15 m/s
+    H00: hover
+  height_m: 10
+  recordings: 165
+  duplicates: 2
+  metrics_sheet: 'DNM_SQM_FLYO_AESCT.xlsx: loudness, sharpness, roughness, fluctuation, impulsiveness, tonality per mic'
+sessions:
+  date: '2022-08-17'
+  site: Edzell, Scotland
+level_audit:
+  flyover_profile: Mavic 3 pass about 48 -> 71 -> 49 dB SPL over 20 s
+defects:
+- Filename dw vs metrics-sheet uw for Mini 3 Pro flyovers
+- Weight column inconsistent between rows
+role: Independent calibrated test domain; detection vs distance along flyovers. No negatives (flyover edges are a distant
+  drone).

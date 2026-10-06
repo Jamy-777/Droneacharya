@@ -1,0 +1,34 @@
+dataset:
+  id: esc50
+  name: ESC-50
+  source: github.com/karolpiczak/ESC-50
+  modality: acoustic
+license: CC BY-NC 3.0 (ESC-10 subset CC BY)
+signal:
+  format: WAV, 16-bit PCM
+  sample_rate_hz: 44100
+  channels: 1
+  clip_s: 5
+  status: EMPIRICAL (n=2000)
+content:
+  classes: 50
+  clips_per_class: 40
+  selected_negatives:
+  - helicopter
+  - airplane
+  - engine
+  - chainsaw
+  - hand_saw
+  - vacuum_cleaner
+  - wind
+  - rain
+  - thunderstorm
+  - train
+  - insects
+  - crickets
+  - chirping_birds
+  - washing_machine
+leakage_safe_keys:
+- src_file
+note: 'helicopter: 40 clips from only 15 source recordings'
+role: Negatives-only layer; never positives.

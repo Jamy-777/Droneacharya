@@ -1,0 +1,45 @@
+dataset:
+  id: miesikowska_uav
+  name: Mięsikowska UAV + speech outdoor dataset
+  doi: Zenodo 15190811
+  modality: acoustic
+provenance:
+  author: Marzena Mięsikowska
+  institution: Kielce University of Technology
+license: CC BY 4.0
+local_artifact:
+  files:
+  - X4_D5_MavicMini2.zip
+  - X4_D11_MavicMini2.zip
+  - X4_D9_Phantom4.zip
+  - X4_D17_Phantom4.zip
+  md5_verified: true
+  not_downloaded: 13 other drone zips (~8.5 GB)
+signal:
+  format: WAV, 16-bit PCM
+  sample_rate_hz: 44100
+  channels: 1
+  recorder: Olympus LS11 (+ Norsonic 140 SLM metric files)
+  status: EMPIRICAL (n=362)
+content:
+  design: 'per drone: 3 altitudes (5|8|10 m) x 3 offsets (0|5|8 m) x 10 takes, hovering'
+  speech_files: 'half of all files (_sekwencja): speech commands in drone presence'
+  no_drone_recordings: false
+  durations_s:
+    drone_only_median: 70
+    speech_median: 19
+  status: EMPIRICAL (filenames + headers)
+sessions:
+  one_date_per_drone: true
+  local_units:
+    D5 Mini 2: Gdańsk 2023-04-15
+    D11 Mini 2: Dębogórze 2023-04-17
+    D9 Phantom 4: Dębogórze 2023-04-16
+    D17 Phantom 4: Łapalice 2023-04-18
+level_audit:
+  unit_level_difference_db: 2-5 between same-model units at different sites
+leakage_safe_keys:
+- drone_unit
+- position
+- take
+role: Positive diversity; same-model units across sites (unit/site generalization); speech-in-presence confound tests.

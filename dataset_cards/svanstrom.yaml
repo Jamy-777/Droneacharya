@@ -1,0 +1,33 @@
+dataset:
+  id: svanstrom
+  name: Drone detection dataset (audio part)
+  source: github.com/DroneDetectionThesis/Drone-detection-dataset
+  modality: acoustic
+provenance:
+  author: Fredrik Svanström
+  institution: Halmstad University
+  paper: Data in Brief 2021, doi:10.1016/j.dib.2021.107521
+license: Free to download, use and edit (repository README)
+local_artifact:
+  files: 90
+  folder: Data/Audio
+signal:
+  format: WAV, 16-bit PCM
+  sample_rate_hz: 44100
+  channels: 2
+  dual_mono_files: 23
+  clip_s: 10
+  status: EMPIRICAL (n=90)
+content:
+  DRONE: 30
+  HELICOPTER: 30
+  BACKGROUND: 30
+level_audit:
+  median_dbfs:
+    BACKGROUND: -35.8
+    DRONE: -24.8
+    HELICOPTER: -19.2
+  interpretation: 'Strong loudness shortcut: normalise level or report the energy baseline.'
+leakage_safe_keys:
+- clip (event grouping unknown)
+role: Same-chain hard negatives (helicopter) and background; small test set.
