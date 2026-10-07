@@ -21,10 +21,10 @@ storage:
     version: '4.0'
 structure:
   artifact:
-    text: One 1 s `.mat` file
+    text: One 1 s `.mat` file (360 local; 726 in v4.0)
     kind: FACT
-    status: REPO_METADATA
-    source: UCLA Dataverse API v4.0 listing (manifests/uavsig_v4_file_listing.json)
+    status: VERIFIED
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   capture:
     text: = artifact; whether a scenario's 6 consecutive captures are continuous is not established
     kind: FACT
@@ -57,9 +57,9 @@ signal:
   container:
     value: MAT v5 (compressed); variable data + label variables
     status: EMPIRICAL
-    n: 8
+    n: 360
     n_unit: file
-    source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   sample_rate_hz:
     value: 50000000
     status: AUTHOR_DOC
@@ -75,9 +75,9 @@ signal:
   samples_per_artifact:
     value: 50000000
     status: EMPIRICAL
-    n: 8
+    n: 360
     n_unit: file
-    source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   artifact_duration_s:
     value: 1.0
     status: AUTHOR_DOC
@@ -143,19 +143,19 @@ facts:
     n_unit: file
     source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
   samples_capture_chunk:
-    text: '**50,000,000 complex — EMPIRICAL n=8**'
+    text: '**50,000,000 complex — EMPIRICAL (n=360 files)**'
     kind: FACT
     status: EMPIRICAL
-    n: 8
+    n: 360
     n_unit: file
-    source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   chunk_duration:
-    text: 1 s — EMPIRICAL n=8
+    text: '1 s — EMPIRICAL (n=360 files: 50 M samples at 50 MS/s)'
     kind: FACT
     status: EMPIRICAL
-    n: 8
+    n: 360
     n_unit: file
-    source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   sample_rate:
     text: '**50 MS/s (author doc)**'
     kind: FACT
@@ -242,7 +242,7 @@ facts:
     kind: FACT
     status: UNKNOWN
   environmental_negatives:
-    text: 'No-TX baseline: controller_p*_0000, 12 captures — no experimental TX on, ambient RF present (author doc + EMPIRICAL n=1)'
+    text: 'No-TX baseline: controller_p*_0000, 12 captures, 0 labelled transmissions (EMPIRICAL n=12) — no experimental TX on, ambient RF present (author doc)'
     kind: FACT
     status: AUTHOR_DOC
     source: UAVSig Readme.pdf + uavsig_dataset_info.pdf (authors)
@@ -320,12 +320,12 @@ facts:
     status: AUTHOR_DOC
     source: UAVSig Readme.pdf + uavsig_dataset_info.pdf (authors)
   schema_consistency:
-    text: Consistent across 8 captures (EMPIRICAL)
+    text: Same 7 variables in all 360 local files (num_transmission, data, start, end, fc, bw, id)
     kind: FACT
     status: EMPIRICAL
-    n: 8
+    n: 360
     n_unit: file
-    source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   parent_recording_identity:
     text: Filename = transmitter set × channel × capture (decoded, EMPIRICAL n=5)
     kind: FACT
@@ -371,12 +371,12 @@ facts:
     status: REPO_METADATA
     source: UCLA Dataverse API v4.0 listing (manifests/uavsig_v4_file_listing.json)
   label_taxonomy:
-    text: Per-transmission start/end/fc/bw/id; id = drone, controller or active-controller set
+    text: Per-transmission start/end/fc/bw/id (101–514 per UAS capture, 0 in the 12 baselines); id = drone, controller or active-controller set
     kind: FACT
     status: EMPIRICAL
-    n: 8
+    n: 360
     n_unit: file
-    source: scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)
+    source: 'index/uavsig: variable directory and num_transmission of the 360 local files (all controllers, all one-drone, 72 of 432 two-drone; scripts/build_index.py uavsig)'
   leakage_safe_keys:
     text: scenario + capture sequence + physical transmitter + day
     kind: ASSESSMENT

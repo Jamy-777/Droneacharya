@@ -11,21 +11,21 @@ Project decisions are not claims; they live in `configs/dataset_roles.yaml`.
 | Dataset | VERIFIED | EMPIRICAL | AUTHOR_DOC | AUTHOR_CODE | REPO_METADATA | INFERRED | CONFLICTING | UNKNOWN | NOT_APPLICABLE | claims |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | cardrf | 34 | 23 | 10 | 2 | 0 | 10 | 2 | 6 | 5 | 92 |
-| ddl | 17 | 1 | 6 | 0 | 1 | 1 | 2 | 0 | 0 | 28 |
-| drff_r2 | 3 | 41 | 27 | 0 | 0 | 7 | 2 | 12 | 2 | 94 |
+| ddl | 18 | 1 | 6 | 0 | 1 | 0 | 2 | 0 | 0 | 28 |
+| drff_r2 | 33 | 13 | 27 | 0 | 0 | 8 | 2 | 9 | 2 | 94 |
 | dronenoise | 12 | 2 | 9 | 0 | 2 | 1 | 1 | 1 | 0 | 28 |
 | dronerf | 19 | 24 | 23 | 0 | 2 | 20 | 1 | 10 | 3 | 102 |
 | esc50 | 9 | 2 | 10 | 0 | 1 | 0 | 0 | 5 | 1 | 28 |
 | miesikowska_uav | 1 | 16 | 7 | 0 | 3 | 0 | 0 | 1 | 0 | 28 |
-| noisy_rf | 1 | 0 | 26 | 0 | 28 | 14 | 0 | 8 | 5 | 82 |
+| noisy_rf | 12 | 0 | 25 | 0 | 23 | 14 | 0 | 3 | 5 | 82 |
 | remote_controller_rf | 0 | 0 | 35 | 0 | 12 | 5 | 0 | 18 | 12 | 82 |
 | rfuav | 28 | 9 | 13 | 0 | 7 | 9 | 1 | 23 | 0 | 90 |
-| rma | 11 | 29 | 19 | 3 | 4 | 12 | 2 | 2 | 6 | 88 |
+| rma | 23 | 17 | 19 | 3 | 4 | 12 | 2 | 2 | 6 | 88 |
 | svanstrom | 15 | 1 | 10 | 0 | 0 | 0 | 0 | 2 | 0 | 28 |
 | uavirbase | 11 | 2 | 14 | 0 | 1 | 0 | 0 | 0 | 0 | 28 |
-| uavsig | 0 | 17 | 56 | 0 | 4 | 7 | 3 | 2 | 2 | 91 |
+| uavsig | 1 | 17 | 56 | 0 | 3 | 7 | 3 | 2 | 2 | 91 |
 | cross-dataset (acoustic) | 0 | 2 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 4 |
-| **total** | **161** | **169** | **266** | **5** | **65** | **87** | **14** | **90** | **36** | **893** |
+| **total** | **216** | **129** | **265** | **5** | **59** | **87** | **14** | **82** | **36** | **893** |
 
 Kinds: ASSESSMENT 188, FACT 705
 
@@ -42,8 +42,8 @@ None.
 | ddl | facts | `negatives` | **None in release** — 0 `XXXX` clips (EMPIRICAL, all 62,092 parsed) — AUTHOR_DOC: paper and Zenodo describe an XXXX no-drone class and environment-only sessions (DDL paper (Safavi et al.) and Zenodo 6459183 description); VERIFIED: 0 of 62,092 released clips carry the XXXX class code (filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)) |
 | ddl | facts | `site` | 31 Mar: Phantom 17:14–18:20 then Mini 18:24–19:10 → **same site that day** (paper implied separate sites) — AUTHOR_DOC: paper figure implies separate sites for the two drones (DDL paper (Safavi et al.) and Zenodo 6459183 description); INFERRED: 31 Mar: Phantom ends 18:20, Mini starts 18:24 → same site that day (filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)) |
 | drff_r2 | facts | `receiver` | Documentation conflict (USRP-2943 vs X310); empirical receiver IDs `u1/u2` in filenames — AUTHOR_DOC: paper text: NI USRP-2943 receivers (DRFF-R2 paper (arXiv:2603.00106)); AUTHOR_DOC: paper figure: USRP X310 (DRFF-R2 paper (arXiv:2603.00106)) |
-| drff_r2 | facts | `gain_scale` | File documentation inconsistent; gain unresolved in inspected files — AUTHOR_DOC: gain stored in every file (DRFF-R2 paper (arXiv:2603.00106)); EMPIRICAL: no gain field in the inspected Dataset-3/7 files (scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)) |
-| dronenoise | facts | `known_defects` | Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted — VERIFIED: Mini 3 Pro flyover files are named `dw` (scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)); AUTHOR_DOC: metrics sheet lists them as `uw` (figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)) |
+| drff_r2 | facts | `gain_scale` | File documentation inconsistent; gain unresolved in inspected files — AUTHOR_DOC: gain stored in every file (DRFF-R2 paper (arXiv:2603.00106)); VERIFIED: no Gain field in any of the 731 files (index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)) |
+| dronenoise | facts | `known_defects` | Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted; Mini 3 Pro hover ev2/ev3 recorded by M5 only — VERIFIED: Mini 3 Pro flyover files are named `dw` (scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)); AUTHOR_DOC: metrics sheet lists them as `uw` (figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)); VERIFIED: Mini 3 Pro hover ev2/ev3 have microphone M5 only; ev1 lacks M5 but has two byte-identical M5 files under figshare-ID prefixes (index/dronenoise: zip listing and WAV headers of all 174 files (scripts/build_index.py dronenoise)) |
 | dronerf | supplementary | `Published prose sample-count claim` | CONFLICTING — states 1M/part — AUTHOR_DOC: paper prose: 1,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); AUTHOR_DOC: paper tables imply 10,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); EMPIRICAL: 10,000,000 values per CSV (scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)) |
 | rfuav | facts | `label_taxonomy` | **AMBIGUOUS — UAV/RC-system-like classes** — AUTHOR_DOC: 37 distinct UAVs (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); AUTHOR_DOC: 35 drone types (repository README) (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); REPO_METADATA: public classes include RC transmitter products (e.g. FUTABA T14SG, FRSKY X20R) (Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)); VERIFIED: XML Drone field disagrees with the class folder in 5 packs (e.g. RadioMaster BOXER → 'Radiolink AT10 II'; FrSky → 'FLYSKY') (index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)) |
 | rma | facts | `public_release_caveat` | Full public release; README omits Mavic archives (~19 GB) — AUTHOR_DOC: README lists 9 systems, no Mavic (README.txt (authors)); VERIFIED: release holds 4 Mavic archives (60 files) (central directories of all 16 zips) |
@@ -52,7 +52,7 @@ None.
 | uavsig | facts | `scalar_dtype` | complex double holding int16 codes/32767 — EMPIRICAL n=8 (paper: float32) — EMPIRICAL: released MAT stores complex double holding int16 codes / 32767 (scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)); AUTHOR_DOC: GNU Radio stored float32 (MILCOM 2024 paper (doi:10.1109/MILCOM61039.2024.10773837)) |
 | uavsig | facts | `day_metadata` | Author doc: 5/9/24 (no-TX, controllers, one-drone) and 5/10/24 (two-drone); directories all say 2024-05-09 — CONFLICTING — AUTHOR_DOC: two-drone captured 2024-05-10, everything else 2024-05-09 (UAVSig Readme.pdf + uavsig_dataset_info.pdf (authors)); REPO_METADATA: all three category directories labelled 2024-05-09 (UCLA Dataverse API v4.0 listing (manifests/uavsig_v4_file_listing.json)) |
 
-## Unknown (90)
+## Unknown (82)
 
 | Dataset | Section | Key | Claim |
 | --- | --- | --- | --- |
@@ -65,13 +65,10 @@ None.
 | drff_r2 | signal | `capture_bandwidth_hz` | matrix: VERIFY |
 | drff_r2 | facts | `if_capture_bandwidth` | UNKNOWN — not established |
 | drff_r2 | facts | `occupied_signal_bandwidth` | Not characterized (scenario/signal dependent) |
-| drff_r2 | facts | `independent_sessions_per_class` | Multiple days/receivers per unit in Dataset-3 — count UNKNOWN |
 | drff_r2 | facts | `potential_shortcut_receiver` | High-priority audit |
 | drff_r2 | facts | `potential_shortcut_snr` | Possible |
 | drff_r2 | facts | `potential_shortcut_position` | Not established |
-| drff_r2 | facts | `known_acquisition_defect` | Not established |
 | drff_r2 | facts | `window_label_reliability` | **AUDIT NEEDED** — 10-ms window sampling insufficient to characterize temporal occupancy |
-| drff_r2 | supplementary | `Positive/negative gain matched` | UNKNOWN |
 | drff_r2 | supplementary | `Positive/negative receiver matched` | UNKNOWN |
 | drff_r2 | supplementary | `Positive/negative day matched` | UNKNOWN |
 | dronenoise | facts | `speech_other_confounds` | — |
@@ -91,12 +88,7 @@ None.
 | esc50 | facts | `weather` | — |
 | esc50 | facts | `speech_other_confounds` | — |
 | miesikowska_uav | facts | `known_defects` | — |
-| noisy_rf | structure | `group` | None available: no recording or noise-snippet IDs |
-| noisy_rf | signal | `scalar_dtype` |  |
-| noisy_rf | facts | `scalar_dtype` | UNKNOWN (PyTorch tensors) |
-| noisy_rf | facts | `i_q_layout` | UNKNOWN |
 | noisy_rf | facts | `positive_negative_fc_matched` | UNKNOWN — positives have per-transmitter Fc offsets |
-| noisy_rf | facts | `schema_consistency` | UNKNOWN — single `dataset.pt`, not yet extracted or inspected |
 | noisy_rf | facts | `independent_sessions_per_class` | UNKNOWN — no recording IDs |
 | noisy_rf | facts | `window_label_reliability` | UNKNOWN — 1.17 ms vectors may miss RC bursts at low SNR |
 | remote_controller_rf | structure | `artifact` | Not assessed (paper read only) |

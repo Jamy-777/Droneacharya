@@ -19,72 +19,54 @@ storage:
     version: R2
 structure:
   artifact:
-    text: One `.mat` file
+    text: One `.mat` file at its documented subset location (724; 7 byte-identical copies in lineage)
     kind: FACT
     status: VERIFIED
-    source: raw_sha256.csv inventory of the local release (731 .mat in 7 subset folders)
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   capture:
-    text: '= artifact: one 1.4 s capture'
+    text: '= artifact: one 1.4 s capture (RF0_I + RF0_Q)'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   group:
-    text: Physical unit + day + receiver + configuration
+    text: Unit + day across subsets and receivers; mixtures by folder; Wi-Fi subset by unit; each environment file alone
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: INFERRED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
 signal:
   complex_iq:
     value: true
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   scalar_dtype:
     value: float32
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   container:
     value: MAT v7.3 (HDF5); separate RF0_I / RF0_Q
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   sample_rate_hz:
     value: 100000000
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   center_frequency_hz:
     varies: true
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
-    note: 5.745 GHz outdoor subsets, 2.437 GHz Wi-Fi subset; stored per file (CenterFrequence / CenterFreq); per-subset audit pending
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
+    note: 5.745 GHz in Datasets 1–5 (including the 'dual-frequency' subsets); 2.437 GHz in Dataset 6; Dataset 7 one file each
   capture_bandwidth_hz:
     status: UNKNOWN
     note: 'matrix: VERIFY'
   samples_per_artifact:
     value: 140000000
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
     note: per channel
   artifact_duration_s:
     value: 1.4
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
 facts:
   primary_purpose:
     text: RFF/model/state/robustness
@@ -112,68 +94,50 @@ facts:
     status: AUTHOR_DOC
     source: DRFF-R2 paper (arXiv:2603.00106)
   raw_representation:
-    text: Complex IQ
+    text: Complex IQ (RF0_I, RF0_Q) in all 731 files
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   scalar_dtype:
-    text: '**float32 — EMPIRICAL (n=5 files)**'
+    text: '**float32 — VERIFIED (all 731 files)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   raw_format:
-    text: MATLAB/HDF5 `.mat`
+    text: MAT v7.3 (HDF5) `.mat`, all 731 files
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   i_q_layout:
-    text: Separate `RF0_I`, `RF0_Q`
+    text: Separate `RF0_I`, `RF0_Q`, each (140000000, 1)
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   samples_capture_chunk:
-    text: '**140M/channel — EMPIRICAL (n=5 files)**'
+    text: '**140M/channel — VERIFIED (all 731 files)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   chunk_duration:
-    text: '**1.4 s — EMPIRICAL (n=5 files)**'
+    text: '**1.4 s — VERIFIED (all 731 files)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   sample_rate:
-    text: '**100 MS/s — EMPIRICAL (n=5 files, Fs field)**'
+    text: '**100 MS/s — VERIFIED (Fs in all 731 files)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   center_frequency:
-    text: 5.745 GHz outdoor; 2.437 GHz Wi-Fi subset
+    text: '5.745 GHz in Datasets 1–5 (incl. ''dual-frequency''); 2.437 GHz in Dataset 6; Dataset 7: one file each'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   absolute_frequency_coverage:
-    text: 5.695–5.795 GHz (outdoor); 2.387–2.487 GHz (Wi-Fi subset)
+    text: 5.695–5.795 GHz (Datasets 1–5); 2.387–2.487 GHz (Dataset 6)
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   if_capture_bandwidth:
     text: UNKNOWN — not established
     kind: FACT
@@ -226,19 +190,15 @@ facts:
     status: AUTHOR_DOC
     source: DRFF-R2 paper (arXiv:2603.00106)
   day_metadata:
-    text: '**Yes — day tag in filenames (EMPIRICAL n=5 files)**'
+    text: '**d1/d2/d3 in Dataset 3; d2 only in Datasets 1, 4, 5; none in 2, 6, 7** (all 731 files)'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   receiver_variation:
-    text: '**Yes — receiver tag u1/u2 in filenames (EMPIRICAL n=5 files)**'
+    text: '**u1/u2 in Dataset 3 (24 / 155 files); u1 only in Dataset 1; u2 only in 4, 5; none in 2, 6, 7**'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   gain_scale:
     text: File documentation inconsistent; gain unresolved in inspected files
     kind: FACT
@@ -247,33 +207,29 @@ facts:
     - claim: gain stored in every file
       status: AUTHOR_DOC
       source: DRFF-R2 paper (arXiv:2603.00106)
-    - claim: no gain field in the inspected Dataset-3/7 files
-      status: EMPIRICAL
-      source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
-      n: 5
-      n_unit: file
+    - claim: no Gain field in any of the 731 files
+      status: VERIFIED
+      source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   snr_metadata:
-    text: Not consistently present in inspected MATs
-    kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
-  environmental_negatives:
-    text: '**Yes** (Dataset-7 environmental baseline)'
+    text: Not stored (no SNR field in any of the 731 files)
     kind: FACT
     status: VERIFIED
-    source: raw_sha256.csv inventory of the local release (731 .mat in 7 subset folders)
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
+  environmental_negatives:
+    text: '**Two files (Dataset 7): outdoor 5.745 GHz; indoor 2.437 GHz carries drone metadata (TD=mini5PRO_1, hover) — CONFLICTING**'
+    kind: FACT
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   negative_taxonomy:
     text: ambient/no-emitter only
     kind: FACT
     status: AUTHOR_DOC
     source: DRFF-R2 paper (arXiv:2603.00106)
   negative_diversity:
-    text: Low — single environmental baseline
+    text: Very low — one clean 1.4 s outdoor capture; the indoor file is in doubt
     kind: ASSESSMENT
     status: VERIFIED
-    source: raw_sha256.csv inventory of the local release (731 .mat in 7 subset folders)
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   negative_provenance:
     text: Same-site same-equipment recordings (Dataset-7)
     kind: FACT
@@ -316,19 +272,15 @@ facts:
     status: AUTHOR_DOC
     source: DRFF-R2 paper (arXiv:2603.00106)
   distance_metadata:
-    text: Yes in dataset design; schema varies
+    text: Distance field only in Dataset 1
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   altitude_state_metadata:
-    text: 'Yes'
+    text: Height + State in all but the outdoor environment file; Dataset 1 adds FlightMode, Direction, V
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   frequency_hopping:
     text: Explicit subset
     kind: FACT
@@ -350,19 +302,15 @@ facts:
     status: AUTHOR_DOC
     source: DRFF-R2 paper (arXiv:2603.00106)
   schema_consistency:
-    text: '**No — subset drift empirically observed**'
+    text: '**No — 5 metadata layouts** (Dataset 1 adds Direction/Distance/FlightMode; Dataset 2 NTD1/NTD2; Datasets 6/7 Near; outdoor environment only CenterFreq/Fs)'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   parent_recording_identity:
-    text: Yes — filename encodes unit/config/day/receiver
+    text: Yes — unit (TD), config (C), receiver (U), day (D) in fields and file names
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   window_safe_splitting_possible:
     text: Yes — leakage-safe keys established
     kind: ASSESSMENT
@@ -413,20 +361,19 @@ facts:
     n_unit: file
     source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   independent_sessions_per_class:
-    text: Multiple days/receivers per unit in Dataset-3 — count UNKNOWN
+    text: 'Dataset 3: up to 3 days × 2 receivers per unit; other subsets 1 day or no day field'
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   potential_shortcut_receiver:
     text: High-priority audit
     kind: ASSESSMENT
     status: UNKNOWN
   potential_shortcut_center_frequency:
-    text: 'Yes'
+    text: '**HIGH — subset ↔ band: Wi-Fi subset 2.437 GHz, all other drone subsets 5.745 GHz; each environment file in one band**'
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   potential_shortcut_snr:
     text: Possible
     kind: ASSESSMENT
@@ -448,9 +395,10 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   known_acquisition_defect:
-    text: Not established
+    text: Indoor environment file carries drone metadata; same file names reused across subsets with different content
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   classical_ml_opportunity:
     text: Spectral/statistical features
     kind: ASSESSMENT
@@ -501,19 +449,15 @@ facts:
     status: UNKNOWN
 supplementary:
   Dataset-3 metadata fields:
-    text: TD, State, C, U, D, Height, V — EMPIRICAL (n=3 Dataset-3 files)
+    text: TD, State, C, U, D, Height, V — VERIFIED (all 179 Dataset-3 files)
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   Center-frequency key naming:
-    text: 'DS 3/6: `CenterFrequence`; DS 7: `CenterFreq`'
+    text: '`CenterFrequence` in every file except outdoor_environment (`CenterFreq`)'
     kind: FACT
-    status: EMPIRICAL
-    n: 5
-    n_unit: file
-    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   Antenna:
     text: Dual-band omnidirectional, 5 dBi
     kind: FACT
@@ -556,9 +500,10 @@ supplementary:
     n_unit: file
     source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   Positive/negative gain matched:
-    text: UNKNOWN
+    text: Not stored in any file
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)'
   Positive/negative receiver matched:
     text: UNKNOWN
     kind: FACT

@@ -34,6 +34,8 @@ CAPTURES = pa.schema([
     ("dataset_id", pa.string()),
     ("group_id", pa.string()),
     ("n_artifacts", pa.int32()),
+    ("stored_in", pa.string()),                # artifact holding many captures (e.g. one tensor file); else null
+    ("stored_index", pa.int64()),              # row of this capture inside stored_in
     ("channels", pa.list_(pa.string())),
     ("recorded_at", pa.string()),              # acquisition timestamp as stored (ISO 8601, no zone), when known
     ("start_s", pa.float64()),                 # offset inside the group's recording, when known
@@ -104,11 +106,18 @@ def validate(dataset_id, tables):
     group_ids = {r["group_id"] for r in groups}
     per_capture = {}
     for r in artifacts:
+        if r["capture_id"] is None:  # empty files, or a container referenced by captures through stored_in
+            continue
         if r["capture_id"] not in capture_ids:
             raise ValueError(f"artifact {r['artifact_id']} points at unknown capture {r['capture_id']}")
         per_capture[r["capture_id"]] = per_capture.get(r["capture_id"], 0) + 1
     per_group = {}
+    artifact_ids = {r["artifact_id"] for r in artifacts}
     for r in captures:
+        if r.get("stored_in") is not None:
+            if r["stored_in"] not in artifact_ids or r.get("stored_index") is None:
+                raise ValueError(f"capture {r['capture_id']}: stored_in must name an artifact and give stored_index")
+            per_capture[r["capture_id"]] = 0
         if r["group_id"] not in group_ids:
             raise ValueError(f"capture {r['capture_id']} points at unknown group {r['group_id']}")
         if per_capture.get(r["capture_id"], 0) != r["n_artifacts"]:

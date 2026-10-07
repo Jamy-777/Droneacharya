@@ -20,19 +20,20 @@ storage:
     version: '1'
 structure:
   artifact:
-    text: Single `dataset.pt` inside `archive.zip`
+    text: Single `dataset.pt` inside `archive.zip` (extracted CRC-verified to interim)
     kind: FACT
     status: VERIFIED
-    source: archive.zip central directory + CRC check of every member
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   capture:
-    text: 'One 16,384-sample vector: a derived observation (clean signal mixed with noise); evaluation only'
+    text: 'One 16,384-sample vector (98,705): derived, noise-mixed; evaluation only'
     kind: FACT
-    status: REPO_METADATA
-    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   group:
-    text: 'None available: no recording or noise-snippet IDs'
+    text: 'None possible: no recording or noise-snippet ID in the file'
     kind: ASSESSMENT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
 signal:
   complex_iq:
     value: true
@@ -40,11 +41,13 @@ signal:
     source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
     note: already mixed with noise
   scalar_dtype:
-    status: UNKNOWN
+    value: float32, I and Q as two real channels
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   container:
-    value: PyTorch .pt (single file)
-    status: REPO_METADATA
-    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
+    value: 'PyTorch zip (.pt): x_iq, x_spec, y, snr, duty_cycle'
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   sample_rate_hz:
     value: 14000000
     status: REPO_METADATA
@@ -97,18 +100,20 @@ facts:
     status: REPO_METADATA
     source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   scalar_dtype:
-    text: UNKNOWN (PyTorch tensors)
+    text: '**float32, I/Q as 2 real channels (98705, 2, 16384)** — VERIFIED'
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   raw_format:
-    text: PyTorch `.pt` (load with weights_only=True, mmap=True)
+    text: 'PyTorch zip `.pt`: x_iq, x_spec (128×128 spectrograms), y, snr, duty_cycle; read without executing the pickle'
     kind: FACT
-    status: REPO_METADATA
-    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   i_q_layout:
-    text: UNKNOWN
+    text: I and Q as channel axis 0/1 of x_iq
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   samples_capture_chunk:
     text: 16,384 per vector (repo metadata)
     kind: FACT
@@ -278,14 +283,15 @@ facts:
     status: AUTHOR_DOC
     source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   schema_consistency:
-    text: UNKNOWN — single `dataset.pt`, not yet extracted or inspected
+    text: Single file; 5 tensors, counts match class_stats.csv and SNR_stats.csv
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   parent_recording_identity:
-    text: '**Not provided**'
+    text: '**Not provided — no ID field in the file**'
     kind: FACT
-    status: REPO_METADATA
-    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   window_safe_splitting_possible:
     text: '**No** — no recording or noise-snippet ID; authors use stratified random 5-fold'
     kind: ASSESSMENT
@@ -297,10 +303,10 @@ facts:
     status: REPO_METADATA
     source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   published_derived_representations:
-    text: IQ vectors + spectrograms
+    text: IQ vectors + 2×128×128 spectrograms (x_spec), shipped in the same file
     kind: FACT
-    status: AUTHOR_DOC
-    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   raw_derived_reproducibility:
     text: Low — clean recordings and noise snippets not released
     kind: ASSESSMENT
@@ -325,10 +331,10 @@ facts:
     status: REPO_METADATA
     source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   leakage_safe_keys:
-    text: '**None available**'
+    text: '**None available (VERIFIED: no ID field)**'
     kind: ASSESSMENT
-    status: REPO_METADATA
-    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
+    status: VERIFIED
+    source: 'index/noisy_rf: pickle disassembly (not executed) + tensor storages of dataset.pt (scripts/build_index.py noisy_rf)'
   independent_sessions_per_class:
     text: UNKNOWN — no recording IDs
     kind: FACT

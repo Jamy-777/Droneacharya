@@ -31,21 +31,17 @@ structure:
     status: EMPIRICAL
     n: 9
     n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    source: scripts/inspect_rma.py on 9 captures
   group:
-    text: Archive (system × RC/Vid session)
+    text: Archive = one session of 1–22 min (MAT creation times of all 812 files)
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
 signal:
   complex_iq:
     value: true
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   scalar_dtype:
     value: complex128 (HDF5 compound) holding int16 codes / 32768
     status: EMPIRICAL
@@ -54,10 +50,8 @@ signal:
     source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   container:
     value: MAT v7.3 (HDF5); variable uhd_samps, shape (1, N)
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   sample_rate_hz:
     value: 100000000
     status: AUTHOR_DOC
@@ -73,18 +67,14 @@ signal:
     note: complex sampling at 100 MS/s
   samples_per_artifact:
     varies: true
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
-    note: 10M most archives; 20M Mini 2 video; 100M Mavic
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
+    note: 10M in 11 archives; 20M mini2vid and inspire2Vid; 100M the four Mavic archives
   artifact_duration_s:
     varies: true
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
-    note: 0.1 s / 0.2 s / 1 s by archive
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
+    note: 0.1 s / 0.2 s / 1 s by archive, constant within each
 facts:
   primary_purpose:
     text: RC + video-link identification; novelty detection (per publication titles)
@@ -146,19 +136,15 @@ facts:
     n_unit: file
     source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   samples_capture_chunk:
-    text: '**Varies by class: 10M (100 ms) most; 20M Mini 2 video; 100M (1 s) Mavic — EMPIRICAL n=9**'
+    text: '**10M (11 archives), 20M (mini2vid, inspire2Vid), 100M (4 Mavic archives) — constant within each archive (VERIFIED, all 812)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   chunk_duration:
-    text: 100 ms / 200 ms / 1 s by archive
+    text: 100 ms / 200 ms / 1 s by archive (all 812 files)
     kind: FACT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   sample_rate:
     text: 100 MS/s (author README + code)
     kind: FACT
@@ -222,12 +208,10 @@ facts:
     status: VERIFIED
     source: central directories of all 16 zips
   day_metadata:
-    text: 'MAT headers: Apr 4–6 2022 (most), May 2022 (SJRC), **Oct 30 / Nov 2 2022 (Mavic)**'
+    text: 'MAT headers (all 812): Apr 1–6 2022 (most), May 5 2022 (SJRC), **Oct 30 (Mavic Vid) / Nov 2 2022 (Mavic RC)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   receiver_variation:
     text: No — one receiver
     kind: FACT
@@ -324,12 +308,10 @@ facts:
     status: AUTHOR_DOC
     source: README.txt (authors)
   schema_consistency:
-    text: Consistent across the 9 audited captures (EMPIRICAL n=9)
+    text: One variable `uhd_samps` (1, N) in all 812 files
     kind: FACT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   parent_recording_identity:
     text: Archive = session; files are separate captures seconds apart (not continuous)
     kind: FACT
@@ -370,12 +352,10 @@ facts:
     kind: FACT
     status: NOT_APPLICABLE
   class_balance:
-    text: 51–71 files per archive; capture length differs by class (100 ms–1 s)
+    text: 51–71 files per archive; capture length differs by archive (100 ms–1 s)
     kind: FACT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   label_taxonomy:
     text: System × signal type (RC / Vid) from archive name
     kind: FACT
@@ -389,12 +369,10 @@ facts:
     n_unit: file
     source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   independent_sessions_per_class:
-    text: '**1 per archive** (EMPIRICAL); Mavic in a separate campaign'
+    text: '**1 per archive** (1–22 min, all 812 files); RC and Vid of a system in separate sessions'
     kind: FACT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   potential_shortcut_receiver:
     text: None within; same receiver model as RFUAV (low cross-dataset receiver gap)
     kind: ASSESSMENT
@@ -414,12 +392,10 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   potential_shortcut_dataset_source:
-    text: Yes in cross-dataset experiments; **Mavic session 7 months later**
+    text: 'Yes in cross-dataset; **within: capture length ↔ archive (perfect), Mavic sessions 7 months later**'
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 9
-    n_unit: file
-    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+    status: VERIFIED
+    source: 'index/rma: MAT header and uhd_samps length of all 812 files (scripts/build_index.py rma)'
   potential_shortcut_position:
     text: Low — fixed 7 m
     kind: ASSESSMENT

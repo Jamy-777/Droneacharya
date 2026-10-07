@@ -25,10 +25,10 @@ structure:
     status: VERIFIED
     source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   capture:
-    text: Contiguous run of clips within a recording segment, split at gaps in the clip sequence
+    text: Gap-free run of a segment's clips (38 runs in 36 segments); empty and unparseable clips belong to no capture
     kind: FACT
-    status: INFERRED
-    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
+    status: VERIFIED
+    source: 'index/ddl: WAV headers and file names of all 62,103 clips (scripts/build_index.py ddl)'
   group:
     text: Flight day + recording segment
     kind: ASSESSMENT

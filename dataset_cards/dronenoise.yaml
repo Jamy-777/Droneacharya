@@ -138,7 +138,7 @@ facts:
     kind: FACT
     status: UNKNOWN
   known_defects:
-    text: Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted
+    text: Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted; Mini 3 Pro hover ev2/ev3 recorded by M5 only
     kind: FACT
     status: CONFLICTING
     conflict:
@@ -148,6 +148,9 @@ facts:
     - claim: metrics sheet lists them as `uw`
       status: AUTHOR_DOC
       source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
+    - claim: Mini 3 Pro hover ev2/ev3 have microphone M5 only; ev1 lacks M5 but has two byte-identical M5 files under figshare-ID prefixes
+      status: VERIFIED
+      source: 'index/dronenoise: zip listing and WAV headers of all 174 files (scripts/build_index.py dronenoise)'
   leakage_safe_keys:
     text: flyover event
     kind: ASSESSMENT
