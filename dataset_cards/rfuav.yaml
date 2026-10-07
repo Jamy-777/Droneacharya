@@ -22,290 +22,508 @@ storage:
 structure:
   artifact:
     text: One 1 s `.iq` chunk (with its XML) inside a class RAR
-    status: VERIFIED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   capture:
     text: 'Pack: the pack''s consecutive 1 s chunks concatenated (continuity across chunks not yet checked)'
+    kind: FACT
     status: INFERRED
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   group:
     text: Pack (stronger grouping unresolved)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
 signal:
   complex_iq:
     value: true
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   scalar_dtype:
     value: float32
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   container:
     value: interleaved binary .iq (I0,Q0,I1,Q1...) + XML per pack, in class RARs
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   sample_rate_hz:
     value: 100000000
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
     note: sampled packs
   center_frequency_hz:
     varies: true
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
     note: per pack in XML; observed 2.440 / 2.450 GHz
   capture_bandwidth_hz:
     value: 100000000
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
     note: sampled packs
   samples_per_artifact:
     value: 100000000
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
     note: complex samples per 1 s chunk
   artifact_duration_s:
     value: 1.0
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
 facts:
   primary_purpose:
     text: Identification + detection benchmark
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   year:
     text: '2025'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   license:
     text: Apache-2.0 (HF artifact); raw scope verify
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   full_reported_scale:
     text: ~1.3 TB / 37 distinct UAVs reported
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   public_release_caveat:
     text: '**HF repo (2026-07-27): 37 class archives (109.2 GB) + `ValidationSet_5Drones` (5 DJI aircraft, 162.1 GB) + image set/weights (27.7 GB) ≈ 299 GB**; full 1.3 TB corpus not public'
+    kind: FACT
     status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   raw_representation:
     text: Complex IQ
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   scalar_dtype:
-    text: '**float32 VERIFIED**'
-    status: VERIFIED
+    text: '**float32 — EMPIRICAL (n=1 file; XML DataType in 3 packs)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   raw_format:
     text: interleaved binary `.iq` + XML
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   i_q_layout:
     text: '`I0,Q0,I1,Q1...`'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   samples_capture_chunk:
-    text: '**100M complex VERIFIED**'
-    status: VERIFIED
+    text: '**100M complex — EMPIRICAL (n=1 file)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   chunk_duration:
-    text: '**1.0 s VERIFIED**'
-    status: VERIFIED
+    text: '**1.0 s — EMPIRICAL (n=3 packs, XML)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   sample_rate:
-    text: '**100 MS/s sampled packs VERIFIED**'
-    status: VERIFIED
+    text: '**100 MS/s — EMPIRICAL (n=3 packs, XML)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   center_frequency:
     text: Per-pack; observed 2.440/2.450 GHz
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   absolute_frequency_coverage:
     text: 2.39–2.49 / 2.40–2.50 GHz (per pack)
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   if_capture_bandwidth:
-    text: '**100 MHz sampled packs VERIFIED**'
-    status: VERIFIED
+    text: '**100 MHz — EMPIRICAL (n=3 packs, XML)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   occupied_signal_bandwidth:
     text: class/condition dependent; distinct from IF BW
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   receiver:
     text: USRP X310 sampled packs
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   pack_unit_identifier:
     text: source-pack serial available; physical UAV unit unknown
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   manufacturer_coverage:
     text: Multiple apparent ecosystems; mapping incomplete
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   models_classes:
     text: 37 public image classes
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   physical_units:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   same_model_multi_unit:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   positive_signal_composition:
     text: control/hopping/video characteristics; class-dependent; VTSBW conditions
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   day_metadata:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   receiver_variation:
     text: Across full corpus requires audit
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   gain_scale:
     text: ScaleFactor 60 per pack — field from Signal Hound's XML format (root `SignalHoundIQFile`), semantics not established; do not treat as gain
-    status: UNKNOWN
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   snr_metadata:
     text: Per-pack; sampled 15/29/31 dB
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   environmental_negatives:
     text: 'Raw corpus: unresolved'
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   negative_taxonomy:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   negative_diversity:
     text: UNKNOWN — detection subset not inspected
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   negative_provenance:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   hard_negative_emitters:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   recorded_interference_conditions:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   positive_negative_fs_matched:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   positive_negative_fc_matched:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   negative_difficulty:
     text: UNKNOWN
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   indoor_outdoor:
     text: Real-world reported; class-level conditions need mapping
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   distance_metadata:
     text: Not established in sampled XML
-    status: UNKNOWN
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   altitude_state_metadata:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   frequency_hopping:
     text: '**Major documented characteristic**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   video_transmission_signals:
     text: '**Explicit; VTSBW conditions**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   multi_uav_mixtures:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   controlled_environment:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   schema_consistency:
     text: XML schema consistent in sampled packs
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   parent_recording_identity:
     text: Pack identity available
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   window_safe_splitting_possible:
     text: Pack-level; within-pack window independence requires design
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   original_raw_representation:
     text: Complex IQ in binary `.iq` files
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   published_derived_representations:
     text: Spectrograms + 37-class image dataset + FFT/STFT tooling
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   raw_derived_reproducibility:
     text: Yes — raw IQ + published tooling available
-    status: UNGRADED
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   train_class_support:
     text: '**37/37**'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   validation_class_support:
     text: '**37/37**'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   class_balance:
     text: '**63–499 train images/class (~7.9×)**'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   label_taxonomy:
     text: '**AMBIGUOUS — UAV/RC-system-like classes**'
-    status: UNGRADED
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: 37 distinct UAVs
+      status: AUTHOR_DOC
+      source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
+    - claim: 35 drone types (repository README)
+      status: AUTHOR_DOC
+      source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
+    - claim: public classes include RC transmitter products (e.g. FUTABA T14SG, FRSKY X20R)
+      status: REPO_METADATA
+      source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
   leakage_safe_keys:
     text: pack ID available; stronger grouping unresolved
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   independent_sessions_per_class:
     text: UNKNOWN — 1 pack per condition in sampled classes
+    kind: FACT
     status: UNKNOWN
   potential_shortcut_receiver:
     text: Requires full-corpus audit
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_center_frequency:
     text: '**Yes**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   potential_shortcut_snr:
     text: '**High-priority**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   potential_shortcut_received_power:
     text: Not yet established
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_dataset_source:
     text: Future cross-dataset concern
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   potential_shortcut_position:
     text: Not established
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   known_acquisition_defect:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   classical_ml_opportunity:
     text: '**Very strong: FHSBW/FHSDT/FHSDC/FHSPP/VTSBW**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   phase_aware_experiments:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   magnitude_common_experiments:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   detection_usefulness:
     text: '**Promising; negatives unresolved**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   identification_usefulness:
     text: '**Strong**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   robustness_usefulness:
     text: '**Strong SNR/signal-condition potential**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   unique_contribution:
     text: scale + RF-system diversity + hopping/video characteristics
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   claim_ceiling:
     text: represented-class RF identification/robustness; not universal detection
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: Positive-diversity/representation training + identification
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: No, negatives unresolved
-    status: ASSESSMENT
-  full_download_justification:
-    text: Later/subset-dependent
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rfuav.yaml details
   window_label_reliability:
     text: UNKNOWN — pack-level inspection only
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
 supplementary:
   Label granularity:
     text: Pack / clip
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   Label provenance:
     text: per-pack XML metadata
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   Published detection baseline:
     text: 'Yes'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   Published classification baseline:
     text: 'Yes'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   Antenna documented:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   Controller ID available:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   Signal-condition structure:
     text: Class may contain multiple VTSBW conditions
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: pack
+    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   Known defects:
     text: 37 vs 35 UAV conflict; partial release; taxonomy ambiguity
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
 details:
   dataset:
     id: rfuav

@@ -4,20 +4,42 @@ A card is one YAML file per dataset in dataset_cards/. Every section except
 `details` is validated strictly (unknown keys are errors). `details` keeps the
 pre-schema card body verbatim until its content is moved into typed fields.
 
+Every claim has a kind and an evidence status, which are independent:
+
+Kinds
+-----
+FACT        a property of the dataset (sample rate, class counts, site)
+ASSESSMENT  our judgement about the dataset (shortcut risk, usefulness,
+            claim ceiling); its status grades the observations it rests on
+            and its source points at them
+Project decisions (roles, download choices) are not dataset claims; they
+live in configs/dataset_roles.yaml and are joined into the matrices.
+
 Evidence statuses
 -----------------
-VERIFIED        measured or checked by us against the stored data
-EMPIRICAL       measured by us on n inspected files (n required)
+VERIFIED        read directly from the distributed files, covering the claim's
+                whole scope, without sampling or statistics (a header field,
+                a complete inventory, every member's CRC)
+EMPIRICAL       measured by us: on a sample, or a statistic even over all
+                files (clipping fractions, level medians); n and n_unit required
 AUTHOR_DOC      stated by the dataset authors (paper, README, datasheet)
 AUTHOR_CODE     read from the authors' own code
 REPO_METADATA   repository record (Zenodo, Kaggle, Hugging Face, Dataverse)
-INFERRED        derived by us from the above; needs confirmation
-CONFLICTING     sources disagree
+INFERRED        reasoned by us from the above; needs confirmation
+CONFLICTING     sources disagree about the same thing: list them in `conflict`
 UNKNOWN         not established
 NOT_APPLICABLE  the property does not exist for this dataset
-ASSESSMENT      our judgement (roles, usefulness, claim ceilings, risks)
-UNGRADED        carried over from the hand-written matrix without an
-                evidence marker; to be graded, never cited as evidence
+UNGRADED        migration only: carried over from the hand-written matrix;
+                a test requires none to remain
+
+Grading rules
+-------------
+- A derived value is never graded above its weakest input.
+- The status order is a trust heuristic, not a resolver: an author statement
+  and a measurement about different stages (ADC bits vs stored dtype) do not
+  conflict, and a higher status never silently overrides a lower one.
+- "Frozen" means: schema-valid, no UNGRADED, every graded claim sourced.
+  Cards still change afterwards, through reviewed commits.
 """
 from typing import Annotated, Any, Generic, Literal, TypeVar, Union
 
@@ -25,7 +47,12 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Status = Literal[
     "VERIFIED", "EMPIRICAL", "AUTHOR_DOC", "AUTHOR_CODE", "REPO_METADATA",
-    "INFERRED", "CONFLICTING", "UNKNOWN", "NOT_APPLICABLE", "ASSESSMENT", "UNGRADED",
+    "INFERRED", "CONFLICTING", "UNKNOWN", "NOT_APPLICABLE", "UNGRADED",
+]
+Kind = Literal["FACT", "ASSESSMENT"]
+NUnit = Literal[
+    "file", "archive", "archive_member", "capture", "clip", "recording", "pack",
+    "class", "window", "physical_unit", "session",
 ]
 ABSENT: frozenset[str] = frozenset({"UNKNOWN", "NOT_APPLICABLE"})
 DATASET_ID = r"^[a-z][a-z0-9_]*$"
@@ -37,48 +64,110 @@ class Strict(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
-def _check_evidence(status, n):
+class Claim(Strict):
+    """One side of a conflict."""
+
+    claim: str
+    status: Literal["VERIFIED", "EMPIRICAL", "AUTHOR_DOC", "AUTHOR_CODE", "REPO_METADATA", "INFERRED"]
+    source: str
+    n: int | None = Field(default=None, ge=1)
+    n_unit: NUnit | None = None
+
+    @model_validator(mode="after")
+    def _valid(self):
+        _check_n(self.status, self.n, self.n_unit)
+        return self
+
+
+def _check_n(status, n, n_unit):
     if status == "EMPIRICAL" and n is None:
-        raise ValueError("EMPIRICAL needs n (number of files inspected)")
+        raise ValueError("EMPIRICAL needs n and n_unit")
+    if (n is None) != (n_unit is None):
+        raise ValueError("n and n_unit go together")
     if status in ABSENT and n is not None:
         raise ValueError(f"{status} cannot carry n")
 
 
+def _check_cell_text(text):
+    if "\n" in text or "|" in text.replace("\\|", ""):
+        raise ValueError("text must be one line without unescaped '|' (it becomes a table cell)")
+
+
+def _check_evidence(status, n, n_unit, source, conflict):
+    _check_n(status, n, n_unit)
+    if status not in ABSENT and status not in ("UNGRADED", "CONFLICTING") and not source:
+        raise ValueError(f"{status} needs a source")  # CONFLICTING: each claim carries its own
+    if (status == "CONFLICTING") != bool(conflict):
+        raise ValueError("CONFLICTING needs a conflict list, and only CONFLICTING may have one")
+    if conflict and len(conflict) < 2:
+        raise ValueError("a conflict needs at least two claims")
+
+
 class Fact(Strict):
-    """One statement about a dataset, shown as a matrix cell."""
+    """One claim about a dataset, shown as a matrix cell."""
 
     text: str = Field(min_length=1)
+    kind: Kind
     status: Status
     n: int | None = Field(default=None, ge=1)
+    n_unit: NUnit | None = None
     source: str | None = None
+    conflict: list[Claim] | None = None
 
     @model_validator(mode="after")
     def _valid(self):
-        if "\n" in self.text or "|" in self.text.replace("\\|", ""):
-            raise ValueError("text must be one line without unescaped '|' (it becomes a table cell)")
-        _check_evidence(self.status, self.n)
+        _check_cell_text(self.text)
+        _check_evidence(self.status, self.n, self.n_unit, self.source, self.conflict)
         return self
 
 
 class Measured(Strict, Generic[T]):
-    """A typed value that code consumes. Null means absent; never a guess."""
+    """A typed value that code consumes. Null means absent; never a guess.
+
+    For CONFLICTING, `value` is what the stored files contain (what code
+    processes); `conflict` records the disagreeing claims.
+    """
 
     value: T | None = None
     varies: bool = False  # differs per artifact/capture; read it from the file or metadata
     status: Status
     n: int | None = Field(default=None, ge=1)
+    n_unit: NUnit | None = None
     source: str | None = None
     note: str | None = None
+    conflict: list[Claim] | None = None
 
     @model_validator(mode="after")
     def _valid(self):
-        _check_evidence(self.status, self.n)
+        _check_evidence(self.status, self.n, self.n_unit, self.source, self.conflict)
         if self.status in ABSENT:
             if self.value is not None or self.varies:
                 raise ValueError(f"{self.status} must have value null and varies false")
         elif self.varies == (self.value is not None):
             raise ValueError("give either a value or varies: true, not both and not neither")
         return self
+
+
+class Policy(Strict):
+    """A Droneacharya decision about a dataset (configs/dataset_roles.yaml)."""
+
+    text: str = Field(min_length=1)
+    basis: str  # where the decision and its reasons are recorded
+
+    @model_validator(mode="after")
+    def _valid(self):
+        _check_cell_text(self.text)
+        return self
+
+
+class DatasetPolicy(Strict):
+    rows: dict[str, Policy]                 # keys = policy rows of the matrix
+    supplementary: dict[str, Policy] = {}   # keys = supplementary row labels
+
+
+class RolesFile(Strict):
+    schema_version: Literal[1]
+    datasets: dict[str, DatasetPolicy]
 
 
 class Source(Strict):
@@ -161,6 +250,7 @@ Card = Annotated[Union[RFCard, AcousticCard], Field(discriminator="modality")]
 class RowSpec(Strict):
     key: str = Field(pattern=DATASET_ID)
     label: str
+    policy: bool = False  # cell comes from configs/dataset_roles.yaml, not the card
 
 
 class ColumnSpec(Strict):

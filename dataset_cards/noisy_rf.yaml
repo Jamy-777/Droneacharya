@@ -21,35 +21,44 @@ storage:
 structure:
   artifact:
     text: Single `dataset.pt` inside `archive.zip`
+    kind: FACT
     status: VERIFIED
+    source: archive.zip central directory + CRC check of every member
   capture:
     text: 'One 16,384-sample vector: a derived observation (clean signal mixed with noise); evaluation only'
+    kind: FACT
     status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   group:
     text: 'None available: no recording or noise-snippet IDs'
+    kind: ASSESSMENT
     status: UNKNOWN
 signal:
   complex_iq:
     value: true
     status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
     note: already mixed with noise
   scalar_dtype:
     status: UNKNOWN
   container:
     value: PyTorch .pt (single file)
-    status: EMPIRICAL
-    n: 1
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   sample_rate_hz:
     value: 14000000
     status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
     note: downsampled from 56 MS/s
   center_frequency_hz:
     value: 2441750000
     status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
     note: some transmitters at 2.440 / 2.445 GHz
   capture_bandwidth_hz:
     value: 14000000
     status: INFERRED
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   samples_per_artifact:
     status: NOT_APPLICABLE
     note: artifact is the whole dataset.pt; 16,384 samples per vector (REPO_METADATA)
@@ -59,227 +68,350 @@ signal:
 facts:
   primary_purpose:
     text: Low-SNR detection + RC-link classification benchmark
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   year:
     text: 2023 (Kaggle v1, 2023-06-08)
+    kind: FACT
     status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   license:
     text: CC BY 4.0
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   full_reported_scale:
     text: 98,705 vectors × 16,384 samples; 25.9 GB single `dataset.pt`
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   public_release_caveat:
     text: Only noise-mixed vectors released; all-or-nothing 25.9 GB file; 2024 arXiv dev set is a different release
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   raw_representation:
     text: Complex IQ, already mixed with noise (derived)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   scalar_dtype:
     text: UNKNOWN (PyTorch tensors)
+    kind: FACT
     status: UNKNOWN
   raw_format:
     text: PyTorch `.pt` (load with weights_only=True, mmap=True)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   i_q_layout:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   samples_capture_chunk:
     text: 16,384 per vector (repo metadata)
+    kind: FACT
     status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   chunk_duration:
     text: ≈1.17 ms (INFERRED at 14 MS/s)
+    kind: FACT
     status: INFERRED
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   sample_rate:
     text: 14 MS/s (downsampled from 56 MS/s, Chebyshev I) — repo + paper
-    status: AUTHOR_DOC
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   center_frequency:
     text: 2.44175 GHz; some transmitters 2.440 / 2.445 GHz (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   absolute_frequency_coverage:
     text: 2.43475–2.44875 GHz (14 MHz)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   if_capture_bandwidth:
     text: 14 MHz (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   occupied_signal_bandwidth:
     text: RC hopping links; Wi-Fi exceeds the 14 MHz window
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   receiver:
     text: USRP B210 + log-periodic antenna (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   pack_unit_identifier:
     text: None — vectors carry no recording ID
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   manufacturer_coverage:
     text: DJI, Futaba, Graupner, FrSky, Turnigy
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   models_classes:
     text: 6 RC links + Noise
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   physical_units:
     text: 1 per class (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   same_model_multi_unit:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: INFERRED
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   positive_signal_composition:
     text: RC uplinks only (DJI = GL300F remote)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   day_metadata:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   receiver_variation:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   gain_scale:
     text: Removed — unit-power normalization before mixing
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   snr_metadata:
     text: '**Yes — synthetic, per vector, −20…30 dB in 2 dB steps**'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   environmental_negatives:
     text: Noise class = Labnoise + Gaussian mixtures
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   negative_taxonomy:
     text: Wi-Fi + Bluetooth + amplifier (unlabelled mix) + Gaussian
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   negative_diversity:
     text: Moderate — real busy-building traffic, one site
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   negative_provenance:
     text: Public university building (site differs from positives)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   hard_negative_emitters:
     text: '**YES — real Wi-Fi/BT traffic, unlabelled, mixed with Gaussian**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   recorded_interference_conditions:
     text: 'Synthetic: positives mixed with Labnoise (50%) or Gaussian (50%)'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   positive_negative_fs_matched:
     text: Yes — same pipeline (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   positive_negative_fc_matched:
     text: UNKNOWN — positives have per-transmitter Fc offsets
+    kind: FACT
     status: UNKNOWN
   negative_difficulty:
     text: High at low SNR by construction; site mismatch risk
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   indoor_outdoor:
     text: 'Indoor: chamber (positives), building (negatives)'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   distance_metadata:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   altitude_state_metadata:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   frequency_hopping:
     text: Yes (RC links), not labelled
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   video_transmission_signals:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   multi_uav_mixtures:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   controlled_environment:
     text: Yes for positives (anechoic chamber)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   schema_consistency:
-    text: EMPIRICAL (single file)
-    status: EMPIRICAL
-    n: 1
+    text: UNKNOWN — single `dataset.pt`, not yet extracted or inspected
+    kind: FACT
+    status: UNKNOWN
   parent_recording_identity:
     text: '**Not provided**'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   window_safe_splitting_possible:
     text: '**No** — no recording or noise-snippet ID; authors use stratified random 5-fold'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   original_raw_representation:
     text: Not released (only mixed vectors)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   published_derived_representations:
     text: IQ vectors + spectrograms
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   raw_derived_reproducibility:
     text: Low — clean recordings and noise snippets not released
-    status: UNGRADED
+    kind: ASSESSMENT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   train_class_support:
     text: N/A — no fixed split
+    kind: FACT
     status: NOT_APPLICABLE
   validation_class_support:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   class_balance:
     text: Noise 53% (52,552); DJI 2,194 … Taranis 16,546; SNR levels balanced
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   label_taxonomy:
     text: Class + synthetic SNR
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   leakage_safe_keys:
     text: '**None available**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   independent_sessions_per_class:
     text: UNKNOWN — no recording IDs
+    kind: FACT
     status: UNKNOWN
   potential_shortcut_receiver:
     text: None within dataset
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   potential_shortcut_center_frequency:
     text: '**Yes — per-transmitter Fc offsets**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   potential_shortcut_snr:
     text: Low — balanced by design
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   potential_shortcut_received_power:
     text: Removed by normalization
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   potential_shortcut_dataset_source:
     text: Yes in cross-dataset experiments
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   potential_shortcut_position:
     text: Recording site differs by class (chamber vs building)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   known_acquisition_defect:
     text: Synthetic mixing; possible noise-snippet reuse (UNKNOWN)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: arXiv:2406.18624 (same authors; describes acquisition, different development set)
   classical_ml_opportunity:
     text: Spectral/hop features at mid-high SNR
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   phase_aware_experiments:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   magnitude_common_experiments:
     text: Spectral-common within the 14 MHz window
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: REPO_METADATA
+    source: Kaggle dataset page and API (sgluege/noisy-drone-rf-signal-classification)
   detection_usefulness:
     text: Low-SNR detection vs real building RF; synthetic
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   identification_usefulness:
     text: Moderate — 6 RC links
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   robustness_usefulness:
     text: Synthetic SNR sweep −20…30 dB
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   unique_contribution:
     text: Real uncontrolled-building Wi-Fi/BT/amplifier noise + calibrated SNR sweep
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   claim_ceiling:
     text: 6 RC links vs building/Gaussian noise under synthetic SNR, 14 MHz at 2.44 GHz
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: External low-SNR test set + building-RF negative domain (evaluation only)
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: No — synthetic mixtures, no recording IDs
-    status: ASSESSMENT
-  full_download_justification:
-    text: Only as external test set; all-or-nothing 25.9 GB
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/noisy_rf.yaml details
   window_label_reliability:
     text: UNKNOWN — 1.17 ms vectors may miss RC bursts at low SNR
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
 details:
   # Noisy Drone RF Signal Classification (ZHAW) dataset card
   #

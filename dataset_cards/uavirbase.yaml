@@ -20,102 +20,146 @@ storage:
 structure:
   artifact:
     text: One 8-channel WAV recording
-    status: EMPIRICAL
-    n: 132
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   capture:
     text: '= artifact: one 40 s hover, or one 40–256 s ambient recording'
-    status: EMPIRICAL
-    n: 132
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   group:
     text: Recording; only 4 ambient recordings, so leave one ambient recording out
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
 signal:
   container:
     value: WAV
-    status: EMPIRICAL
-    n: 132
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   sample_format:
     value: pcm_s32
-    status: EMPIRICAL
-    n: 132
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   sample_rate_hz:
     value: 96000
-    status: EMPIRICAL
-    n: 132
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   channels_per_artifact:
     value: 8
-    status: EMPIRICAL
-    n: 132
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   artifact_duration_s:
     varies: true
-    status: EMPIRICAL
-    n: 132
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
     note: 40 s drone; 40–256 s ambient
 facts:
   primary_purpose:
     text: UAV sound-source localization (author)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   licence:
     text: CC BY 4.0
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Zenodo record 15391924 (licence, MD5)
   local_artifact:
     text: '`Microphone_array.zip` 13.8 GB, MD5 OK'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Zenodo record 15391924 (licence, MD5)
   recording_type:
     text: Field, outdoor (urban)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   positives:
     text: DJI Mavic 3 Cine
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
   negatives:
     text: 4 ambient recordings, 416 s, same array
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   same_chain_negatives:
     text: '**Yes**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
   sample_rate_format:
-    text: '**96 kHz, 32-bit integer PCM, 8 ch (EMPIRICAL n=132)**'
-    status: EMPIRICAL
-    n: 132
+    text: '**96 kHz, 32-bit integer PCM, 8 ch (all 132 headers)**'
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   clip_recording_length:
     text: 40 s (128 drone), 40–256 s ambient
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 132 WAV headers (interim/uavirbase)'
   microphones_channels:
     text: 8 × Rode NTG-2, Behringer UMC1820
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   calibration:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   sessions_days:
     text: '**1 day** (15 Nov 2024)'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
   site:
     text: Warsaw, one site
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   geometry_metadata:
     text: Distance 10/20 m × height 10/20 m × 8 azimuths × 4 orientations, hovering
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
   weather:
     text: Per-recording weather station (wind 0–2.9 m/s)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
   speech_other_confounds:
     text: Urban ambient
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   known_defects:
-    text: —
-    status: UNGRADED
+    text: Drone clipping up to 1.2% of samples at 10 m (n=28)
+    kind: FACT
+    status: EMPIRICAL
+    n: 28
+    n_unit: recording
+    source: scripts/inspect_acoustic.py level audit, 28 recordings
   leakage_safe_keys:
     text: recording folder (each 40 s file = one hover)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: label.json (authors' per-recording metadata)
   published_split:
     text: 30 s / 10 s within recording — leaky
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   level_shortcut_risk:
     text: '**Low — ambient −24…−14 dBFS vs drone −28…−13 dBFS** (n=28)'
-    status: ASSESSMENT
-  provisional_role:
-    text: '**Detection backbone (same chain)** + geometry robustness'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 28
+    n_unit: recording
+    source: scripts/inspect_acoustic.py level audit, 28 recordings
 details:
   dataset:
     id: uavirbase

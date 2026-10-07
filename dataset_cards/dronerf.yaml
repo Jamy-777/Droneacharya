@@ -22,27 +22,43 @@ storage:
 structure:
   artifact:
     text: One band CSV `<BUI><L or H>_<segment>.csv` inside a class RAR inside the release zip
+    kind: FACT
     status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   capture:
     text: L+H file pair of one segment (two simultaneous band channels)
+    kind: FACT
     status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   group:
     text: 'BUI: each flight mode is ~5.25 s cut into ~21 segments, likely one recording'
+    kind: ASSESSMENT
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
 signal:
   complex_iq:
     value: false
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
     note: signed real samples; likely the I component (INFERRED)
   scalar_dtype:
     value: decimal text
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   container:
     value: single-row CSV in RAR
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   sample_rate_hz:
     value: 40000000
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
     note: 0.25 s per segment x 10M samples; not stated by the authors
   center_frequency_hz:
     status: UNKNOWN
@@ -50,298 +66,515 @@ signal:
   capture_bandwidth_hz:
     value: 40000000
     status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
     note: up to 40 MHz per receiver
   samples_per_artifact:
     value: 10000000
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
     note: per band file
   artifact_duration_s:
     value: 0.25
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
 facts:
   primary_purpose:
     text: Detection + identification + flight-mode classification
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   year:
     text: '2019'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   license:
     text: CC BY 4.0
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Mendeley Data record 10.17632/f4c2b4n755.1
   full_reported_scale:
     text: 227 logical segments / 454 CSV files
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   public_release_caveat:
     text: Full public dataset
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Mendeley Data record 10.17632/f4c2b4n755.1
   raw_representation:
     text: Signed real time-domain samples (likely the I component of USRP IQ — INFERRED); not an envelope
-    status: INFERRED
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   scalar_dtype:
     text: Text decimal values; numerical storage dtype N/A
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   raw_format:
     text: Single-row CSV
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   i_q_layout:
     text: N/A — no complex IQ
+    kind: FACT
     status: NOT_APPLICABLE
   samples_capture_chunk:
-    text: '**10M/band; 20M paired segment VERIFIED**'
-    status: VERIFIED
+    text: '**10M/band; 20M paired segment — EMPIRICAL (n=4 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   chunk_duration:
     text: '0.25 s INFERRED (paper: ~5.25 s per mode over 21 segments)'
+    kind: FACT
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   sample_rate:
     text: '**40 MS/s INFERRED** (paper: ~5.25 s per mode / 21 segments = 0.25 s; 10M samples per file) — not stated by authors'
+    kind: FACT
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   center_frequency:
     text: 2.4-GHz acquisition region
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   absolute_frequency_coverage:
     text: '~2.400–2.480 GHz split into L/H halves (paper: 80 MHz); exact edges INFERRED'
+    kind: FACT
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   if_capture_bandwidth:
     text: Up to 40 MHz/receiver documented
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   occupied_signal_bandwidth:
     text: Signal/model/mode dependent; not yet characterized
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   receiver:
     text: 2× NI-USRP-2943R
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   pack_unit_identifier:
     text: BUI + segment; physical-unit identity unknown
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   manufacturer_coverage:
     text: Parrot + DJI
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   models_classes:
     text: 3 UAV models + background; hierarchical mode classes
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   physical_units:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   same_model_multi_unit:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   positive_signal_composition:
     text: Drone/controller communications; mode-dependent; bursty
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   day_metadata:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   receiver_variation:
     text: Two simultaneous receivers represent L/H bands, not a robustness split
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   gain_scale:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   snr_metadata:
     text: Not provided per segment
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   environmental_negatives:
     text: Yes — recorded RF background
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   negative_taxonomy:
     text: Ambient RF background
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   negative_diversity:
     text: Limited/unknown
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   negative_provenance:
     text: Recorded with drones absent
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   hard_negative_emitters:
     text: None explicitly labeled
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   recorded_interference_conditions:
     text: Uncontrolled ambient RF only
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   positive_negative_fs_matched:
     text: Presumed same acquisition pipeline; not independently metadata-verified
-    status: VERIFIED
+    kind: FACT
+    status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   positive_negative_fc_matched:
     text: Same paired acquisition bands; exact metadata not per file
-    status: UNGRADED
+    kind: FACT
+    status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   negative_difficulty:
     text: Better than simple silence, but narrow taxonomy
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   indoor_outdoor:
     text: Laboratory
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   distance_metadata:
     text: Not available per file
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   altitude_state_metadata:
     text: Operational mode labels; no detailed altitude metadata
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   frequency_hopping:
     text: Not explicitly represented as dedicated metadata
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   video_transmission_signals:
     text: Yes — video-recording operating mode
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   multi_uav_mixtures:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   controlled_environment:
     text: Laboratory
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   schema_consistency:
     text: Yes for sampled CSV structure
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   parent_recording_identity:
     text: 'Yes: paired L/H logical segment'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   window_safe_splitting_possible:
     text: '**Segment grouping is NOT enough** — each mode is ~5.25 s cut into 21 segments (likely one recording); group by BUI/session'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   original_raw_representation:
     text: Amplitude CSV
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   published_derived_representations:
     text: normalized time plots + FFT/spectral processing
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   raw_derived_reproducibility:
     text: Strong; public code available
-    status: UNGRADED
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   train_class_support:
     text: N/A until our split
+    kind: FACT
     status: NOT_APPLICABLE
   validation_class_support:
     text: N/A until our split
+    kind: FACT
     status: NOT_APPLICABLE
   class_balance:
     text: 'Imbalanced: 41 background / 84 Bebop / 81 AR / 21 Phantom segments'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   label_taxonomy:
     text: BUI → detection/model/mode hierarchy
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   leakage_safe_keys:
     text: BUI = session (INFERRED); segment-level keys UNSAFE
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   independent_sessions_per_class:
     text: Likely 1 per BUI (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   potential_shortcut_receiver:
     text: Low as class shortcut; L/H receiver/band identity must be preserved
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   potential_shortcut_center_frequency:
     text: Band-specific activity risk
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   potential_shortcut_snr:
     text: UNKNOWN
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_received_power:
     text: '**YES — strongly band/time dependent**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   potential_shortcut_dataset_source:
     text: High concern in cross-dataset experiments
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   potential_shortcut_position:
     text: Not established
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   known_acquisition_defect:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   classical_ml_opportunity:
     text: 'Strong: temporal + spectral + burst/activity features'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   phase_aware_experiments:
     text: 'No'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   magnitude_common_experiments:
     text: '**No** — signed real samples ≠ IQ magnitude; spectral-common only, after frequency alignment'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   detection_usefulness:
     text: Good benchmark; negative diversity limited
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   identification_usefulness:
     text: Moderate; only 3 models
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   robustness_usefulness:
     text: Limited compared with DRFF-R2
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   unique_contribution:
     text: Parrot + real background + legacy domain + simple detection + burst structure
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   claim_ceiling:
     text: DroneRF-domain benchmark detection/identification only
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: baseline detector + classical ML + historical external domain
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: No, not alone
-    status: ASSESSMENT
-  full_download_justification:
-    text: Yes — only ~3.75 GB and useful benchmark
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/dronerf.yaml details
   window_label_reliability:
     text: '**HIGH PRIORITY** — bursty activity observed in BUI 10000 (Bebop *on & connected*, its least active mode); occupancy likely differs by mode'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
 supplementary:
   Logical segments:
     text: '227'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Released CSV files:
     text: '454'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Background segments:
     text: '41'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Bebop segments:
     text: '84'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   AR Drone segments:
     text: '81'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Phantom 3 segments:
     text: '21'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Samples per band file:
-    text: '**10,000,000 VERIFIED**'
-    status: VERIFIED
+    text: '**10,000,000 — EMPIRICAL (n=4 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Samples per paired segment:
-    text: '**20,000,000 VERIFIED**'
-    status: VERIFIED
+    text: '**20,000,000 — EMPIRICAL (n=4 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Published prose sample-count claim:
     text: CONFLICTING — states 1M/part
+    kind: FACT
     status: CONFLICTING
+    conflict:
+    - claim: 'paper prose: 1,000,000 samples per part'
+      status: AUTHOR_DOC
+      source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
+    - claim: paper tables imply 10,000,000 samples per part
+      status: AUTHOR_DOC
+      source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
+    - claim: 10,000,000 values per CSV
+      status: EMPIRICAL
+      source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+      n: 4
+      n_unit: file
   Recording length per mode:
     text: ~5.25 s per flight mode, ~10.25 s background (paper, verified via Europe PMC)
-    status: VERIFIED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   BUI digits:
     text: '[drone present][drone type ×2][flight mode ×2]; 10000 = Bebop on & connected, 10011 = Bebop flying + video'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   Empirical CSV structure:
     text: One comma-separated row
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 4
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Filename structure:
     text: '`<BUI><H/L>_<segment>.csv`'
-    status: UNGRADED
-  L/H pairing:
-    text: '**VERIFIED**'
+    kind: FACT
     status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
+  L/H pairing:
+    text: '**VERIFIED — all 227 segments have exactly one L and one H file**'
+    kind: FACT
+    status: VERIFIED
+    source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Temporal positive behavior:
     text: '**Bursty — empirically observed in BUI 10000 (Bebop on & connected); other modes not yet checked**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Bebop-L median RMS:
     text: '2.604'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Bebop-L RMS p90:
     text: '1290.641'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Bebop-L RMS maximum:
     text: '1709.861'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Background-L median RMS:
     text: '2.378'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   Window-label reliability:
     text: File-level positive does not guarantee continuously active RF
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
 details:
   dataset:
     id: dronerf

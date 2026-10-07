@@ -1,14 +1,15 @@
-"""Load and cross-check dataset cards and matrix specs."""
+"""Load and cross-check dataset cards, project roles and matrix specs."""
 from pathlib import Path
 
 import yaml
 from pydantic import TypeAdapter
 
-from .schema import Card, MatrixSpec
+from .schema import Card, MatrixSpec, RolesFile
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CARDS_DIR = REPO_ROOT / "dataset_cards"
 SPECS_DIR = REPO_ROOT / "configs" / "matrices"
+ROLES_PATH = REPO_ROOT / "configs" / "dataset_roles.yaml"
 
 _card_adapter = TypeAdapter(Card)
 
@@ -33,14 +34,19 @@ def load_cards(cards_dir=CARDS_DIR):
     return {card.id: card for card in (load_card(p) for p in sorted(Path(cards_dir).glob("*.yaml")))}
 
 
+def load_roles(path=ROLES_PATH):
+    return RolesFile.model_validate(_read_yaml(path)).datasets
+
+
 def load_spec(modality, specs_dir=SPECS_DIR):
     return MatrixSpec.model_validate(_read_yaml(Path(specs_dir) / f"{modality}.yaml"))
 
 
-def check_cards_against_spec(cards, spec):
+def check_cards_against_spec(cards, roles, spec):
     """Problems that would make the generated matrix wrong or incomplete."""
     problems = []
-    row_keys = [r.key for r in spec.rows]
+    card_rows = [r.key for r in spec.rows if not r.policy]
+    policy_rows = [r.key for r in spec.rows if r.policy]
     of_modality = {i for i, c in cards.items() if c.modality == spec.modality}
     columns = {c.id for c in spec.columns}
     if missing := of_modality - columns:
@@ -52,13 +58,19 @@ def check_cards_against_spec(cards, spec):
             continue
         if card.modality != spec.modality:
             problems.append(f"column '{column.id}' is a {card.modality} card")
-        if missing := [k for k in row_keys if k not in card.facts]:
+        if missing := [k for k in card_rows if k not in card.facts]:
             problems.append(f"{card.id}: facts missing for rows {missing}")
-        if unknown := [k for k in card.facts if k not in row_keys]:
-            problems.append(f"{card.id}: facts for rows not in the {spec.modality} matrix {unknown}")
+        if unknown := [k for k in card.facts if k not in card_rows]:
+            problems.append(f"{card.id}: facts for rows that are not card rows of the {spec.modality} matrix {unknown}")
+        policy = roles.get(card.id)
+        if policy_rows and policy is None:
+            problems.append(f"{card.id}: no entry in configs/dataset_roles.yaml")
+        elif policy is not None:
+            if missing := [k for k in policy_rows if k not in policy.rows]:
+                problems.append(f"{card.id}: dataset_roles.yaml missing rows {missing}")
+            if unknown := [k for k in policy.rows if k not in policy_rows]:
+                problems.append(f"{card.id}: dataset_roles.yaml has rows not in the matrix {unknown}")
     for supplement in spec.supplements:
         if supplement.id not in columns:
             problems.append(f"supplement '{supplement.id}' is not a matrix column")
-        elif not cards[supplement.id].supplementary:
-            problems.append(f"supplement '{supplement.id}' has no supplementary rows")
     return problems

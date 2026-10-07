@@ -5,21 +5,10 @@ output: docs/datasets/rf_compatibility_matrix.md
 preamble: '# Droneacharya RF Dataset Compatibility Matrix
 
 
-  Status vocabulary:
+  Every cell is a graded claim in `dataset_cards/<dataset>.yaml`: kind (FACT or ASSESSMENT), evidence status, source, and for EMPIRICAL the sample size with its unit. Status definitions and grading rules: `src/droneacharya/cards/schema.py`. Per-dataset counts and every CONFLICTING or UNKNOWN claim: `evidence_audit.md`. Inline markers in cell text (`author doc`, `n=…`, INFERRED) are kept for reading; the graded status in the card is authoritative.
 
 
-  - **VERIFIED** — confirmed by primary source or empirical inspection
-
-  - INFERRED — reasonable inference requiring confirmation
-
-  - CONFLICTING — sources disagree
-
-  - UNKNOWN — not established
-
-  - EMPIRICAL — requires inspection of actual data
-
-
-  CardRF and later columns also mark evidence level: `author doc` (the dataset authors'' own description), `n=…` (number of files a value was checked on), and VERIFIED only for values we measured ourselves.
+  *Provisional Droneacharya role*, *Primary detection foundation?* and *Full-download justification* are Droneacharya decisions from `configs/dataset_roles.yaml`, not dataset properties.
 
 
   ## Schema frozen after DRFF-R2 + RFUAV reconnaissance. No new rows/columns unless a dataset reveals a genuinely new dimension.
@@ -189,10 +178,13 @@ rows:
   label: Claim ceiling
 - key: provisional_droneacharya_role
   label: Provisional Droneacharya role
+  policy: true
 - key: primary_detection_foundation
   label: Primary detection foundation?
+  policy: true
 - key: full_download_justification
   label: Full-download justification
+  policy: true
 - key: window_label_reliability
   label: Window-label reliability
 supplements:

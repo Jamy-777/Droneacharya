@@ -5,10 +5,16 @@ output: docs/datasets/acoustic_compatibility_matrix.md
 preamble: '# Droneacharya Acoustic Dataset Compatibility Matrix
 
 
-  Same evidence vocabulary as the RF matrix: `author doc` (dataset authors'' own description), `repo` (repository record), `n=…` (files checked), VERIFIED only for values we measured. Audit scripts: `scripts/inspect_acoustic.py`; per-file audit CSVs in `interim/<dataset>/`.
+  Every cell is a graded claim in `dataset_cards/<dataset>.yaml`: kind (FACT or ASSESSMENT), evidence status, source, and for EMPIRICAL the sample size with its unit. Status definitions and grading rules: `src/droneacharya/cards/schema.py`. Per-dataset counts and every CONFLICTING or UNKNOWN claim: `evidence_audit.md`. Inline markers in cell text (`author doc`, `n=…`, INFERRED) are kept for reading; the graded status in the card is authoritative.
 
 
-  Datasets were selected on 2026-10-05 (selection record and audit conclusions: `acoustic_notes.md`) and downloaded 2026-10-06; every archive matched its published MD5.'
+  *Provisional role* are Droneacharya decisions from `configs/dataset_roles.yaml`, not dataset properties.
+
+
+  Audit scripts: `scripts/inspect_acoustic.py`; per-file audit CSVs in `interim/<dataset>/`.
+
+
+  Datasets were selected on 2026-10-05 (selection record and audit conclusions: `acoustic_notes.md`) and downloaded 2026-10-06. Every archive with a published checksum matched it; Svanström and ESC-50 come from GitHub, which publishes none (Svanström sizes and three blob hashes checked against the GitHub API).'
 columns:
 - id: ddl
   label: DDL
@@ -65,17 +71,30 @@ rows:
   label: Level shortcut risk
 - key: provisional_role
   label: Provisional role
+  policy: true
 cross_dataset_heading: Cross-dataset facts
 cross_dataset:
   Sample rates:
     text: 96 kHz (DDL, UaVirBASE), 50 kHz (DroneNoise), 44.1 kHz (Mięsikowska, Svanström, ESC-50) → common band limited to 22.05 kHz unless 44.1 kHz sets are excluded
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 362
+    n_unit: file
+    source: 'per-dataset sample_rate_hz fields (weakest: Mięsikowska, 362 files of 4 zips)'
   Same-chain negatives:
     text: Only UaVirBASE (4 ambient recordings, 416 s) and Svanström (30 background + 30 helicopter, 10 s each)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: UaVirBASE label.json + Svanström paper (same equipment)
   Main shortcut:
     text: 'Recording chain ↔ label: drones come from 5 chains, most negatives from others. Run a "predict the dataset" baseline and leave-one-dataset-out tests'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: docs/datasets/acoustic_notes.md
   Units:
     text: DroneNoise M6–M9 in pascals (M1–M5 ±5 dB); all others uncalibrated full-scale
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: DroneNoise calibration-tone audit (scripts/inspect_acoustic.py)

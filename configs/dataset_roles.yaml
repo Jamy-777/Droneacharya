@@ -1,0 +1,129 @@
+# Droneacharya project decisions per dataset (roles, detection foundation, downloads).
+# Canonical home of policy: these are our choices, not dataset properties, so a change of
+# strategy edits this file and leaves the dataset cards alone. Joined into the generated
+# matrices by scripts/build_matrices.py. `basis` points at where each decision is argued.
+
+schema_version: 1
+datasets:
+  drff_r2:
+    rows:
+      provisional_droneacharya_role:
+        text: Robustness laboratory + auxiliary detection
+        basis: dataset_cards/drff_r2.yaml details.droneacharya; docs/datasets/drff_r2_experimental_design.md
+      primary_detection_foundation:
+        text: No, not alone
+        basis: dataset_cards/drff_r2.yaml details.droneacharya; docs/datasets/drff_r2_experimental_design.md
+      full_download_justification:
+        text: 'Done — full release on D: (731 .mat, 405 GB)'
+        basis: dataset_cards/drff_r2.yaml details.droneacharya; docs/datasets/drff_r2_experimental_design.md
+  rfuav:
+    rows:
+      provisional_droneacharya_role:
+        text: Positive-diversity/representation training + identification
+        basis: docs/datasets/rfuav_notes.md
+      primary_detection_foundation:
+        text: No, negatives unresolved
+        basis: docs/datasets/rfuav_notes.md
+      full_download_justification:
+        text: Done — 37 class RARs (109.2 GB, SHA-256 checked); `ValidationSet_5Drones` (162 GB) not downloaded
+        basis: docs/datasets/rfuav_notes.md
+  dronerf:
+    rows:
+      provisional_droneacharya_role:
+        text: baseline detector + classical ML + historical external domain
+        basis: dataset_cards/dronerf.yaml details.droneacharya
+      primary_detection_foundation:
+        text: No, not alone
+        basis: dataset_cards/dronerf.yaml details.droneacharya
+      full_download_justification:
+        text: Done — full release (Mendeley zip, 23 RARs)
+        basis: dataset_cards/dronerf.yaml details.droneacharya
+  cardrf:
+    rows:
+      provisional_droneacharya_role:
+        text: Hard-negative source + aircraft/controller discrimination
+        basis: docs/datasets/cardrf_notes.md
+      primary_detection_foundation:
+        text: Hard-negative component; evaluate by holding out whole devices with clipping/session controls
+        basis: docs/datasets/cardrf_notes.md
+      full_download_justification:
+        text: Done — 71.1 GB, CRC of all 10,172 members verified
+        basis: docs/datasets/cardrf_notes.md
+  uavsig:
+    rows:
+      provisional_droneacharya_role:
+        text: fingerprint/generalization diagnostic + activity-label reference + real multi-UAV
+        basis: docs/datasets/uavsig_notes.md
+      primary_detection_foundation:
+        text: 'No'
+        basis: docs/datasets/uavsig_notes.md
+      full_download_justification:
+        text: Subset — 366 of 726 files (360 `.mat`), MD5 verified; full 238.9 GB not needed yet
+        basis: docs/datasets/uavsig_notes.md
+    supplementary:
+      Droneacharya split policy:
+        text: Do NOT use published split as primary; group by scenario + capture sequence + transmitter + day
+        basis: docs/datasets/uavsig_notes.md
+  rma:
+    rows:
+      provisional_droneacharya_role:
+        text: Clean-reference identification + leave-system-out novelty + RFUAV cross-dataset partner
+        basis: docs/datasets/rma_notes.md
+      primary_detection_foundation:
+        text: No — no negatives
+        basis: docs/datasets/rma_notes.md
+      full_download_justification:
+        text: Done — all 16 archives (46.7 GB), MD5 verified
+        basis: docs/datasets/rma_notes.md
+  noisy_rf:
+    rows:
+      provisional_droneacharya_role:
+        text: External low-SNR test set + building-RF negative domain (evaluation only)
+        basis: docs/datasets/noisy_rf_notes.md
+      primary_detection_foundation:
+        text: No — synthetic mixtures, no recording IDs
+        basis: docs/datasets/noisy_rf_notes.md
+      full_download_justification:
+        text: Done — `archive.zip` (23.5 GB), CRC verified; evaluation only
+        basis: docs/datasets/noisy_rf_notes.md
+  remote_controller_rf:
+    rows:
+      provisional_droneacharya_role:
+        text: Backlog — paper read only
+        basis: docs/datasets/remote_controller_rf_notes.md
+      primary_detection_foundation:
+        text: 'No'
+        basis: docs/datasets/remote_controller_rf_notes.md
+      full_download_justification:
+        text: No — 124 GB, no new axis (paper read only)
+        basis: docs/datasets/remote_controller_rf_notes.md
+  ddl:
+    rows:
+      provisional_role:
+        text: '**Demoted:** range-labelled positives (high-pass below ~300 Hz); future localization. Not a detection backbone (no negatives)'
+        basis: docs/datasets/acoustic_notes.md
+  uavirbase:
+    rows:
+      provisional_role:
+        text: '**Detection backbone (same chain)** + geometry robustness'
+        basis: docs/datasets/acoustic_notes.md
+  miesikowska_uav:
+    rows:
+      provisional_role:
+        text: Positive diversity, same-model cross-site units, speech confound
+        basis: docs/datasets/acoustic_notes.md
+  dronenoise:
+    rows:
+      provisional_role:
+        text: Independent calibrated test; detection vs distance
+        basis: docs/datasets/acoustic_notes.md
+  svanstrom:
+    rows:
+      provisional_role:
+        text: '**Same-chain hard negatives** (helicopter)'
+        basis: docs/datasets/acoustic_notes.md
+  esc50:
+    rows:
+      provisional_role:
+        text: Hard-negative layer (labelled classes)
+        basis: docs/datasets/acoustic_notes.md

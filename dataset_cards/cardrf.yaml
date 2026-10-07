@@ -21,33 +21,50 @@ storage:
 structure:
   artifact:
     text: One `.mat` member of CARDRF.zip (500 zero-byte `__MACOSX` entries skipped)
+    kind: FACT
     status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   capture:
     text: '= artifact: one triggered 250 µs capture'
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   group:
     text: Device session block (Frame.Date); hold out whole devices
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
 signal:
   complex_iq:
     value: false
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
     note: real direct-RF waveform
   scalar_dtype:
     value: int16
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
     note: volts = Data * YInc + YOrg
   container:
     value: MAT; structs Channel_1 + Frame; waveform Channel_1.Data
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   sample_rate_hz:
     value: 20000000000
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   center_frequency_hz:
     status: NOT_APPLICABLE
     note: direct RF sampling
@@ -58,268 +75,481 @@ signal:
     value: 5000000
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   artifact_duration_s:
     value: 0.00025
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
 facts:
   primary_purpose:
     text: UAV/controller vs Wi-Fi/Bluetooth discrimination + RF fingerprinting
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   year:
     text: 2020 acquisition (Aug 2020, author doc)
+    kind: FACT
     status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   license:
     text: UNKNOWN — check IEEE DataPort
+    kind: FACT
     status: UNKNOWN
   full_reported_scale:
     text: 71.1 GB zip; **9,600 captures** (6,090 LOS train / 2,610 LOS test / 900 NLOS); 6 UAS + 5 BT + 2 Wi-Fi devices
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   public_release_caveat:
     text: Processed_CardRF (1 GB) = LOS UAV + controller only; Wi-Fi/Bluetooth/NLOS only in raw zip
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Processed_CardRF.zip, all 22 CSVs streamed
   raw_representation:
     text: Real-valued direct-RF waveform (oscilloscope); no IQ
-    status: UNGRADED
-  scalar_dtype:
-    text: int16 ADC codes — EMPIRICAL n=135; volts = Data×6.5841e-06 + YOrg
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+  scalar_dtype:
+    text: int16 ADC codes — EMPIRICAL n=135; volts = Data×6.5841e-06 + YOrg
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   raw_format:
     text: '`.mat`: structs `Channel_1` + `Frame`; waveform in `Channel_1.Data`'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   i_q_layout:
     text: N/A — real samples
+    kind: FACT
     status: NOT_APPLICABLE
   samples_capture_chunk:
     text: '**5,000,000 — EMPIRICAL n=135**'
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   chunk_duration:
     text: 250 µs — EMPIRICAL n=135
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   sample_rate:
     text: '**20 GSa/s — EMPIRICAL n=135 (XInc = 5e-11 s)**'
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   center_frequency:
     text: N/A — direct RF sampling, no down-conversion; 2.4 GHz band of interest
+    kind: FACT
     status: NOT_APPLICABLE
   absolute_frequency_coverage:
     text: Direct RF, Nyquist 0–10 GHz; emitters at 2.4 GHz
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   if_capture_bandwidth:
     text: Nyquist 10 GHz; analog front-end bandwidth UNKNOWN
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   occupied_signal_bandwidth:
     text: Device-dependent; not characterized
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   receiver:
     text: Keysight MSOS604A, single serial (EMPIRICAL, Frame struct)
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   pack_unit_identifier:
     text: Device per directory; one unit per model (INFERRED) → model = unit
+    kind: FACT
     status: INFERRED
+    source: CardRF.pdf (authors' dataset description)
   manufacturer_coverage:
     text: DJI, Beebeerun, 3DR/FlySky + Apple, FitBit, Motorola, Cisco, TP-Link
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   models_classes:
     text: 6 UAS (aircraft + controller), 5 Bluetooth, 2 Wi-Fi; flight-mode sub-labels
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   physical_units:
     text: 1 per model (INFERRED from Table I)
+    kind: FACT
     status: INFERRED
+    source: CardRF.pdf (authors' dataset description)
   same_model_multi_unit:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: INFERRED
+    source: CardRF.pdf (authors' dataset description)
   positive_signal_composition:
     text: Aircraft (Non_Control) and controller (Control) captured separately; Flying/Hovering/Videoing
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   day_metadata:
     text: '**Per-capture timestamps (Frame.Date): Aug 25–29 2020; 3DR Iris Nov 1 2020**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   receiver_variation:
     text: No — one capture system
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   gain_scale:
     text: '**Identical scope settings in all categories (EMPIRICAL n=135)** — no vertical-scale shortcut'
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   snr_metadata:
     text: Not provided
-    status: UNGRADED
-  environmental_negatives:
-    text: No empty-band class (signal-triggered captures)
-    status: UNGRADED
-  negative_taxonomy:
-    text: '**Wi-Fi (2 routers) + Bluetooth (5 devices)** — raw only'
-    status: UNGRADED
-  negative_diversity:
-    text: 'Moderate: 7 devices, 2 technologies, one site; 500 captures per device (Motorola 350)'
-    status: ASSESSMENT
-  negative_provenance:
-    text: Same site/system, deliberate single-emitter captures (author doc)
-    status: AUTHOR_DOC
-  hard_negative_emitters:
-    text: '**YES — Wi-Fi (1,000) + Bluetooth (2,350) captures, LOS — EMPIRICAL**'
-    status: VERIFIED
-  recorded_interference_conditions:
-    text: None — single-source captures
-    status: UNGRADED
-  positive_negative_fs_matched:
-    text: '**Yes — identical settings (EMPIRICAL n=135)**'
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+  environmental_negatives:
+    text: No empty-band class (signal-triggered captures)
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
+  negative_taxonomy:
+    text: '**Wi-Fi (2 routers) + Bluetooth (5 devices)** — raw only'
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
+  negative_diversity:
+    text: 'Moderate: 7 devices, 2 technologies, one site; 500 captures per device (Motorola 350)'
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
+  negative_provenance:
+    text: Same site/system, deliberate single-emitter captures (author doc)
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
+  hard_negative_emitters:
+    text: '**YES — Wi-Fi (1,000) + Bluetooth (2,350) captures, LOS — EMPIRICAL**'
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
+  recorded_interference_conditions:
+    text: None — single-source captures
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
+  positive_negative_fs_matched:
+    text: '**Yes — identical settings (EMPIRICAL n=135)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   positive_negative_fc_matched:
     text: N/A (direct RF); trigger and scale identical; **sessions NOT matched**
+    kind: FACT
     status: NOT_APPLICABLE
   negative_difficulty:
     text: Real same-band emitters; clipping present in negatives too; session differs by class
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   indoor_outdoor:
     text: Outdoor (AERPAW Lake Wheeler, NC)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   distance_metadata:
     text: 8–12 m LOS (range, not per file)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   altitude_state_metadata:
     text: Flight-mode labels only
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   frequency_hopping:
     text: Not labeled; 250 µs too short to observe hop sequences
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   video_transmission_signals:
     text: Inspire 'Videoing' mode only
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   multi_uav_mixtures:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   controlled_environment:
     text: No — outdoor field
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   schema_consistency:
     text: Raw and processed consistent (EMPIRICAL); 500 `__MACOSX` junk `.mat` entries to skip
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   parent_recording_identity:
     text: One file = one capture; one session block per device (Frame.Date)
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   window_safe_splitting_possible:
     text: 'Only by device/session: **official Train/Test is same-session (interleaved seconds apart)**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   original_raw_representation:
     text: Real int16 direct-RF waveform in MAT
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   published_derived_representations:
     text: 'Processed_CardRF: 1024-sample raw slices, 100/capture from the trigger point'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Processed_CardRF.zip, all 22 CSVs streamed
   raw_derived_reproducibility:
     text: Partial — shipped notebook (5 slices) ≠ released data (100 slices)
-    status: UNGRADED
+    kind: ASSESSMENT
+    status: CONFLICTING
+    conflict:
+    - claim: Resampling_Dividers.mlx cuts number_slice = 5 slices per capture
+      status: AUTHOR_CODE
+      source: 'Code.zip (authors'' MATLAB: *_Resampling.m, Resampling_Dividers.mlx)'
+    - claim: released Processed_CardRF holds 100 chained slices per capture
+      status: VERIFIED
+      source: Processed_CardRF.zip, all 22 CSVs streamed
   train_class_support:
     text: 'Processed: 11/11 classes (350 captures each; Beebeerun ctrl 245)'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Processed_CardRF.zip, all 22 CSVs streamed
   validation_class_support:
     text: 'Processed: 11/11 classes (150 captures each; Beebeerun ctrl 105)'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Processed_CardRF.zip, all 22 CSVs streamed
   class_balance:
     text: 'Processed: balanced by design; flight modes exactly 50/50'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Processed_CardRF.zip, all 22 CSVs streamed
   label_taxonomy:
     text: LOS/NLOS → category (UAV / Controller / Wi-Fi / Bluetooth) → device → flight mode
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   leakage_safe_keys:
     text: device session block (Frame.Date) + capture; hold out whole devices
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   independent_sessions_per_class:
     text: '**1 per device** (EMPIRICAL, Frame.Date); 3DR Iris on a later date'
+    kind: FACT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   potential_shortcut_receiver:
     text: None within dataset; total in cross-dataset
-    status: ASSESSMENT
-  potential_shortcut_center_frequency:
-    text: N/A (direct RF)
-    status: ASSESSMENT
-  potential_shortcut_snr:
-    text: UNKNOWN; distance varies 8–12 m
-    status: ASSESSMENT
-  potential_shortcut_received_power:
-    text: '**HIGH — clipping 0–42% varies by device; NLOS ~13 dB weaker**'
-    status: ASSESSMENT
-  potential_shortcut_dataset_source:
-    text: 'Total in cross-dataset; **within dataset: device ↔ session/day**'
-    status: ASSESSMENT
-  potential_shortcut_position:
-    text: Aircraft vs controller geometry; LOS/NLOS amplitude shift
-    status: ASSESSMENT
-  known_acquisition_defect:
-    text: '**ADC saturation in all categories incl. Wi-Fi/BT (EMPIRICAL n=135)**'
+    kind: ASSESSMENT
     status: EMPIRICAL
     n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+  potential_shortcut_center_frequency:
+    text: N/A (direct RF)
+    kind: ASSESSMENT
+    status: NOT_APPLICABLE
+  potential_shortcut_snr:
+    text: UNKNOWN; distance varies 8–12 m
+    kind: ASSESSMENT
+    status: UNKNOWN
+  potential_shortcut_received_power:
+    text: '**HIGH — clipping 0–42% varies by device; NLOS ~13 dB weaker**'
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+  potential_shortcut_dataset_source:
+    text: 'Total in cross-dataset; **within dataset: device ↔ session/day**'
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+  potential_shortcut_position:
+    text: Aircraft vs controller geometry; LOS/NLOS amplitude shift
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+  known_acquisition_defect:
+    text: '**ADC saturation in all categories incl. Wi-Fi/BT (EMPIRICAL n=135)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   classical_ml_opportunity:
     text: Short-window spectral/transient features; clipping must be controlled
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/cardrf.yaml details
   phase_aware_experiments:
     text: No (real-valued)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   magnitude_common_experiments:
     text: No directly; spectral-common only after digital down-conversion
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   detection_usefulness:
     text: Hard-negative rejection (UAV vs Wi-Fi/BT); no empty-band detection
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/cardrf.yaml details
   identification_usefulness:
     text: Strong among represented devices; model = unit
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/cardrf.yaml details
   robustness_usefulness:
     text: LOS→NLOS (3 UAVs) only
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/cardrf.yaml details
   unique_contribution:
     text: Explicit Wi-Fi + Bluetooth hard negatives; aircraft vs controller separation; LOS/NLOS
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/cardrf.yaml details
   claim_ceiling:
     text: Short-window UAS vs Wi-Fi/BT discrimination for represented devices, one site, 8–12 m
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: Hard-negative source (pending raw audit) + aircraft/controller discrimination
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: Hard-negative component; evaluate by holding out whole devices with clipping/session controls
-    status: ASSESSMENT
-  full_download_justification:
-    text: Done — 71.1 GB, size verified
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/cardrf.yaml details
   window_label_reliability:
     text: 'Burst classes: noise before trigger, ~5 µs transient after; **DJI aircraft: signal before trigger too**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
 supplementary:
   Devices:
     text: 'UAS: DJI Phantom 4, Inspire, Matrice 600, Mavic Pro 1, Beebeerun FPV, 3DR Iris (FlySky FS-TH9x). BT: iPhone 6S, iPhone 7, iPad 3, FitBit Charge3, Motorola E5 Cruise. Wi-Fi: Cisco Linksys E3200, TP-Link TL-WR940N'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: CardRF.pdf (authors' dataset description)
   NLOS coverage:
     text: 'UAV only: DJI Inspire, Matrice 600, Phantom (Flying)'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   Trigger:
-    text: Example XOrg = −1.25e-4 s → trigger at capture midpoint (author doc)
-    status: AUTHOR_DOC
+    text: XOrg = −1.25e-4 s in every audited file → trigger at capture midpoint (EMPIRICAL n=135)
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   Processed slicing:
     text: 1024 samples × 100 consecutive slices per capture, start index 2,500,000, 1-sample overlap between slices
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_CODE
+    source: 'Code.zip (authors'' MATLAB: *_Resampling.m, Resampling_Dividers.mlx)'
   Processed split:
     text: 70/30 by capture (350/150 per class), inherited from the raw split — which is same-session
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 135
+    n_unit: file
+    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   Clipping by class (processed, train):
     text: 'UAV: Inspire 16%, Phantom 27%, M600 29%, Beebeerun 30%, Mavic Pro 30%. Controller: Beebeerun 0.001%, Inspire 7%, M600 8%, Phantom 14%, Mavic Pro 37%, 3DR Iris 40%'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 22
+    n_unit: file
+    source: Processed_CardRF.zip, all 22 CSVs streamed
   Documentation conflict:
     text: Scale factor 6.581e-06 (text) vs YInc 6.5841e-06 (struct)
-    status: UNGRADED
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: scale factor 6.581e-06 V/code
+      status: AUTHOR_DOC
+      source: CardRF.pdf (authors' dataset description)
+    - claim: YInc = 6.58411815e-06 in every audited file
+      status: EMPIRICAL
+      source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+      n: 135
+      n_unit: file
   Shipped code:
     text: '`*_Resampling.m` slice only (no resampling); `Resampling_Dividers.mlx` uses 5 slices — not the production recipe'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_CODE
+    source: 'Code.zip (authors'' MATLAB: *_Resampling.m, Resampling_Dividers.mlx)'
 details:
   # CardRF dataset card
   #

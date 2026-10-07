@@ -20,101 +20,151 @@ storage:
 structure:
   artifact:
     text: One microphone's WAV for one event
-    status: EMPIRICAL
-    n: 174
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   capture:
     text: Flyover or hover event recorded by 9 ground microphones (M1–M9)
+    kind: FACT
     status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   group:
     text: Event
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
 signal:
   container:
     value: WAV
-    status: EMPIRICAL
-    n: 174
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   sample_format:
     value: float32
-    status: EMPIRICAL
-    n: 174
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   sample_rate_hz:
     value: 50000
-    status: EMPIRICAL
-    n: 174
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   channels_per_artifact:
     value: 1
-    status: EMPIRICAL
-    n: 174
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   artifact_duration_s:
     varies: true
-    status: EMPIRICAL
-    n: 174
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
     note: 12–30 s
 facts:
   primary_purpose:
     text: sUAS noise / psychoacoustics (author)
+    kind: FACT
     status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   licence:
     text: CC BY 4.0
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: figshare record 22133411 (licence, MD5)
   local_artifact:
     text: '`22133411.zip` 0.74 GB'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: figshare record 22133411 (licence, MD5)
   recording_type:
     text: Field, outdoor
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   positives:
     text: DJI Mini 3 Pro (`3p`), `Fp`, Mavic 3 (`M3`), Yuneec (`Yn`)
-    status: UNGRADED
+    kind: FACT
+    status: INFERRED
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   negatives:
     text: None (flyover edges = distant drone, not background)
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   same_chain_negatives:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   sample_rate_format:
-    text: '**50 kHz, 32-bit float, mono (EMPIRICAL n=174)**; M6–M9 in pascals, M1–M5 calibration ±5 dB'
-    status: EMPIRICAL
-    n: 174
+    text: '**50 kHz, 32-bit float, mono (all 174 headers)**; M6–M9 in pascals, M1–M5 calibration ±5 dB'
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   clip_recording_length:
     text: 12–30 s per flyover/hover
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   microphones_channels:
     text: 9 ground microphones (M1–M9), calibrated
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   calibration:
     text: '**9 calibration tones: M6–M9 consistent with pascals; M1–M5 tones unsteady (±5 dB)**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   sessions_days:
     text: 1 day (17 Aug 2022)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   site:
     text: Edzell, Scotland
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   geometry_metadata:
     text: 10 m AGL; 15 m/s flyovers and hovers
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   weather:
     text: Not in files
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
   speech_other_confounds:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   known_defects:
     text: Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted
-    status: UNGRADED
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: Mini 3 Pro flyover files are named `dw`
+      status: VERIFIED
+      source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
+    - claim: metrics sheet lists them as `uw`
+      status: AUTHOR_DOC
+      source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   leakage_safe_keys:
     text: flyover event
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)
   published_split:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: figshare record 22133411 (licence, MD5)
   level_shortcut_risk:
     text: Calibrated; flyover sweeps 48→71 dB SPL
-    status: ASSESSMENT
-  provisional_role:
-    text: Independent calibrated test; detection vs distance
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 1
+    n_unit: file
+    source: 'scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)'
 details:
   dataset:
     id: dronenoise

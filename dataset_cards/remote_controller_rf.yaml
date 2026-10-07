@@ -15,261 +15,378 @@ adoption: backlog
 structure:
   artifact:
     text: Not assessed (paper read only)
+    kind: FACT
     status: UNKNOWN
   capture:
     text: Not assessed (paper read only)
+    kind: FACT
     status: UNKNOWN
   group:
     text: Not assessed (paper read only)
+    kind: ASSESSMENT
     status: UNKNOWN
 signal:
   complex_iq:
     value: false
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   scalar_dtype:
     status: UNKNOWN
   container:
     value: .mat
-    status: AUTHOR_DOC
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   sample_rate_hz:
     value: 20000000000
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   center_frequency_hz:
     status: NOT_APPLICABLE
     note: direct RF sampling
   capture_bandwidth_hz:
     value: 6000000000
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
     note: oscilloscope analog bandwidth
   samples_per_artifact:
     value: 5000000
     status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   artifact_duration_s:
     value: 0.00025
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
 facts:
   primary_purpose:
     text: RC detection/classification with Wi-Fi/BT rejection (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   year:
     text: 2020 (DataPort; OJ-COMS 2020)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   license:
     text: Open access (login); license text UNKNOWN
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   full_reported_scale:
     text: 17 RCs, 8 makers, ~1000 signals/RC; 124 GB single zip
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   public_release_caveat:
     text: Release lists RC signals only; paper's Wi-Fi/BT captures not listed
-    status: AUTHOR_DOC
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   raw_representation:
     text: Real-valued direct RF (oscilloscope)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   scalar_dtype:
     text: UNKNOWN (paper-read only)
+    kind: FACT
     status: UNKNOWN
   raw_format:
     text: '`.mat` + MATLAB class scripts'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   i_q_layout:
     text: N/A — real samples
+    kind: FACT
     status: NOT_APPLICABLE
   samples_capture_chunk:
     text: 5,000,000 (DataPort)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   chunk_duration:
     text: 0.25 ms
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   sample_rate:
     text: 20 GSa/s (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   center_frequency:
     text: N/A — direct RF sampling, 2.4 GHz band
+    kind: FACT
     status: NOT_APPLICABLE
   absolute_frequency_coverage:
     text: Direct RF; 2.4 GHz
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   if_capture_bandwidth:
     text: Oscilloscope analog bandwidth 6 GHz (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   occupied_signal_bandwidth:
     text: RC links; paper rejects Wi-Fi by >20 MHz bandwidth
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   receiver:
     text: Keysight MSOS604A + 2 dBi omni / 24 dBi grid + LNA
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   pack_unit_identifier:
     text: Controller label incl. unit tags (Mpact/Ngat)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   manufacturer_coverage:
     text: DJI, Spektrum, Futaba, Graupner, HobbyKing, FlySky, Turnigy, Jeti
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   models_classes:
     text: 15 models / 17 controllers
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   physical_units:
     text: '17'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   same_model_multi_unit:
     text: Yes — 2 pairs (Matrice 600, Phantom 4 Pro)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   positive_signal_composition:
     text: RC uplinks only
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   day_metadata:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   receiver_variation:
     text: Antenna variation (omni/grid); per-file UNKNOWN
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   gain_scale:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   snr_metadata:
     text: Paper sweeps SNR; per-file not documented
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   environmental_negatives:
     text: Not in release (as listed)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   negative_taxonomy:
     text: 'Paper: Wi-Fi routers + 6 Bluetooth phones; not released'
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   negative_diversity:
     text: N/A in release
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: NOT_APPLICABLE
   negative_provenance:
     text: N/A in release
+    kind: FACT
     status: NOT_APPLICABLE
   hard_negative_emitters:
     text: Not in release
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   recorded_interference_conditions:
     text: Paper only
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   positive_negative_fs_matched:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   positive_negative_fc_matched:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   negative_difficulty:
     text: N/A
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: NOT_APPLICABLE
   indoor_outdoor:
     text: Indoor reported; outdoor shown, not reported
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   distance_metadata:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   altitude_state_metadata:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   frequency_hopping:
     text: Yes (RC links), not labelled
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   video_transmission_signals:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   multi_uav_mixtures:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   controlled_environment:
     text: Indoor lab (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   schema_consistency:
     text: Not inspected
+    kind: FACT
     status: UNKNOWN
   parent_recording_identity:
     text: Per-signal files; session UNKNOWN
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   window_safe_splitting_possible:
     text: Not assessed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   original_raw_representation:
     text: Real direct-RF in MAT
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   published_derived_representations:
     text: 15 statistical transient features (paper)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   raw_derived_reproducibility:
     text: Paper code not in release
-    status: AUTHOR_DOC
+    kind: ASSESSMENT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   train_class_support:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   validation_class_support:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   class_balance:
     text: ~1000 per controller
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: IEEE DataPort record 10.21227/ss99-8d56
   label_taxonomy:
     text: Controller make/model/unit
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   leakage_safe_keys:
     text: Not assessed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   independent_sessions_per_class:
     text: Not assessed
+    kind: FACT
     status: UNKNOWN
   potential_shortcut_receiver:
     text: Not assessed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_center_frequency:
     text: N/A (direct RF)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: NOT_APPLICABLE
   potential_shortcut_snr:
     text: Not assessed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_received_power:
     text: Not assessed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_dataset_source:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: docs/datasets/remote_controller_rf_notes.md
   potential_shortcut_position:
     text: Not assessed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   known_acquisition_defect:
     text: Not assessed
+    kind: FACT
     status: UNKNOWN
   classical_ml_opportunity:
     text: Strong — paper's 15 transient features
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   phase_aware_experiments:
     text: 'No'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   magnitude_common_experiments:
     text: Spectral-common after down-conversion
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: docs/datasets/remote_controller_rf_notes.md
   detection_usefulness:
     text: Paper-level only
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: docs/datasets/remote_controller_rf_notes.md
   identification_usefulness:
     text: Strong in paper (98.13% kNN at 25 dB)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   robustness_usefulness:
     text: Paper SNR study only
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
   unique_contribution:
     text: None new vs CardRF + UAVSig (see notes)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: docs/datasets/remote_controller_rf_notes.md
   claim_ceiling:
     text: N/A — not adopted
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: Backlog — paper read only
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: 'No'
-    status: ASSESSMENT
-  full_download_justification:
-    text: No — 124 GB, no new axis
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: NOT_APPLICABLE
   window_label_reliability:
     text: Triggered captures (INFERRED, as CardRF)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: docs/datasets/remote_controller_rf_notes.md
 details:
   notes: docs/datasets/remote_controller_rf_notes.md
   source: IEEE DataPort, DOI 10.21227/ss99-8d56; Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)

@@ -20,101 +20,139 @@ storage:
 structure:
   artifact:
     text: One 5 s mono WAV clip
-    status: EMPIRICAL
-    n: 2000
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   capture:
     text: = artifact
-    status: EMPIRICAL
-    n: 2000
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   group:
     text: '`src_file` (Freesound source recording)'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
 signal:
   container:
     value: WAV
-    status: EMPIRICAL
-    n: 2000
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   sample_format:
     value: pcm_s16
-    status: EMPIRICAL
-    n: 2000
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   sample_rate_hz:
     value: 44100
-    status: EMPIRICAL
-    n: 2000
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   channels_per_artifact:
     value: 1
-    status: EMPIRICAL
-    n: 2000
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   artifact_duration_s:
     value: 5.0
-    status: EMPIRICAL
-    n: 2000
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
 facts:
   primary_purpose:
     text: Environmental sound classification
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   licence:
     text: 'CC BY-NC 3.0 (ESC-10: CC BY)'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   local_artifact:
     text: '`ESC-50-master.zip`'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: GitHub repository archive (no published checksum)
   recording_type:
     text: Freesound clips (mixed sources)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   positives:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   negatives:
     text: Helicopter, airplane, engine, chainsaw, wind, rain, … (40 clips per class)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   same_chain_negatives:
     text: N/A (no positives)
+    kind: FACT
     status: NOT_APPLICABLE
   sample_rate_format:
-    text: 44.1 kHz, 16-bit, mono (EMPIRICAL n=2000)
-    status: EMPIRICAL
-    n: 2000
+    text: 44.1 kHz, 16-bit, mono (all 2,000 headers)
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   clip_recording_length:
     text: 5 s
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   microphones_channels:
     text: Unknown / various
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   calibration:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   sessions_days:
     text: Freesound source files
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   site:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   geometry_metadata:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   weather:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   speech_other_confounds:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   known_defects:
     text: Some clips clip heavily (up to 10.6%)
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 2000
+    n_unit: file
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
   leakage_safe_keys:
     text: '`src_file` (helicopter: 15 sources for 40 clips)'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   published_split:
     text: 5 folds by `src_file`
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: ESC-50 README + meta/esc50.csv (Piczak 2015)
   level_shortcut_risk:
     text: Varies by source
-    status: ASSESSMENT
-  provisional_role:
-    text: Hard-negative layer (labelled classes)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 2000
+    n_unit: file
+    source: 'scripts/inspect_acoustic.py: all 2,000 WAV headers + level audit (interim/esc50)'
 details:
   dataset:
     id: esc50

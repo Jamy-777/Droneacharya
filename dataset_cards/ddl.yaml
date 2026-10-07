@@ -21,102 +21,156 @@ storage:
 structure:
   artifact:
     text: One 0.1 s 8-channel WAV clip
-    status: EMPIRICAL
-    n: 62103
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   capture:
     text: Contiguous run of clips within a recording segment, split at gaps in the clip sequence
+    kind: FACT
     status: INFERRED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   group:
     text: Flight day + recording segment
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
 signal:
   container:
     value: WAV
-    status: EMPIRICAL
-    n: 62103
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   sample_format:
     value: pcm_s32
-    status: EMPIRICAL
-    n: 62103
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   sample_rate_hz:
     value: 96000
-    status: EMPIRICAL
-    n: 62103
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   channels_per_artifact:
     value: 8
-    status: EMPIRICAL
-    n: 62103
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   artifact_duration_s:
     value: 0.1
-    status: EMPIRICAL
-    n: 62103
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
     note: 3,945 clips are empty 44-byte files
 facts:
   primary_purpose:
     text: Drone detection + localization (author)
+    kind: FACT
     status: AUTHOR_DOC
+    source: DDL paper (Safavi et al.) and Zenodo 6459183 description
   licence:
     text: CC BY 4.0
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: Zenodo record 6459183 (licence, MD5)
   local_artifact:
     text: '`MLSP_2022_Real_Data.zip` 12.6 GB, MD5 OK'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Zenodo record 6459183 (licence, MD5)
   recording_type:
     text: Field, outdoor
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DDL paper (Safavi et al.) and Zenodo 6459183 description
   positives:
     text: DJI Mini 2, Phantom 4 Pro
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DDL paper (Safavi et al.) and Zenodo 6459183 description
   negatives:
     text: '**None in release** — 0 `XXXX` clips (EMPIRICAL, all 62,092 parsed)'
-    status: EMPIRICAL
-    n: 62092
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: paper and Zenodo describe an XXXX no-drone class and environment-only sessions
+      status: AUTHOR_DOC
+      source: DDL paper (Safavi et al.) and Zenodo 6459183 description
+    - claim: 0 of 62,092 released clips carry the XXXX class code
+      status: VERIFIED
+      source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   same_chain_negatives:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   sample_rate_format:
-    text: '**96 kHz, 32-bit integer PCM, 8 ch (EMPIRICAL n=62,103 headers)**'
-    status: EMPIRICAL
-    n: 62103
+    text: '**96 kHz, 32-bit integer PCM, 8 ch (all 62,103 headers)**'
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   clip_recording_length:
     text: 0.1 s clips (62,092) ≈ 103.5 min
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   microphones_channels:
     text: 8-ch cube array, Zoom F8N
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DDL paper (Safavi et al.) and Zenodo 6459183 description
   calibration:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: Zenodo record 6459183 (licence, MD5)
   sessions_days:
     text: '**2 flight days** (29 & 31 Mar 2021), 36 recording segments'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   site:
     text: '31 Mar: Phantom 17:14–18:20 then Mini 18:24–19:10 → **same site that day** (paper implied separate sites)'
-    status: AUTHOR_DOC
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: paper figure implies separate sites for the two drones
+      status: AUTHOR_DOC
+      source: DDL paper (Safavi et al.) and Zenodo 6459183 description
+    - claim: '31 Mar: Phantom ends 18:20, Mini starts 18:24 → same site that day'
+      status: INFERRED
+      source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   geometry_metadata:
     text: Range 0–249 m, bearing, altitude per clip (filename)
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   weather:
     text: Temperature only (1 value per day)
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   speech_other_confounds:
     text: 'Suburban site: cars, people (author)'
+    kind: FACT
     status: AUTHOR_DOC
+    source: DDL paper (Safavi et al.) and Zenodo 6459183 description
   known_defects:
     text: '**3,945 empty 44-byte clips (6.4%)** in 10 sessions on 31 Mar; 11 garbled filenames; low-frequency comb (58–105 Hz, ~11.7 Hz spacing) in both drones and both days — likely site/equipment'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   leakage_safe_keys:
     text: flight day + recording segment (filename)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: filename index of all 62,092 clips (interim/ddl/ddl_filename_index.csv)
   published_split:
     text: Random by sample (Train/Val/Test tables) — leaky
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DDL paper (Safavi et al.) and Zenodo 6459183 description
   level_shortcut_risk:
     text: Broadband level differs 15–20 dB by day, but **only below 300 Hz**; in 300–8000 Hz days match (−67.1 / −67.9 dB) and level falls with range (r = −0.89 Phantom, −0.59 Mini on 31 Mar; 29 Mar Mini shows no trend) (n=720)
-    status: ASSESSMENT
-  provisional_role:
-    text: '**Demoted:** range-labelled positives (high-pass below ~300 Hz); future localization. Not a detection backbone (no negatives)'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 720
+    n_unit: clip
+    source: scripts/inspect_acoustic.py level audit, 720 clips in 300–8000 Hz (docs/datasets/acoustic_notes.md)
 details:
   dataset:
     id: ddl

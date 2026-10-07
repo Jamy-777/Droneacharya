@@ -20,102 +20,142 @@ storage:
 structure:
   artifact:
     text: One 10 s stereo WAV
-    status: EMPIRICAL
-    n: 90
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   capture:
     text: = artifact
-    status: EMPIRICAL
-    n: 90
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   group:
     text: Clip (event grouping UNKNOWN)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: 'GitHub contents API: sizes and blob SHA-1 of Data/Audio; raw_sha256.csv'
 signal:
   container:
     value: WAV
-    status: EMPIRICAL
-    n: 90
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   sample_format:
     value: pcm_s16
-    status: EMPIRICAL
-    n: 90
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   sample_rate_hz:
     value: 44100
-    status: EMPIRICAL
-    n: 90
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   channels_per_artifact:
     value: 2
-    status: EMPIRICAL
-    n: 90
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
     note: 23 of 90 dual-mono
   artifact_duration_s:
     value: 10.0
-    status: EMPIRICAL
-    n: 90
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
 facts:
   primary_purpose:
     text: Multi-sensor drone detection (author)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   licence:
     text: '"Free to download, use and edit"'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   local_artifact:
     text: 90 WAVs from `Data/Audio`
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'GitHub contents API: sizes and blob SHA-1 of Data/Audio; raw_sha256.csv'
   recording_type:
     text: Field, outdoor (airports)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   positives:
     text: Drone (30 clips)
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   negatives:
     text: Background (30) + helicopter (30), same equipment
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   same_chain_negatives:
     text: '**Yes**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   sample_rate_format:
-    text: '**44.1 kHz, 16-bit, stereo (EMPIRICAL n=90)**'
-    status: EMPIRICAL
-    n: 90
+    text: '**44.1 kHz, 16-bit, stereo (all 90 headers)**'
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   clip_recording_length:
     text: 10 s
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   microphones_channels:
     text: Stereo; 23/90 clips dual-mono
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
   calibration:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   sessions_days:
     text: 3 airports (author)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   site:
     text: Halmstad, Gothenburg, Malmö airports
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   geometry_metadata:
     text: Close / medium / distant (author)
+    kind: FACT
     status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   weather:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   speech_other_confounds:
     text: —
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   known_defects:
-    text: —
-    status: UNGRADED
+    text: '`BACKGROUND_010.wav` and `BACKGROUND_019.wav` are byte-identical (also in the upstream repository)'
+    kind: FACT
+    status: VERIFIED
+    source: 'GitHub contents API: sizes and blob SHA-1 of Data/Audio; raw_sha256.csv'
   leakage_safe_keys:
-    text: clip (event grouping unknown)
-    status: ASSESSMENT
+    text: clip; `BACKGROUND_010`/`019` must share a group (identical files); event grouping unknown
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: 'GitHub contents API: sizes and blob SHA-1 of Data/Audio; raw_sha256.csv'
   published_split:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: Svanström et al., Data in Brief 2021 + repository README
   level_shortcut_risk:
     text: '**High — background −35.8, drone −24.8, helicopter −19.2 dBFS (median)**'
-    status: ASSESSMENT
-  provisional_role:
-    text: '**Same-chain hard negatives** (helicopter)'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 90
+    n_unit: file
+    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
 details:
   dataset:
     id: svanstrom

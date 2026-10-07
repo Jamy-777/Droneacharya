@@ -22,296 +22,504 @@ storage:
 structure:
   artifact:
     text: One `.mat` member of a system archive (zip)
+    kind: FACT
     status: VERIFIED
+    source: central directories of all 16 zips
   capture:
     text: = artifact; files are separate captures seconds apart, not continuous
+    kind: FACT
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   group:
     text: Archive (system × RC/Vid session)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
 signal:
   complex_iq:
     value: true
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   scalar_dtype:
     value: complex128 (HDF5 compound) holding int16 codes / 32768
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   container:
     value: MAT v7.3 (HDF5); variable uhd_samps, shape (1, N)
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   sample_rate_hz:
     value: 100000000
     status: AUTHOR_DOC
+    source: README.txt (authors)
   center_frequency_hz:
     value: 2440000000
     status: AUTHOR_DOC
+    source: README.txt (authors)
   capture_bandwidth_hz:
     value: 100000000
     status: INFERRED
+    source: README.txt (authors)
     note: complex sampling at 100 MS/s
   samples_per_artifact:
     varies: true
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
     note: 10M most archives; 20M Mini 2 video; 100M Mavic
   artifact_duration_s:
     varies: true
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
     note: 0.1 s / 0.2 s / 1 s by archive
 facts:
   primary_purpose:
     text: RC + video-link identification; novelty detection (per publication titles)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   year:
     text: 2024 release (v1.0); captures created 2022 (MAT header, n=1)
-    status: EMPIRICAL
-    n: 1
+    kind: FACT
+    status: REPO_METADATA
+    source: KU Leuven RDR API listing (manifests/rma_file_listing.json)
   license:
     text: '**CC BY-NC 4.0** (non-commercial)'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: KU Leuven RDR API listing (manifests/rma_file_listing.json)
   full_reported_scale:
     text: 46.7 GB (= 43.5 GiB); 16 zips; 812 `.mat` captures; 10 systems
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   public_release_caveat:
     text: Full public release; README omits Mavic archives (~19 GB)
-    status: AUTHOR_DOC
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: README lists 9 systems, no Mavic
+      status: AUTHOR_DOC
+      source: README.txt (authors)
+    - claim: release holds 4 Mavic archives (60 files)
+      status: VERIFIED
+      source: central directories of all 16 zips
   raw_representation:
     text: Complex IQ
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   scalar_dtype:
     text: complex double holding int16 codes/32768 — EMPIRICAL n=9
+    kind: FACT
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   raw_format:
     text: MAT v7.3 (HDF5), variable `uhd_samps` — EMPIRICAL n=9
+    kind: FACT
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   i_q_layout:
     text: HDF5 compound real/imag, shape (1, N) — EMPIRICAL n=9
+    kind: FACT
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   samples_capture_chunk:
     text: '**Varies by class: 10M (100 ms) most; 20M Mini 2 video; 100M (1 s) Mavic — EMPIRICAL n=9**'
+    kind: FACT
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   chunk_duration:
     text: 100 ms / 200 ms / 1 s by archive
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   sample_rate:
     text: 100 MS/s (author README + code)
+    kind: FACT
     status: AUTHOR_DOC
+    source: README.txt (authors)
   center_frequency:
     text: 2.44 GHz (author README + code)
+    kind: FACT
     status: AUTHOR_DOC
+    source: README.txt (authors)
   absolute_frequency_coverage:
     text: 2.39–2.49 GHz
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   if_capture_bandwidth:
     text: 100 MHz (INFERRED from complex 100 MS/s)
+    kind: FACT
     status: INFERRED
+    source: README.txt (authors)
   occupied_signal_bandwidth:
     text: System and link dependent; RC vs video recorded separately
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   receiver:
     text: USRP X310 (single) + OmniLOG 70600 omni
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   pack_unit_identifier:
     text: Archive (system × RC/Vid) + file index; one unit per system (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: README.txt (authors)
   manufacturer_coverage:
     text: DJI + Spektrum, FrSky, Nine Eagles, WLtoys, Q205, SJRC
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   models_classes:
     text: 10 systems (9 in README + undocumented Mavic); RC/Vid split for DJI
-    status: AUTHOR_DOC
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   physical_units:
     text: 1 per system (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: README.txt (authors)
   same_model_multi_unit:
     text: No (as documented)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   positive_signal_composition:
     text: RC uplink and video downlink recorded separately; hobby controllers RC only
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   day_metadata:
     text: 'MAT headers: Apr 4–6 2022 (most), May 2022 (SJRC), **Oct 30 / Nov 2 2022 (Mavic)**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   receiver_variation:
     text: No — one receiver
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   gain_scale:
     text: Noise floor similar in the 9 inspected captures (min window RMS 4.5–4.6e-4) — gain likely constant (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   snr_metadata:
     text: Not provided; fixed 7 m in chamber
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   environmental_negatives:
     text: '**None in release**'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   negative_taxonomy:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   negative_diversity:
     text: None
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: central directories of all 16 zips
   negative_provenance:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   hard_negative_emitters:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   recorded_interference_conditions:
     text: None (semi-anechoic chamber)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   positive_negative_fs_matched:
     text: N/A — no negatives
+    kind: FACT
     status: NOT_APPLICABLE
   positive_negative_fc_matched:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   negative_difficulty:
     text: N/A — no negatives
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: NOT_APPLICABLE
   indoor_outdoor:
     text: Indoor semi-anechoic chamber
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   distance_metadata:
     text: Fixed 7 m (author README)
+    kind: FACT
     status: AUTHOR_DOC
+    source: README.txt (authors)
   altitude_state_metadata:
     text: None
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   frequency_hopping:
     text: Likely in hobby RC links; not labeled (INFERRED)
+    kind: FACT
     status: INFERRED
+    source: README.txt (authors)
   video_transmission_signals:
     text: '**YES — separate Vid archives (Mini 2, Inspire 2, Matrice, Mavic)**'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   multi_uav_mixtures:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   controlled_environment:
     text: Yes — semi-anechoic chamber
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   schema_consistency:
-    text: EMPIRICAL (n=1)
+    text: Consistent across the 9 audited captures (EMPIRICAL n=9)
+    kind: FACT
     status: EMPIRICAL
-    n: 1
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   parent_recording_identity:
     text: Archive = session; files are separate captures seconds apart (not continuous)
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   window_safe_splitting_possible:
     text: Yes by archive/session; file-level splits are same-session
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   original_raw_representation:
     text: Complex IQ (double) in MAT v7.3
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   published_derived_representations:
     text: 'Author code: 1024-pt Hann spectrogram, log-amplitude, z-scored per spectrogram'
+    kind: FACT
     status: AUTHOR_CODE
+    source: get_spectrogram2.m / signal_visualize.m (authors' code)
   raw_derived_reproducibility:
     text: Strong — raw IQ + author code
+    kind: ASSESSMENT
     status: AUTHOR_CODE
+    source: get_spectrogram2.m / signal_visualize.m (authors' code)
   train_class_support:
     text: N/A — no published split
+    kind: FACT
     status: NOT_APPLICABLE
   validation_class_support:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   class_balance:
     text: 51–71 files per archive; capture length differs by class (100 ms–1 s)
-    status: UNGRADED
-  label_taxonomy:
-    text: System × signal type (RC / Vid) from archive name
-    status: UNGRADED
-  leakage_safe_keys:
-    text: archive (session) + file; names repeat across RC/Vid archives
-    status: ASSESSMENT
-  independent_sessions_per_class:
-    text: '**1 per archive** (EMPIRICAL); Mavic in a separate campaign'
+    kind: FACT
     status: EMPIRICAL
     n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+  label_taxonomy:
+    text: System × signal type (RC / Vid) from archive name
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
+  leakage_safe_keys:
+    text: archive (session) + file; names repeat across RC/Vid archives
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
+  independent_sessions_per_class:
+    text: '**1 per archive** (EMPIRICAL); Mavic in a separate campaign'
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   potential_shortcut_receiver:
     text: None within; same receiver model as RFUAV (low cross-dataset receiver gap)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   potential_shortcut_center_frequency:
     text: Low — fixed 2.44 GHz
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   potential_shortcut_snr:
     text: UNKNOWN; fixed geometry
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_received_power:
     text: Audit — RC vs video power; author code z-scores it away
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_dataset_source:
     text: Yes in cross-dataset experiments; **Mavic session 7 months later**
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   potential_shortcut_position:
     text: Low — fixed 7 m
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   known_acquisition_defect:
     text: No zero-gap/dropout pattern in the 9 inspected captures (zeros 0.03–0.13% = quantization)
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   classical_ml_opportunity:
     text: 'Strong: burst, hop and bandwidth features on clean signals'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rma.yaml details
   phase_aware_experiments:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   magnitude_common_experiments:
     text: Yes (spectral-common)
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
   detection_usefulness:
     text: Positive-only; needs negatives from another dataset
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rma.yaml details
   identification_usefulness:
     text: '**Strong** — 10 systems incl. hobby RC; RC vs video'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rma.yaml details
   robustness_usefulness:
     text: Low — single chamber, fixed distance
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rma.yaml details
   unique_contribution:
     text: Clean anechoic RC + video references for 10 systems; closest acquisition match to RFUAV
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rma.yaml details
   claim_ceiling:
     text: Identification of represented RC/video emissions in a semi-anechoic chamber at 7 m
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: Clean-reference identification + leave-system-out novelty + RFUAV cross-dataset partner
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: No — no negatives
-    status: ASSESSMENT
-  full_download_justification:
-    text: No — fetch individual captures from the remote zips
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/rma.yaml details
   window_label_reliability:
     text: RC bursty (12–65% of 1 ms windows active); video 40–93% — activity-aware labels needed
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 9
+    n_unit: file
+    source: scripts/inspect_rma.py on 9 captures (interim/rma/inspection)
 supplementary:
   Repository:
     text: KU Leuven RDR, DOI 10.48804/HZRVNZ, v1.0 (2024-01-16)
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: KU Leuven RDR API listing (manifests/rma_file_listing.json)
   Archives:
     text: Spektrum_DX4e, mini2RC, mini2vid, inspire2RC, inspire2Vid, matriceRC, matricevid (71 files each); Frysky, NineEagles, wltoys, Q205, SJRC_pro (51 each); MavicRC1/2 (15+16), MavicVid1/2 (14+15)
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: central directories of all 16 zips
   Documentation conflicts:
     text: Mavic not in README; Frysky vs "Taranis Q X7"; SJRC F11 Pro "drone + RC" but one archive
-    status: AUTHOR_DOC
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: 'README: 9 systems incl. ''Taranis Q X7'' and ''SJRC F11 Pro drone + remote controller'''
+      status: AUTHOR_DOC
+      source: README.txt (authors)
+    - claim: 'archives: 4 undocumented Mavic archives, ''Frysky'' archive, one SJRC archive'
+      status: VERIFIED
+      source: central directories of all 16 zips
   Antenna / distance:
     text: OmniLOG 70600 omni; 7 m
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: README.txt (authors)
   Published preprocessing:
     text: '`get_spectrogram2.m`: NFFT 1024, Hann, no overlap, log-amplitude, per-spectrogram z-score'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_CODE
+    source: get_spectrogram2.m / signal_visualize.m (authors' code)
   Not to be confused with:
     text: 'Zenodo 10.5281/zenodo.21428081 (ZHAW 2026): different drones + Wi-Fi/BT background, spectrogram images only'
-    status: UNGRADED
+    kind: FACT
+    status: REPO_METADATA
+    source: KU Leuven RDR API listing (manifests/rma_file_listing.json)
 details:
   # RMA (Royal Military Academy / KU Leuven) Drone RF Dataset card
   #

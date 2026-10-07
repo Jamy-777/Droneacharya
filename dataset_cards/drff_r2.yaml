@@ -20,301 +20,552 @@ storage:
 structure:
   artifact:
     text: One `.mat` file
+    kind: FACT
     status: VERIFIED
+    source: raw_sha256.csv inventory of the local release (731 .mat in 7 subset folders)
   capture:
     text: '= artifact: one 1.4 s capture'
-    status: VERIFIED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   group:
     text: Physical unit + day + receiver + configuration
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
 signal:
   complex_iq:
     value: true
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   scalar_dtype:
     value: float32
     status: EMPIRICAL
     n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   container:
     value: MAT v7.3 (HDF5); separate RF0_I / RF0_Q
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   sample_rate_hz:
     value: 100000000
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   center_frequency_hz:
     varies: true
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
     note: 5.745 GHz outdoor subsets, 2.437 GHz Wi-Fi subset; stored per file (CenterFrequence / CenterFreq); per-subset audit pending
   capture_bandwidth_hz:
     status: UNKNOWN
     note: 'matrix: VERIFY'
   samples_per_artifact:
     value: 140000000
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
     note: per channel
   artifact_duration_s:
     value: 1.4
-    status: VERIFIED
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
 facts:
   primary_purpose:
     text: RFF/model/state/robustness
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   year:
     text: '2026'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   license:
     text: CC BY 4.0
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   full_reported_scale:
     text: 26 physical units / 8 models
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   public_release_caveat:
     text: Public dataset
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   raw_representation:
     text: Complex IQ
-    status: UNGRADED
-  scalar_dtype:
-    text: '**float32 — EMPIRICAL (n=5 files)**'
+    kind: FACT
     status: EMPIRICAL
     n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+  scalar_dtype:
+    text: '**float32 — EMPIRICAL (n=5 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   raw_format:
     text: MATLAB/HDF5 `.mat`
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   i_q_layout:
     text: Separate `RF0_I`, `RF0_Q`
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   samples_capture_chunk:
-    text: '**140M/channel VERIFIED**'
-    status: VERIFIED
+    text: '**140M/channel — EMPIRICAL (n=5 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   chunk_duration:
-    text: '**1.4 s VERIFIED**'
-    status: VERIFIED
+    text: '**1.4 s — EMPIRICAL (n=5 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   sample_rate:
-    text: '**100 MS/s VERIFIED**'
-    status: VERIFIED
+    text: '**100 MS/s — EMPIRICAL (n=5 files, Fs field)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   center_frequency:
     text: 5.745 GHz outdoor; 2.437 GHz Wi-Fi subset
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   absolute_frequency_coverage:
     text: 5.695–5.795 GHz (outdoor); 2.387–2.487 GHz (Wi-Fi subset)
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   if_capture_bandwidth:
-    text: '**VERIFY**'
+    text: UNKNOWN — not established
+    kind: FACT
     status: UNKNOWN
   occupied_signal_bandwidth:
-    text: scenario/signal dependent
-    status: UNGRADED
+    text: Not characterized (scenario/signal dependent)
+    kind: FACT
+    status: UNKNOWN
   receiver:
-    text: Documentation conflict; empirical receiver IDs `u1/u2`
-    status: UNGRADED
+    text: Documentation conflict (USRP-2943 vs X310); empirical receiver IDs `u1/u2` in filenames
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: 'paper text: NI USRP-2943 receivers'
+      status: AUTHOR_DOC
+      source: DRFF-R2 paper (arXiv:2603.00106)
+    - claim: 'paper figure: USRP X310'
+      status: AUTHOR_DOC
+      source: DRFF-R2 paper (arXiv:2603.00106)
   pack_unit_identifier:
     text: Physical UAV unit available
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   manufacturer_coverage:
     text: DJI only
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   models_classes:
     text: 8 models
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   physical_units:
     text: '**26**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   same_model_multi_unit:
     text: Yes, uneven
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   positive_signal_composition:
     text: scenario-dependent; hopping/mixed/interference variants
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   day_metadata:
-    text: '**Yes; empirically verified**'
-    status: VERIFIED
+    text: '**Yes — day tag in filenames (EMPIRICAL n=5 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   receiver_variation:
-    text: '**Yes; empirically verified**'
-    status: VERIFIED
+    text: '**Yes — receiver tag u1/u2 in filenames (EMPIRICAL n=5 files)**'
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   gain_scale:
     text: File documentation inconsistent; gain unresolved in inspected files
-    status: UNGRADED
+    kind: FACT
+    status: CONFLICTING
+    conflict:
+    - claim: gain stored in every file
+      status: AUTHOR_DOC
+      source: DRFF-R2 paper (arXiv:2603.00106)
+    - claim: no gain field in the inspected Dataset-3/7 files
+      status: EMPIRICAL
+      source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
+      n: 5
+      n_unit: file
   snr_metadata:
     text: Not consistently present in inspected MATs
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   environmental_negatives:
     text: '**Yes** (Dataset-7 environmental baseline)'
-    status: UNGRADED
+    kind: FACT
+    status: VERIFIED
+    source: raw_sha256.csv inventory of the local release (731 .mat in 7 subset folders)
   negative_taxonomy:
     text: ambient/no-emitter only
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   negative_diversity:
     text: Low — single environmental baseline
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: VERIFIED
+    source: raw_sha256.csv inventory of the local release (731 .mat in 7 subset folders)
   negative_provenance:
     text: Same-site same-equipment recordings (Dataset-7)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   hard_negative_emitters:
     text: None dedicated; Wi-Fi appears only mixed with UAV positives
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   recorded_interference_conditions:
     text: UAV + Wi-Fi mixed positives (Dataset-6)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   positive_negative_fs_matched:
     text: '**Yes, sampled**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   positive_negative_fc_matched:
     text: '**Yes, sampled**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   negative_difficulty:
     text: '**Weak alone; major energy shortcut risk**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   indoor_outdoor:
     text: Both
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   distance_metadata:
     text: Yes in dataset design; schema varies
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   altitude_state_metadata:
     text: 'Yes'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   frequency_hopping:
     text: Explicit subset
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   video_transmission_signals:
     text: Not central
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   multi_uav_mixtures:
     text: '**Yes**'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   controlled_environment:
     text: RF-absorbing setup
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   schema_consistency:
     text: '**No — subset drift empirically observed**'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   parent_recording_identity:
     text: Yes — filename encodes unit/config/day/receiver
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   window_safe_splitting_possible:
     text: Yes — leakage-safe keys established
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   original_raw_representation:
     text: Complex IQ in MAT files
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   published_derived_representations:
     text: STFT spectrograms
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   raw_derived_reproducibility:
     text: Yes — raw IQ available
-    status: UNGRADED
+    kind: ASSESSMENT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   train_class_support:
     text: N/A for our raw audit
+    kind: FACT
     status: NOT_APPLICABLE
   validation_class_support:
     text: N/A
+    kind: FACT
     status: NOT_APPLICABLE
   class_balance:
     text: Unit/model imbalance
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   label_taxonomy:
     text: Model/unit/state are distinguishable
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   leakage_safe_keys:
     text: unit/day/receiver/config
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   independent_sessions_per_class:
     text: Multiple days/receivers per unit in Dataset-3 — count UNKNOWN
-    status: UNGRADED
+    kind: FACT
+    status: UNKNOWN
   potential_shortcut_receiver:
     text: High-priority audit
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_center_frequency:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   potential_shortcut_snr:
     text: Possible
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   potential_shortcut_received_power:
     text: '**HIGH — ~30 dB positive/negative power gap observed (n=1 vs 1); gain unknown, cause unresolved**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   potential_shortcut_dataset_source:
     text: Future cross-dataset concern
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   potential_shortcut_position:
     text: Not established
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
   known_acquisition_defect:
     text: Not established
+    kind: FACT
     status: UNKNOWN
   classical_ml_opportunity:
     text: Spectral/statistical features
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   phase_aware_experiments:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   magnitude_common_experiments:
     text: 'Yes'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   detection_usefulness:
     text: Useful but environmental negatives are weak alone
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   identification_usefulness:
     text: Strong
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   robustness_usefulness:
     text: '**Excellent**'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   unique_contribution:
     text: controlled unit/day/receiver/state/interference variation
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   claim_ceiling:
     text: controlled robustness across represented DJI conditions
-    status: ASSESSMENT
-  provisional_droneacharya_role:
-    text: Robustness laboratory + auxiliary detection
-    status: ASSESSMENT
-  primary_detection_foundation:
-    text: No, not alone
-    status: ASSESSMENT
-  full_download_justification:
-    text: Later/subset-dependent
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: INFERRED
+    source: dataset_cards/drff_r2.yaml details (claim_ceiling, unique_contribution, potential shortcuts)
   window_label_reliability:
     text: '**AUDIT NEEDED** — 10-ms window sampling insufficient to characterize temporal occupancy'
-    status: ASSESSMENT
+    kind: ASSESSMENT
+    status: UNKNOWN
 supplementary:
   Dataset-3 metadata fields:
-    text: 'VERIFIED: TD, State, C, U, D, Height, V'
-    status: VERIFIED
+    text: TD, State, C, U, D, Height, V — EMPIRICAL (n=3 Dataset-3 files)
+    kind: FACT
+    status: EMPIRICAL
+    n: 3
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   Center-frequency key naming:
     text: 'DS 3/6: `CenterFrequence`; DS 7: `CenterFreq`'
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   Antenna:
     text: Dual-band omnidirectional, 5 dBi
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   Label granularity:
     text: File/capture
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   Label provenance:
     text: acquisition config + filename + MAT metadata
-    status: UNGRADED
+    kind: FACT
+    status: EMPIRICAL
+    n: 5
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   Published detection baseline:
     text: 'No'
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   Published classification baseline:
     text: Yes (EfficientNetB0)
-    status: UNGRADED
+    kind: FACT
+    status: AUTHOR_DOC
+    source: DRFF-R2 paper (arXiv:2603.00106)
   Positive/negative dtype matched:
-    text: '**VERIFIED**'
-    status: VERIFIED
+    text: Yes — EMPIRICAL (n=1 positive vs 1 environment file)
+    kind: FACT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   Positive/negative length matched:
-    text: '**VERIFIED**'
-    status: VERIFIED
+    text: Yes — EMPIRICAL (n=1 positive vs 1 environment file)
+    kind: FACT
+    status: EMPIRICAL
+    n: 2
+    n_unit: file
+    source: scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)
   Positive/negative gain matched:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   Positive/negative receiver matched:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
   Positive/negative day matched:
     text: UNKNOWN
+    kind: FACT
     status: UNKNOWN
 details:
   dataset:
