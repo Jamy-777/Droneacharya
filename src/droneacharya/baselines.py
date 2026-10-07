@@ -1,99 +1,20 @@
 """Shortcut baselines: deliberately weak models given one confound each.
 
-A detector is only credible if it beats these on the same split. Each baseline
-is evaluated on a saved split: the model is fitted on the other partitions and
-predicts the held-out one, so whole groups (devices, recordings, packs) are
-unseen at test time. Scoring follows three rules, because these datasets have
-few independent groups:
-
-- one metric over the pooled out-of-fold predictions (averaging per-fold AUC
-  over folds of 1–3 groups is biased upward);
-- the model kind is fixed per baseline in advance, never chosen on test folds;
-- significance by permuting labels between groups (the folds stay fixed), and
-  a 95% interval by resampling whole groups.
+A detector is only credible if it beats these on the same split and rows.
+Evaluation rules (pooled out-of-fold metric, model fixed in advance, group
+permutation, group bootstrap) live in evaluation.py and are shared with the
+detectors.
 """
-import warnings
 from collections import defaultdict
 
 import numpy as np
 from scipy.signal import resample_poly, welch
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import balanced_accuracy_score, roc_auc_score
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeClassifier
 
 from . import signal
+from .evaluation import evaluate, metric, model, out_of_fold  # noqa: F401  (re-exported for scripts and tests)
 
 CARDRF_RAILS = (-32736, 30720)  # processed-data rail codes; EMPIRICAL n=135 raw captures
 TRIGGER = 2_500_000             # trigger at the capture midpoint (XOrg = -125 us)
-
-
-def model(kind):
-    """tree: depth-3 intervals, for 1–3 scalar confounds (catches 'in between' levels); linear: many features."""
-    if kind == "tree":
-        return DecisionTreeClassifier(max_depth=3, min_samples_leaf=20, class_weight="balanced", random_state=0)
-    if kind == "linear":
-        return make_pipeline(StandardScaler(), LogisticRegression(class_weight="balanced", max_iter=2000))
-    raise ValueError(kind)
-
-
-def out_of_fold(X, y, partitions, kind):
-    """Scores for every row from a model fitted without its partition: P(class 1) if binary, else labels."""
-    binary = len(set(y)) == 2
-    scores = np.empty(len(y), dtype=float if binary else object)
-    for held_out in np.unique(partitions):
-        test = partitions == held_out
-        fitted = model(kind).fit(X[~test], y[~test])
-        scores[test] = fitted.predict_proba(X[test])[:, list(fitted.classes_).index(True)] if binary             else fitted.predict(X[test])
-    return scores
-
-
-def metric(y, scores):
-    """ROC AUC for binary scores, balanced accuracy for predicted labels."""
-    if scores.dtype == object:
-        with warnings.catch_warnings():  # a bootstrap resample may lack a class that was predicted
-            warnings.simplefilter("ignore", UserWarning)
-            return float(balanced_accuracy_score(y, scores.astype(y.dtype)))
-    return float(roc_auc_score(y, scores))
-
-
-def evaluate(X, y, partitions, groups, kind, n_permutations=1000, n_bootstrap=2000, seed=0):
-    """Pooled out-of-fold metric, group-permutation p-value and group-bootstrap 95% interval."""
-    X, y = np.asarray(X, float), np.asarray(y)
-    partitions, groups = np.asarray(partitions), np.asarray(groups)
-    group_ids, group_index = np.unique(groups, return_inverse=True)
-    group_label = {}
-    for g, label in zip(group_index, y):
-        if group_label.setdefault(g, label) != label:
-            raise ValueError("permutation needs label-pure groups")
-    labels = np.array([group_label[g] for g in range(len(group_ids))])
-    binary = len(set(y)) == 2
-
-    scores = out_of_fold(X, y, partitions, kind)
-    observed = metric(y, scores)
-    rng = np.random.default_rng(seed)
-    null = []
-    for _ in range(n_permutations):
-        y_perm = rng.permutation(labels)[group_index]
-        if all(len(set(y_perm[partitions != p])) > 1 for p in np.unique(partitions)):
-            null.append(metric(y_perm, out_of_fold(X, y_perm, partitions, kind)))
-    null = np.asarray(null)
-    boot = []
-    members = [np.flatnonzero(group_index == g) for g in range(len(group_ids))]
-    for _ in range(n_bootstrap):
-        rows = np.concatenate([members[g] for g in rng.integers(0, len(group_ids), len(group_ids))])
-        if len(set(y[rows])) > 1:
-            boot.append(metric(y[rows], scores[rows]))
-    name = "roc_auc" if binary else "balanced_accuracy"
-    return {
-        "model": kind, "metric": name, "n": int(len(y)),
-        "groups_per_label": {str(k): int(v) for k, v in zip(*np.unique(labels, return_counts=True))},
-        name: observed,
-        "ci95": [float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))],
-        "permutation": {"n": int(len(null)), "p_value": float((1 + np.sum(null >= observed)) / (1 + len(null))),
-                        "null_median": float(np.median(null)), "null_95th": float(np.percentile(null, 95))},
-    }
 
 
 # ---------------------------------------------------------------- features

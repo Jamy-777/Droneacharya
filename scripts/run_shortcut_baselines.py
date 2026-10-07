@@ -11,8 +11,6 @@ docs/results/shortcut_baselines.md.
 Usage:
     python scripts/run_shortcut_baselines.py
 """
-import hashlib
-import inspect
 import json
 import random
 import sys
@@ -25,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from droneacharya import baselines as B  # noqa: E402
 from droneacharya import splits  # noqa: E402
+from droneacharya.cache import cached as cached_in  # noqa: E402
 from droneacharya.index import read  # noqa: E402
 from droneacharya.paths import DATA_ROOT  # noqa: E402
 
@@ -36,15 +35,9 @@ ACOUSTIC = ["ddl", "uavirbase", "svanstrom", "dronenoise", "miesikowska_uav", "e
 DATASET_ID_SPLIT = "acoustic/dataset-id-s0"
 
 
-def cached(name, compute, params):
-    key = hashlib.sha256(Path(B.__file__).read_bytes() + inspect.getsource(compute).encode()
-                         + json.dumps(params, sort_keys=True).encode()).hexdigest()[:12]
-    path = OUT / f"{name}-{key}.features.json"
-    if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
-    rows = compute()
-    path.write_text(json.dumps(rows), encoding="utf-8")
-    return rows
+def cached(name, compute, params, datasets):
+    """Feature cache keyed by compute source, parameters, feature/reader code and the index tables."""
+    return cached_in(OUT, name, compute, params, datasets)
 
 
 def save(name, result):
@@ -74,7 +67,7 @@ def cardrf():
                 print(f"  cardrf features {i}/{len(chosen)}", flush=True)
         return rows
 
-    rows = cached("cardrf", compute, {"per_group": CARDRF_PER_GROUP, "seed": SEED, "groups": sorted(by_group)})
+    rows = cached("cardrf", compute, {"per_group": CARDRF_PER_GROUP, "seed": SEED, "groups": sorted(by_group)}, ["cardrf"])
     burst = lambda c: not (c["label_emitter"] == "aircraft" and c["label_class"].startswith("DJI"))  # noqa: E731
     task = "UAS vs Wi-Fi/Bluetooth, unseen UAS systems and devices"
     results = {}
@@ -107,7 +100,7 @@ def audio_level(dataset, max_samples=None):
             rows += [{"capture_id": c["capture_id"], "dbfs": B.level_dbfs(w)} for w in windows]
         return rows
 
-    rows = cached(dataset, compute, {"max_samples": max_samples, "window_s": 1.0, "max_windows": 10})
+    rows = cached(dataset, compute, {"max_samples": max_samples, "window_s": 1.0, "max_windows": 10}, [dataset])
     return save(f"{dataset}_loudness", {
         "task": "drone vs non-drone from loudness only (1 s windows, unseen groups)", "split": split_id,
         "features": ["dbfs"],
@@ -144,7 +137,7 @@ def acoustic_dataset_id():
                     break
         return rows
 
-    rows = cached("acoustic_dataset_id", compute, {"seed": SEED, "datasets": ACOUSTIC, "per_dataset": 200})
+    rows = cached("acoustic_dataset_id", compute, {"seed": SEED, "datasets": ACOUSTIC, "per_dataset": 200}, ACOUSTIC)
     results = {}
     for subset, keep in (("all", lambda c: True), ("drones_only", lambda c: c["label_uas_present"])):
         sel = [r for r in rows if keep(captures[r["capture_id"]])]
