@@ -154,12 +154,12 @@ facts:
     status: AUTHOR_DOC
     source: Jekateryńczuk et al., Appl. Sci. 2025, 15, 5378
   level_shortcut_risk:
-    text: '**Low — ambient −24…−14 dBFS vs drone −28…−13 dBFS** (n=28)'
+    text: '**Low–moderate — loudness alone (1 s windows, leave-one-ambient-out): AUC 0.64 (folds 0.49–0.74)**; only 4 ambient recordings, so fragile'
     kind: ASSESSMENT
     status: EMPIRICAL
-    n: 28
+    n: 132
     n_unit: recording
-    source: scripts/inspect_acoustic.py level audit, 28 recordings
+    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
 details:
   dataset:
     id: uavirbase

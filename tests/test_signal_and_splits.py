@@ -42,7 +42,7 @@ def test_saved_splits_match_their_registry_and_never_leak():
 # ---------------------------------------------------------------- signal reader
 @needs_data
 @pytest.mark.parametrize("dataset,dtype,channels", [
-    ("cardrf", np.float32, 1), ("rma", np.complex64, 1), ("drff_r2", np.complex64, 1), ("rfuav", np.complex64, 1),
+    ("dronerf", np.float32, 2), ("cardrf", np.float32, 1), ("rma", np.complex64, 1), ("drff_r2", np.complex64, 1), ("rfuav", np.complex64, 1),
     ("noisy_rf", np.complex64, 1), ("esc50", np.float32, 1), ("svanstrom", np.float32, 2), ("uavirbase", np.float32, 8),
     ("miesikowska_uav", np.float32, 1), ("ddl", np.float32, 8),
 ])

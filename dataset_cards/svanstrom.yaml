@@ -150,12 +150,12 @@ facts:
     status: AUTHOR_DOC
     source: Svanström et al., Data in Brief 2021 + repository README
   level_shortcut_risk:
-    text: '**High — background −35.8, drone −24.8, helicopter −19.2 dBFS (median)**'
+    text: '**Moderate — loudness alone (1 s windows, unseen clips): AUC 0.64, balanced accuracy 0.63**; medians background −35.8, drone −24.8, helicopter −19.2 dBFS (drone in between)'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 90
-    n_unit: file
-    source: 'scripts/inspect_acoustic.py: all 90 WAV headers + level audit (interim/svanstrom)'
+    n_unit: clip
+    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
 details:
   dataset:
     id: svanstrom

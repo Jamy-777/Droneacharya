@@ -385,12 +385,12 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   potential_shortcut_received_power:
-    text: '**HIGH — clipping 0–42% varies by device; NLOS ~13 dB weaker**'
+    text: '**HIGH — measured on unseen devices: pre-trigger RMS alone AUC 0.80, clipping alone AUC up to 0.71, both + post-trigger RMS balanced accuracy 0.79**; NLOS ~13 dB weaker'
     kind: ASSESSMENT
     status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    n: 1080
+    n_unit: capture
+    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
   potential_shortcut_dataset_source:
     text: 'Total in cross-dataset; **within dataset: device ↔ recording block, flight mode ↔ sub-block in time**'
     kind: ASSESSMENT

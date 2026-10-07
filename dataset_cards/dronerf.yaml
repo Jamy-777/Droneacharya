@@ -44,17 +44,13 @@ signal:
     source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
     note: signed real samples; likely the I component (INFERRED)
   scalar_dtype:
-    value: decimal text
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    value: decimal text holding integers (−15,342 … 15,080; lossless as int16)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   container:
     value: single-row CSV in RAR
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   sample_rate_hz:
     value: 40000000
     status: INFERRED
@@ -70,10 +66,8 @@ signal:
     note: up to 40 MHz per receiver
   samples_per_artifact:
     value: 10000000
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
     note: per band file
   artifact_duration_s:
     value: 0.25
@@ -113,30 +107,24 @@ facts:
     n_unit: file
     source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
   scalar_dtype:
-    text: Text decimal values; numerical storage dtype N/A
+    text: Text decimal values, all integers in −15,342 … 15,080 (all 454 files); stored losslessly as int16 in interim
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   raw_format:
-    text: Single-row CSV
+    text: Single-row CSV (all 454 files)
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   i_q_layout:
     text: N/A — no complex IQ
     kind: FACT
     status: NOT_APPLICABLE
   samples_capture_chunk:
-    text: '**10M/band; 20M paired segment — EMPIRICAL (n=4 files)**'
+    text: '**10M/band; 20M paired segment — VERIFIED (all 454 files)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   chunk_duration:
     text: '0.25 s INFERRED (paper: ~5.25 s per mode over 21 segments)'
     kind: FACT
@@ -297,12 +285,10 @@ facts:
     status: AUTHOR_DOC
     source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   schema_consistency:
-    text: Yes for sampled CSV structure
+    text: Yes — one row of 10,000,000 integers in all 454 files
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   parent_recording_identity:
     text: 'Yes: paired L/H logical segment'
     kind: FACT
@@ -477,19 +463,15 @@ supplementary:
     status: VERIFIED
     source: 'index/dronerf: RAR headers of all 454 CSVs (scripts/build_index.py dronerf)'
   Samples per band file:
-    text: '**10,000,000 — EMPIRICAL (n=4 files)**'
+    text: '**10,000,000 — VERIFIED (all 454 files)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   Samples per paired segment:
-    text: '**20,000,000 — EMPIRICAL (n=4 files)**'
+    text: '**20,000,000 — VERIFIED (all 227 pairs)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   Published prose sample-count claim:
     text: CONFLICTING — states 1M/part
     kind: FACT
@@ -501,11 +483,9 @@ supplementary:
     - claim: paper tables imply 10,000,000 samples per part
       status: AUTHOR_DOC
       source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
-    - claim: 10,000,000 values per CSV
-      status: EMPIRICAL
-      source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
-      n: 4
-      n_unit: file
+    - claim: 10,000,000 values in every CSV
+      status: VERIFIED
+      source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   Recording length per mode:
     text: ~5.25 s per flight mode, ~10.25 s background (paper, verified via Europe PMC)
     kind: FACT
@@ -517,12 +497,10 @@ supplementary:
     status: AUTHOR_DOC
     source: DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)
   Empirical CSV structure:
-    text: One comma-separated row
+    text: One comma-separated row (all 454 files)
     kind: FACT
-    status: EMPIRICAL
-    n: 4
-    n_unit: file
-    source: scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)
+    status: VERIFIED
+    source: 'interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)'
   Filename structure:
     text: '`<BUI><H/L>_<segment>.csv`'
     kind: FACT

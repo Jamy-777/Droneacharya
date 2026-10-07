@@ -14,18 +14,18 @@ Project decisions are not claims; they live in `configs/dataset_roles.yaml`.
 | ddl | 18 | 1 | 6 | 0 | 1 | 0 | 2 | 0 | 0 | 28 |
 | drff_r2 | 33 | 13 | 27 | 0 | 0 | 8 | 2 | 9 | 2 | 94 |
 | dronenoise | 12 | 2 | 9 | 0 | 2 | 1 | 1 | 1 | 0 | 28 |
-| dronerf | 19 | 24 | 23 | 0 | 2 | 20 | 1 | 10 | 3 | 102 |
+| dronerf | 29 | 14 | 23 | 0 | 2 | 20 | 1 | 10 | 3 | 102 |
 | esc50 | 9 | 2 | 10 | 0 | 1 | 0 | 0 | 5 | 1 | 28 |
 | miesikowska_uav | 1 | 16 | 7 | 0 | 3 | 0 | 0 | 1 | 0 | 28 |
 | noisy_rf | 12 | 0 | 25 | 0 | 23 | 14 | 0 | 3 | 5 | 82 |
 | remote_controller_rf | 0 | 0 | 35 | 0 | 12 | 5 | 0 | 18 | 12 | 82 |
-| rfuav | 28 | 9 | 13 | 0 | 7 | 9 | 1 | 23 | 0 | 90 |
+| rfuav | 27 | 10 | 13 | 0 | 7 | 9 | 1 | 23 | 0 | 90 |
 | rma | 23 | 17 | 19 | 3 | 4 | 12 | 2 | 2 | 6 | 88 |
 | svanstrom | 15 | 1 | 10 | 0 | 0 | 0 | 0 | 2 | 0 | 28 |
 | uavirbase | 11 | 2 | 14 | 0 | 1 | 0 | 0 | 0 | 0 | 28 |
 | uavsig | 1 | 17 | 56 | 0 | 3 | 7 | 3 | 2 | 2 | 91 |
-| cross-dataset (acoustic) | 0 | 2 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 4 |
-| **total** | **216** | **129** | **265** | **5** | **59** | **87** | **14** | **82** | **36** | **893** |
+| cross-dataset (acoustic) | 0 | 3 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
+| **total** | **225** | **121** | **265** | **5** | **59** | **86** | **14** | **82** | **36** | **893** |
 
 Kinds: ASSESSMENT 188, FACT 705
 
@@ -44,7 +44,7 @@ None.
 | drff_r2 | facts | `receiver` | Documentation conflict (USRP-2943 vs X310); empirical receiver IDs `u1/u2` in filenames — AUTHOR_DOC: paper text: NI USRP-2943 receivers (DRFF-R2 paper (arXiv:2603.00106)); AUTHOR_DOC: paper figure: USRP X310 (DRFF-R2 paper (arXiv:2603.00106)) |
 | drff_r2 | facts | `gain_scale` | File documentation inconsistent; gain unresolved in inspected files — AUTHOR_DOC: gain stored in every file (DRFF-R2 paper (arXiv:2603.00106)); VERIFIED: no Gain field in any of the 731 files (index/drff_r2: scalar fields and RF0 shapes of all 731 files (scripts/build_index.py drff_r2)) |
 | dronenoise | facts | `known_defects` | Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted; Mini 3 Pro hover ev2/ev3 recorded by M5 only — VERIFIED: Mini 3 Pro flyover files are named `dw` (scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)); AUTHOR_DOC: metrics sheet lists them as `uw` (figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)); VERIFIED: Mini 3 Pro hover ev2/ev3 have microphone M5 only; ev1 lacks M5 but has two byte-identical M5 files under figshare-ID prefixes (index/dronenoise: zip listing and WAV headers of all 174 files (scripts/build_index.py dronenoise)) |
-| dronerf | supplementary | `Published prose sample-count claim` | CONFLICTING — states 1M/part — AUTHOR_DOC: paper prose: 1,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); AUTHOR_DOC: paper tables imply 10,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); EMPIRICAL: 10,000,000 values per CSV (scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)) |
+| dronerf | supplementary | `Published prose sample-count claim` | CONFLICTING — states 1M/part — AUTHOR_DOC: paper prose: 1,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); AUTHOR_DOC: paper tables imply 10,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); VERIFIED: 10,000,000 values in every CSV (interim/dronerf/npy/TRANSFORM.json: all 454 CSVs parsed (scripts/convert_dronerf_npy.py)) |
 | rfuav | facts | `label_taxonomy` | **AMBIGUOUS — UAV/RC-system-like classes** — AUTHOR_DOC: 37 distinct UAVs (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); AUTHOR_DOC: 35 drone types (repository README) (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); REPO_METADATA: public classes include RC transmitter products (e.g. FUTABA T14SG, FRSKY X20R) (Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)); VERIFIED: XML Drone field disagrees with the class folder in 5 packs (e.g. RadioMaster BOXER → 'Radiolink AT10 II'; FrSky → 'FLYSKY') (index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)) |
 | rma | facts | `public_release_caveat` | Full public release; README omits Mavic archives (~19 GB) — AUTHOR_DOC: README lists 9 systems, no Mavic (README.txt (authors)); VERIFIED: release holds 4 Mavic archives (60 files) (central directories of all 16 zips) |
 | rma | supplementary | `Documentation conflicts` | Mavic not in README; Frysky vs "Taranis Q X7"; SJRC F11 Pro "drone + RC" but one archive — AUTHOR_DOC: README: 9 systems incl. 'Taranis Q X7' and 'SJRC F11 Pro drone + remote controller' (README.txt (authors)); VERIFIED: archives: 4 undocumented Mavic archives, 'Frysky' archive, one SJRC archive (central directories of all 16 zips) |
