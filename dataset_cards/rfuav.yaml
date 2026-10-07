@@ -361,12 +361,12 @@ facts:
     status: VERIFIED
     source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   potential_shortcut_snr:
-    text: '**High — metadata only (Fc, SNR, ScaleFactor) identifies the class of an unseen pack 52% of the time vs 8% chance (12 classes with ≥ 2 packs)**; per-pack SNR 1–50 dB'
+    text: '**High, significant — metadata only (Fc, SNR, ScaleFactor), leave one pack out: balanced accuracy 0.53 [0.41, 0.69], p=0.00 vs chance 0.08 (12 classes with ≥ 2 packs)**; per-pack SNR 1–50 dB'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 31
     n_unit: capture
-    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
+    source: docs/results/shortcut_baselines.md (pooled out-of-fold, group permutation, group bootstrap; scripts/run_shortcut_baselines.py)
   potential_shortcut_received_power:
     text: Not yet established
     kind: ASSESSMENT

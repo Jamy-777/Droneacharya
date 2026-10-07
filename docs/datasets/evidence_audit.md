@@ -11,7 +11,7 @@ Project decisions are not claims; they live in `configs/dataset_roles.yaml`.
 | Dataset | VERIFIED | EMPIRICAL | AUTHOR_DOC | AUTHOR_CODE | REPO_METADATA | INFERRED | CONFLICTING | UNKNOWN | NOT_APPLICABLE | claims |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | cardrf | 34 | 23 | 10 | 2 | 0 | 10 | 2 | 6 | 5 | 92 |
-| ddl | 18 | 1 | 6 | 0 | 1 | 0 | 2 | 0 | 0 | 28 |
+| ddl | 17 | 2 | 6 | 0 | 1 | 0 | 2 | 0 | 0 | 28 |
 | drff_r2 | 33 | 13 | 27 | 0 | 0 | 8 | 2 | 9 | 2 | 94 |
 | dronenoise | 12 | 2 | 9 | 0 | 2 | 1 | 1 | 1 | 0 | 28 |
 | dronerf | 29 | 14 | 23 | 0 | 2 | 20 | 1 | 10 | 3 | 102 |
@@ -25,7 +25,7 @@ Project decisions are not claims; they live in `configs/dataset_roles.yaml`.
 | uavirbase | 11 | 2 | 14 | 0 | 1 | 0 | 0 | 0 | 0 | 28 |
 | uavsig | 1 | 17 | 56 | 0 | 3 | 7 | 3 | 2 | 2 | 91 |
 | cross-dataset (acoustic) | 0 | 3 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 4 |
-| **total** | **225** | **121** | **265** | **5** | **59** | **86** | **14** | **82** | **36** | **893** |
+| **total** | **224** | **122** | **265** | **5** | **59** | **86** | **14** | **82** | **36** | **893** |
 
 Kinds: ASSESSMENT 188, FACT 705
 

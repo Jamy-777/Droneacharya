@@ -18,6 +18,9 @@ from droneacharya.index import BUILDERS  # noqa: E402
 from droneacharya.paths import INDEX  # noqa: E402
 
 DEFAULT_K = 5
+# Experiment split names. A name changes when the grouping behind it changes (the old split is retired, never
+# overwritten): CardRF moved from device groups to UAS-system groups on 2026-10-08.
+EXPERIMENT_SPLIT = {"cardrf": "system-kfold-s0"}
 
 
 def main():
@@ -45,9 +48,9 @@ def main():
             note += ("; a label value has a single group, so within-dataset detection cannot keep it out of "
                      "one partition — use this split for positives-only tasks or test detection across datasets")
         assignment = splits.group_kfold(captures, k, seed=0)
-        entry = splits.save(f"{dataset}/group-kfold-s0", "experiment", f"group k-fold, k={k}, UAS-present balanced",
+        entry = splits.save(f"{dataset}/{EXPERIMENT_SPLIT.get(dataset, 'group-kfold-s0')}", "experiment", f"group k-fold, k={k}, UAS-present balanced",
                             captures, assignment, seed=0, notes=note)
-        print(f"{dataset}/group-kfold-s0: k={k}; {note}")
+        print(f"{dataset}/{EXPERIMENT_SPLIT.get(dataset, 'group-kfold-s0')}: k={k}; {note}")
 
 
 if __name__ == "__main__":

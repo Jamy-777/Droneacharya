@@ -150,12 +150,12 @@ facts:
     status: AUTHOR_DOC
     source: Svanström et al., Data in Brief 2021 + repository README
   level_shortcut_risk:
-    text: '**Moderate — loudness alone (1 s windows, unseen clips): AUC 0.64, balanced accuracy 0.63**; medians background −35.8, drone −24.8, helicopter −19.2 dBFS (drone in between)'
+    text: '**Moderate, significant — loudness alone (1 s windows, unseen clips): pooled AUC 0.64 [0.55, 0.72], p=0.01**; medians background −35.8, drone −24.8, helicopter −19.2 dBFS (drone in between)'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 90
     n_unit: clip
-    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
+    source: docs/results/shortcut_baselines.md (pooled out-of-fold, group permutation, group bootstrap; scripts/run_shortcut_baselines.py)
 details:
   dataset:
     id: svanstrom
@@ -186,7 +186,8 @@ details:
       BACKGROUND: -35.8
       DRONE: -24.8
       HELICOPTER: -19.2
-    interpretation: 'Strong loudness shortcut: normalise level or report the energy baseline.'
+    interpretation: 'Loudness shortcut: normalise level or report the energy baseline.'
+    correction: 'Earlier "Strong" withdrawn 2026-10-08: measured as moderate (see facts.level_shortcut_risk).'
   leakage_safe_keys:
   - clip (event grouping unknown)
   role: Same-chain hard negatives (helicopter) and background; small test set.

@@ -105,8 +105,8 @@ datasets:
   uavirbase:
     rows:
       provisional_role:
-        text: '**Detection backbone (same chain)** + geometry robustness'
-        basis: docs/datasets/acoustic_notes.md
+        text: '**Detection development set (same chain)** + geometry robustness; 4 ambient recordings cannot carry significance claims — those come from external tests'
+        basis: docs/datasets/acoustic_notes.md; docs/results/shortcut_baselines.md (2026-10-08 audit)
   miesikowska_uav:
     rows:
       provisional_role:

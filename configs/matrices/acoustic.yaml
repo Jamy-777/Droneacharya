@@ -87,12 +87,12 @@ cross_dataset:
     status: AUTHOR_DOC
     source: UaVirBASE label.json + Svanström paper (same equipment)
   Main shortcut:
-    text: 'Recording chain ↔ label: drones come from 5 chains, most negatives from others. **Measured: 32 band energies (0–8 kHz, every recording resampled to 16 kHz) name the dataset of a 1 s window with balanced accuracy 0.71 vs chance 0.17, even with loudness removed** — a lower bound on identifiability (a stronger model will do better); part of it is content, not chain. Use leave-one-dataset-out tests and report the dataset-ID baseline beside every cross-dataset result'
+    text: 'Recording chain ↔ label. **Measured (32 band energies 0–8 kHz after resampling to 16 kHz, unseen groups): the dataset of a 1 s window is named with balanced accuracy 0.69 [0.63, 0.74], p=0.00 (6 datasets, chance 0.17), and 0.81 [0.74, 0.88], p=0.00 among drone windows only (5 datasets, chance 0.20), loudness removed** — lower bounds; drones-only removes the drone/non-drone content difference. Use leave-one-dataset-out tests and report this baseline beside every cross-dataset result'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 1112
     n_unit: window
-    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
+    source: docs/results/shortcut_baselines.md (pooled out-of-fold, group permutation, group bootstrap; scripts/run_shortcut_baselines.py)
   Units:
     text: DroneNoise M6–M9 in pascals (M1–M5 ±5 dB); all others uncalibrated full-scale
     kind: FACT

@@ -360,10 +360,10 @@ facts:
     status: VERIFIED
     source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   leakage_safe_keys:
-    text: device (= recording block); hold out whole devices; flight-mode results within a device are time-confounded
+    text: UAS system (aircraft + controller) or non-UAS device = recording block; hold out whole systems; flight-mode results within a device are time-confounded
     kind: ASSESSMENT
     status: VERIFIED
-    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
+    source: 'index/cardrf: Frame.Date of all 9,600 captures (scripts/build_index.py cardrf)'
   independent_sessions_per_class:
     text: '**1 recording block per device (17–60 min), no two devices overlap**; flight modes are consecutive sub-blocks; NLOS Inspire/Phantom 4–6 h after LOS, NLOS M600 30 min after'
     kind: FACT
@@ -385,12 +385,12 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   potential_shortcut_received_power:
-    text: '**HIGH — unseen devices: pre-trigger RMS alone AUC 0.80; on burst emitters only (pre-trigger = noise) still AUC 0.69 with folds 0.00–0.99 = session/device leakage; clipping alone AUC up to 0.71; combined balanced accuracy 0.79**; NLOS ~13 dB weaker'
+    text: '**Not established — 13 groups give wide intervals. Unseen UAS systems/devices, pooled AUC [95% CI], p: pre-trigger RMS 0.59 [0.26, 0.88], p=0.14; clipping 0.55 [0.30, 0.80], p=0.27; clipping + energy 0.67 [0.43, 0.87], p=0.07; burst emitters only 0.37 [0.13, 0.73], p=0.66**. Earlier ''0.80'' and ''session leakage confirmed'' (fold-averaged, test-selected) withdrawn 2026-10-08; NLOS ~13 dB weaker'
     kind: ASSESSMENT
     status: EMPIRICAL
-    n: 1080
-    n_unit: capture
-    source: docs/results/shortcut_baselines.md (scripts/run_shortcut_baselines.py; DroneacharyaData/results/shortcut_baselines/)
+    n: 13
+    n_unit: session
+    source: docs/results/shortcut_baselines.md (pooled out-of-fold, group permutation, group bootstrap; scripts/run_shortcut_baselines.py)
   potential_shortcut_dataset_source:
     text: 'Total in cross-dataset; **within dataset: device ↔ recording block, flight mode ↔ sub-block in time**'
     kind: ASSESSMENT

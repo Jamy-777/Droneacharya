@@ -21,6 +21,7 @@ from .paths import DATA_ROOT
 
 SPLITS = DATA_ROOT / "splits"
 REGISTRY = SPLITS / "registry.json"
+RETIRED = SPLITS / "retired.json"
 
 
 def captures_of(dataset):
@@ -90,6 +91,14 @@ def save(split_id, kind, strategy, captures, assignment, *, seed=None, notes=Non
         raise ValueError(f"{split_id}: " + "; ".join(problems[:5]))
     rows = sorted(assignment.items())
     digest = hashlib.sha256("\n".join(f"{c}\t{p}" for c, p in rows).encode()).hexdigest()
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8")) if REGISTRY.exists() else {}
+    if split_id in registry:
+        if registry[split_id]["assignment_sha256"] == digest:
+            return registry[split_id]  # rebuilding an identical split is a no-op
+        raise ValueError(f"{split_id} exists with a different assignment; a split ID never changes meaning. "
+                         "Retire it (splits.retire) or save under a new ID.")
+    if split_id in (json.loads(RETIRED.read_text(encoding="utf-8")) if RETIRED.exists() else {}):
+        raise ValueError(f"{split_id} was retired; retired IDs are never reused")
     path = SPLITS / f"{split_id}.parquet"
     path.parent.mkdir(parents=True, exist_ok=True)
     pq.write_table(pa.table({"capture_id": [c for c, _ in rows], "partition": [p for _, p in rows]}), path)
@@ -98,7 +107,6 @@ def save(split_id, kind, strategy, captures, assignment, *, seed=None, notes=Non
     counts = defaultdict(lambda: defaultdict(int))
     for capture_id, partition in rows:
         counts[partition][str(label_of[capture_id])] += 1
-    registry = json.loads(REGISTRY.read_text(encoding="utf-8")) if REGISTRY.exists() else {}
     registry[split_id] = {
         "kind": kind, "strategy": strategy, "seed": seed, "datasets": sorted({c.split("/")[0] for c, _ in rows}),
         "captures": len(rows), "assignment_sha256": digest,
@@ -108,6 +116,18 @@ def save(split_id, kind, strategy, captures, assignment, *, seed=None, notes=Non
     }
     REGISTRY.write_text(json.dumps(dict(sorted(registry.items())), indent=1), encoding="utf-8")
     return registry[split_id]
+
+
+def retire(split_id, reason):
+    """Withdraw a split: its entry moves to retired.json with the reason; the ID is never reused."""
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    retired = json.loads(RETIRED.read_text(encoding="utf-8")) if RETIRED.exists() else {}
+    entry = registry.pop(split_id)
+    entry.update(retired=datetime.now(timezone.utc).isoformat(timespec="seconds"), reason=reason)
+    retired[split_id] = entry
+    (SPLITS / f"{split_id}.parquet").unlink()
+    RETIRED.write_text(json.dumps(retired, indent=1), encoding="utf-8")
+    REGISTRY.write_text(json.dumps(dict(sorted(registry.items())), indent=1), encoding="utf-8")
 
 
 def load(split_id):

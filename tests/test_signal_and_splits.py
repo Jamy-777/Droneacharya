@@ -35,7 +35,7 @@ def test_saved_splits_match_their_registry_and_never_leak():
     for split_id, entry in registry.items():
         assignment = splits.load(split_id)
         if entry["kind"] == "experiment":
-            captures = splits.captures_of(split_id.split("/")[0])
+            captures = [c for d in entry["datasets"] for c in splits.captures_of(d)]
             assert splits.leakage_problems(captures, assignment) == [], split_id
 
 

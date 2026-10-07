@@ -6,10 +6,12 @@ entries are skipped.
 
   artifact = one .mat member (one triggered 250 us oscilloscope capture)
   capture  = the artifact
-  group    = category + device, LOS and NLOS together: one physical unit per
-             model (INFERRED from the authors' Table I), so every capture of a
-             device shares its fingerprint; Train/Test are interleaved inside
-             the same recording block, so they are not independent either
+  group    = UAS system (aircraft and its controller together) or non-UAS
+             device, LOS and NLOS together: one physical unit per model
+             (INFERRED from the authors' Table I), so "unseen UAS" must hold out
+             the aircraft and controller of a system at once; Train/Test are
+             interleaved inside the same recording block, so they are not
+             independent either
 
 Per-capture Frame.Date, NumPoints and XInc are read from every file (HDF5 inside
 the zip, small datasets only) and cached in interim/cardrf/frame_fields.json.
@@ -91,7 +93,7 @@ def build(raw_root=RAW, interim_root=INTERIM):
         frame = frames[info.filename]
         recorded = _parse_date(frame["date"])
         capture_id = f"{DATASET}/{info.filename.removesuffix('.mat')}"
-        group_id = f"{DATASET}/{category}/{device}"
+        group_id = f"{DATASET}/UAS/{device}" if category in ("UAV", "UAV_Controller") else f"{DATASET}/{category}/{device}"
         artifacts.append({
             "artifact_id": f"{DATASET}/{info.filename}",
             "dataset_id": DATASET,
@@ -136,9 +138,9 @@ def build(raw_root=RAW, interim_root=INTERIM):
         groups.append({
             "group_id": group_id,
             "dataset_id": DATASET,
-            "kind": "device",
-            "basis": "one physical unit per model (authors' Table I); Train/Test captures interleaved within "
-                     "the device's recording blocks (Frame.Date of every capture)",
+            "kind": "uas_system" if "/UAS/" in group_id else "device",
+            "basis": "one physical unit per model (authors' Table I); a UAS system's aircraft and controller together; "
+                     "Train/Test captures interleaved within the recording blocks (Frame.Date of every capture)",
             "status": "INFERRED",
             "n_captures": len(stamps),
         })

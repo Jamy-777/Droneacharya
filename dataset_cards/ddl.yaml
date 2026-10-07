@@ -25,10 +25,12 @@ structure:
     status: VERIFIED
     source: 'scripts/inspect_acoustic.py: all 62,103 WAV headers (interim/ddl)'
   capture:
-    text: Gap-free run of a segment's clips (38 runs in 36 segments); empty and unparseable clips belong to no capture
+    text: Gap-free run of a segment's clips (38 runs in 36 segments); audio is continuous across clip boundaries (1.0% of boundary jumps above the within-clip 99th percentile, 1% expected); empty and unparseable clips belong to no capture
     kind: FACT
-    status: VERIFIED
-    source: 'index/ddl: WAV headers and file names of all 62,103 clips (scripts/build_index.py ddl)'
+    status: EMPIRICAL
+    n: 35
+    n_unit: capture
+    source: scripts/check_ddl_continuity.py (DroneacharyaData/results/checks/ddl_continuity.json)
   group:
     text: Flight day + recording segment
     kind: ASSESSMENT
