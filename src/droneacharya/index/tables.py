@@ -35,9 +35,17 @@ CAPTURES = pa.schema([
     ("group_id", pa.string()),
     ("n_artifacts", pa.int32()),
     ("channels", pa.list_(pa.string())),
-    ("label_drone_present", pa.bool_()),
-    ("label_model", pa.string()),
-    ("label_mode", pa.string()),
+    ("recorded_at", pa.string()),              # acquisition timestamp as stored (ISO 8601, no zone), when known
+    ("start_s", pa.float64()),                 # offset inside the group's recording, when known
+    ("duration_s", pa.float64()),              # null unless sample count and rate are both established
+    ("center_frequency_hz", pa.float64()),     # per-capture acquisition metadata, when the release has it
+    ("sample_rate_hz", pa.float64()),
+    ("reference_snr_db", pa.float64()),
+    ("official_split", pa.string()),           # the release's own split (train / test), if it has one
+    ("label_uas_present", pa.bool_()),         # a UAS emitter (aircraft or its controller) is active
+    ("label_emitter", pa.string()),            # aircraft | controller | uas_link | wifi | bluetooth | none; null if unlabelled
+    ("label_class", pa.string()),              # the release's class (model / system), official spelling
+    ("label_condition", pa.string()),          # operating mode or signal condition, if labelled
     ("label_source", pa.string()),
     ("label_status", pa.string()),
 ])

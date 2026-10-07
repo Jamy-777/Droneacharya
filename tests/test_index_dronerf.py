@@ -1,7 +1,8 @@
 import pytest
 
 from droneacharya.index import read, validate
-from droneacharya.index.dronerf import CSV_NAME, parse_unrar_lt
+from droneacharya.index.dronerf import CSV_NAME
+from droneacharya.index.rar import parse_unrar_lt
 from droneacharya.paths import INDEX
 
 LISTING = """
@@ -67,8 +68,8 @@ def test_captures_of_a_bui_share_one_group_and_labels_follow_the_bui(tables):
     for c in tables["captures"]:
         bui = c["capture_id"].split("/")[1]
         assert c["group_id"] == f"dronerf/{bui}"
-        assert c["label_drone_present"] == (bui[0] == "1")
-        assert (c["label_model"] is None) == (bui == "00000")
+        assert c["label_uas_present"] == (bui[0] == "1")
+        assert (c["label_class"] is None) == (bui == "00000")
 
 
 @built

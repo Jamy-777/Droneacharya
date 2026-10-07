@@ -27,17 +27,13 @@ structure:
   capture:
     text: '= artifact: one triggered 250 µs capture'
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   group:
-    text: Device session block (Frame.Date); hold out whole devices
+    text: 'Category + device, LOS and NLOS together: one unit per model; each device is one recording block'
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: INFERRED
+    source: 'CardRF.pdf (authors'' dataset description) (Table I, one unit per model); index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
 signal:
   complex_iq:
     value: false
@@ -54,17 +50,13 @@ signal:
     source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
     note: volts = Data * YInc + YOrg
   container:
-    value: MAT; structs Channel_1 + Frame; waveform Channel_1.Data
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    value: MAT v7.3 (HDF5); structs Channel_1 + Frame; waveform Channel_1.Data
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   sample_rate_hz:
     value: 20000000000
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   center_frequency_hz:
     status: NOT_APPLICABLE
     note: direct RF sampling
@@ -73,16 +65,12 @@ signal:
     note: Nyquist 10 GHz; analog front-end bandwidth undocumented
   samples_per_artifact:
     value: 5000000
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   artifact_duration_s:
     value: 0.00025
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
 facts:
   primary_purpose:
     text: UAV/controller vs Wi-Fi/Bluetooth discrimination + RF fingerprinting
@@ -123,37 +111,29 @@ facts:
     n_unit: file
     source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   raw_format:
-    text: '`.mat`: structs `Channel_1` + `Frame`; waveform in `Channel_1.Data`'
+    text: 'MAT v7.3 (HDF5): structs `Channel_1` + `Frame`; waveform in `Channel_1.Data`'
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   i_q_layout:
     text: N/A — real samples
     kind: FACT
     status: NOT_APPLICABLE
   samples_capture_chunk:
-    text: '**5,000,000 — EMPIRICAL n=135**'
+    text: '**5,000,000 — VERIFIED (NumPoints of all 9,600 captures)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   chunk_duration:
-    text: 250 µs — EMPIRICAL n=135
+    text: 250 µs — VERIFIED (all 9,600 captures)
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   sample_rate:
-    text: '**20 GSa/s — EMPIRICAL n=135 (XInc = 5e-11 s)**'
+    text: '**20 GSa/s — VERIFIED (XInc = 5e-11 s in all 9,600 captures)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   center_frequency:
     text: N/A — direct RF sampling, no down-conversion; 2.4 GHz band of interest
     kind: FACT
@@ -174,12 +154,10 @@ facts:
     kind: FACT
     status: UNKNOWN
   receiver:
-    text: Keysight MSOS604A, single serial (EMPIRICAL, Frame struct)
+    text: Keysight MSOS604A, one serial (MY55510227) in all 9,600 captures
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   pack_unit_identifier:
     text: Device per directory; one unit per model (INFERRED) → model = unit
     kind: FACT
@@ -211,19 +189,15 @@ facts:
     status: VERIFIED
     source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   day_metadata:
-    text: '**Per-capture timestamps (Frame.Date): Aug 25–29 2020; 3DR Iris Nov 1 2020**'
+    text: '**Per-capture Frame.Date (all 9,600): Aug 25–29 2020; 3DR Iris Nov 1 2020**'
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   receiver_variation:
-    text: No — one capture system
+    text: No — one capture system (all 9,600 captures)
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   gain_scale:
     text: '**Identical scope settings in all categories (EMPIRICAL n=135)** — no vertical-scale shortcut'
     kind: FACT
@@ -331,12 +305,10 @@ facts:
     n_unit: file
     source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   parent_recording_identity:
-    text: One file = one capture; one session block per device (Frame.Date)
+    text: One file = one capture; one recording block per device (Frame.Date of all 9,600)
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   window_safe_splitting_possible:
     text: 'Only by device/session: **official Train/Test is same-session (interleaved seconds apart)**'
     kind: ASSESSMENT
@@ -388,19 +360,15 @@ facts:
     status: VERIFIED
     source: inventory of all 9,600 captures in CARDRF.zip (scripts/inspect_cardrf_raw.py)
   leakage_safe_keys:
-    text: device session block (Frame.Date) + capture; hold out whole devices
+    text: device (= recording block); hold out whole devices; flight-mode results within a device are time-confounded
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   independent_sessions_per_class:
-    text: '**1 per device** (EMPIRICAL, Frame.Date); 3DR Iris on a later date'
+    text: '**1 recording block per device (17–60 min), no two devices overlap**; flight modes are consecutive sub-blocks; NLOS Inspire/Phantom 4–6 h after LOS, NLOS M600 30 min after'
     kind: FACT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   potential_shortcut_receiver:
     text: None within dataset; total in cross-dataset
     kind: ASSESSMENT
@@ -424,12 +392,10 @@ facts:
     n_unit: file
     source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
   potential_shortcut_dataset_source:
-    text: 'Total in cross-dataset; **within dataset: device ↔ session/day**'
+    text: 'Total in cross-dataset; **within dataset: device ↔ recording block, flight mode ↔ sub-block in time**'
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 135
-    n_unit: file
-    source: 'scripts/inspect_cardrf_raw.py: 135 captures, 3 per folder (interim/cardrf/inspection)'
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
   potential_shortcut_position:
     text: Aircraft vs controller geometry; LOS/NLOS amplitude shift
     kind: ASSESSMENT
@@ -550,6 +516,15 @@ supplementary:
     kind: FACT
     status: AUTHOR_CODE
     source: 'Code.zip (authors'' MATLAB: *_Resampling.m, Resampling_Dividers.mlx)'
+  Recording timeline:
+    text: Wi-Fi Aug 25 01:05–01:59; Bluetooth Aug 25 04:00 – Aug 26 05:39; aircraft Aug 25 22:06 – Aug 26 04:51 and Aug 28 22:52–23:52 (M600) and Aug 29 02:32–03:09 (Beebeerun); controllers Aug 28 23:56 – Aug 29 03:46; 3DR Iris Nov 1 (scope clock)
+    kind: FACT
+    status: VERIFIED
+    source: 'index/cardrf: Frame.Date, Frame.Serial, Channel_1.NumPoints and XInc of all 9,600 captures (scripts/build_index.py cardrf)'
+  Scope clock:
+    text: Hours run 22:00–07:59 across midnight every day; 12/24-hour convention and time zone not established
+    kind: FACT
+    status: UNKNOWN
 details:
   # CardRF dataset card
   #

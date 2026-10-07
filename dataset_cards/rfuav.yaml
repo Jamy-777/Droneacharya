@@ -21,17 +21,15 @@ storage:
   name_map: manifests/rfuav_local_to_official.json
 structure:
   artifact:
-    text: One 1 s `.iq` chunk (with its XML) inside a class RAR
+    text: One `.iq` chunk inside a class RAR (358 chunks)
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   capture:
-    text: 'Pack: the pack''s consecutive 1 s chunks concatenated (continuity across chunks not yet checked)'
+    text: Gap-free run of a pack's chunks in time order; 3 packs miss one chunk and split into two captures
     kind: FACT
     status: INFERRED
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   group:
     text: Pack (stronger grouping unresolved)
     kind: ASSESSMENT
@@ -40,56 +38,40 @@ structure:
 signal:
   complex_iq:
     value: true
-    status: EMPIRICAL
-    n: 1
-    n_unit: file
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   scalar_dtype:
     value: float32
-    status: EMPIRICAL
-    n: 1
-    n_unit: file
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   container:
-    value: interleaved binary .iq (I0,Q0,I1,Q1...) + XML per pack, in class RARs
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    value: interleaved binary .iq chunks (I0,Q0,I1,Q1...) + one XML per pack, in class RARs
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   sample_rate_hz:
     value: 100000000
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
     note: sampled packs
   center_frequency_hz:
     varies: true
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
-    note: per pack in XML; observed 2.440 / 2.450 GHz
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
+    note: 'per pack in XML: 5.76–5.80 GHz for Avata 2, FPV Combo, Mavic 3 Pro, Autel EVO Nano; 2.41–2.47 GHz for every other class (31 controllers, Mini 3, Mini 4 Pro)'
   capture_bandwidth_hz:
     value: 100000000
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
     note: sampled packs
   samples_per_artifact:
     value: 100000000
-    status: EMPIRICAL
-    n: 1
-    n_unit: file
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
-    note: complex samples per 1 s chunk
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
+    note: complex samples per full 1 s chunk; the last chunk of 6 packs is shorter
   artifact_duration_s:
     value: 1.0
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
 facts:
   primary_purpose:
     text: Identification + detection benchmark
@@ -124,19 +106,15 @@ facts:
     n_unit: file
     source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   scalar_dtype:
-    text: '**float32 — EMPIRICAL (n=1 file; XML DataType in 3 packs)**'
+    text: '**float32 — VERIFIED (XML DataType ''Complex Float'' in all 53 packs)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 1
-    n_unit: file
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   raw_format:
-    text: interleaved binary `.iq` + XML
+    text: interleaved binary `.iq` + XML per pack (all 37 archives listed)
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   i_q_layout:
     text: '`I0,Q0,I1,Q1...`'
     kind: FACT
@@ -145,66 +123,50 @@ facts:
     n_unit: file
     source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   samples_capture_chunk:
-    text: '**100M complex — EMPIRICAL (n=1 file)**'
+    text: '**100M complex per full chunk — VERIFIED (sizes of all 358 chunks)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 1
-    n_unit: file
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   chunk_duration:
-    text: '**1.0 s — EMPIRICAL (n=3 packs, XML)**'
+    text: '**1.0 s per chunk; last chunk of 6 packs shorter — VERIFIED**'
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   sample_rate:
-    text: '**100 MS/s — EMPIRICAL (n=3 packs, XML)**'
+    text: '**100 MS/s — VERIFIED (all 53 pack XMLs)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   center_frequency:
-    text: Per-pack; observed 2.440/2.450 GHz
+    text: 'Per pack: 5.76–5.80 GHz (Avata 2, FPV Combo, Mavic 3 Pro, Autel EVO Nano); 2.41–2.47 GHz (31 controllers, Mini 3, Mini 4 Pro)'
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   absolute_frequency_coverage:
-    text: 2.39–2.49 / 2.40–2.50 GHz (per pack)
+    text: 'Fc ± 50 MHz per pack: 2.36–2.52 GHz and 5.71–5.85 GHz'
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   if_capture_bandwidth:
-    text: '**100 MHz — EMPIRICAL (n=3 packs, XML)**'
+    text: '**100 MHz — VERIFIED (all 53 pack XMLs)**'
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   occupied_signal_bandwidth:
     text: class/condition dependent; distinct from IF BW
     kind: FACT
     status: AUTHOR_DOC
     source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
   receiver:
-    text: USRP X310 sampled packs
+    text: USRP X310 (DeviceType in all 53 pack XMLs)
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   pack_unit_identifier:
-    text: source-pack serial available; physical UAV unit unknown
+    text: Pack = class folder + condition + pack number; XML SerialNumber is NOT unique (3 duplicated serials); physical unit unknown
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   manufacturer_coverage:
     text: Multiple apparent ecosystems; mapping incomplete
     kind: FACT
@@ -237,19 +199,15 @@ facts:
     kind: FACT
     status: UNKNOWN
   gain_scale:
-    text: ScaleFactor 60 per pack — field from Signal Hound's XML format (root `SignalHoundIQFile`), semantics not established; do not treat as gain
+    text: 'ScaleFactor by class: 90 (all DJI/Autel aircraft), 85/80 (SIYI, YUNZHUO), 60 (others); semantics not established — do not treat as gain'
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   snr_metadata:
-    text: Per-pack; sampled 15/29/31 dB
+    text: Per-pack ReferenceSNRLevel, 1–50 dB
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   environmental_negatives:
     text: 'Raw corpus: unresolved'
     kind: FACT
@@ -321,19 +279,15 @@ facts:
     kind: FACT
     status: UNKNOWN
   schema_consistency:
-    text: XML schema consistent in sampled packs
+    text: Same 11 XML fields in all 53 packs
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   parent_recording_identity:
-    text: Pack identity available
+    text: Pack identity (folder + pack number); chunks are consecutive 1 s cuts
     kind: FACT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   window_safe_splitting_possible:
     text: Pack-level; within-pack window independence requires design
     kind: ASSESSMENT
@@ -385,15 +339,16 @@ facts:
     - claim: public classes include RC transmitter products (e.g. FUTABA T14SG, FRSKY X20R)
       status: REPO_METADATA
       source: Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)
+    - claim: XML Drone field disagrees with the class folder in 5 packs (e.g. RadioMaster BOXER → 'Radiolink AT10 II'; FrSky → 'FLYSKY')
+      status: VERIFIED
+      source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   leakage_safe_keys:
-    text: pack ID available; stronger grouping unresolved
+    text: pack (folder + pack number); stronger grouping unresolved
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   independent_sessions_per_class:
-    text: UNKNOWN — 1 pack per condition in sampled classes
+    text: UNKNOWN — 1–3 packs per class/condition; whether packs share a session is not established
     kind: FACT
     status: UNKNOWN
   potential_shortcut_receiver:
@@ -401,19 +356,15 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   potential_shortcut_center_frequency:
-    text: '**Yes**'
+    text: '**HIGH — 5.76–5.80 GHz occurs only in 4 aircraft classes; all other classes 2.41–2.47 GHz**'
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   potential_shortcut_snr:
-    text: '**High-priority**'
+    text: '**High — per-pack reference SNR 1–50 dB, differs by class**'
     kind: ASSESSMENT
-    status: EMPIRICAL
-    n: 3
-    n_unit: pack
-    source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   potential_shortcut_received_power:
     text: Not yet established
     kind: ASSESSMENT
@@ -428,9 +379,10 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   known_acquisition_defect:
-    text: Not established
+    text: 3 packs miss one 1 s chunk; MINI3 VTSBW=10 XML named pack1 for pack2 chunks; XML Drone field mislabels 5 packs
     kind: FACT
-    status: UNKNOWN
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
   classical_ml_opportunity:
     text: '**Very strong: FHSBW/FHSDT/FHSDC/FHSPP/VTSBW**'
     kind: ASSESSMENT
@@ -520,10 +472,10 @@ supplementary:
     n_unit: pack
     source: 'scripts/inspect_rfuav.py: XML of 3 packs, IQ of 1 file (details.empirical_samples)'
   Known defects:
-    text: 37 vs 35 UAV conflict; partial release; taxonomy ambiguity
+    text: 37 vs 35 UAV conflict; partial release; taxonomy ambiguity; 5 XML Drone mislabels; 3 duplicated XML serials; 3 packs with a missing chunk
     kind: FACT
-    status: AUTHOR_DOC
-    source: RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)
+    status: VERIFIED
+    source: 'index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)'
 details:
   dataset:
     id: rfuav

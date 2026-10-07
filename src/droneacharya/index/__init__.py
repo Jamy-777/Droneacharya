@@ -1,6 +1,6 @@
-from . import dronerf
+from . import cardrf, dronerf, rfuav
 from .tables import read, validate, write
 
-BUILDERS = {"dronerf": dronerf.build}
+BUILDERS = {"cardrf": cardrf.build, "dronerf": dronerf.build, "rfuav": rfuav.build}
 
 __all__ = ["BUILDERS", "read", "validate", "write"]

@@ -22,10 +22,10 @@ import zlib
 from pathlib import Path, PurePosixPath
 
 from ..paths import INTERIM, RAW
+from .rar import UNRAR, parse_unrar_lt
 
 DATASET = "dronerf"
 ZIP_RELPATH = "dronerf/original/f4c2b4n755-1.zip"
-UNRAR = shutil.which("UnRAR") or r"C:\Program Files\WinRAR\UnRAR.exe"
 
 CSV_NAME = re.compile(r"^(?P<bui>[01]{5})(?P<band>[LH])_(?P<segment>\d+)\.csv$")
 # BUI = [drone present][drone type x2][flight mode x2]
@@ -34,20 +34,6 @@ MODES = {"00": "on_connected", "01": "hovering", "10": "flying", "11": "flying_v
 FOLDER_MODEL = {"Bepop drone": "Parrot Bebop", "AR drone": "Parrot AR Drone", "Phantom drone": "DJI Phantom 3",
                 "Background RF activites": None}
 PAPER_SEGMENTS = {None: 41, "Parrot Bebop": 84, "Parrot AR Drone": 81, "DJI Phantom 3": 21}
-
-
-def parse_unrar_lt(text):
-    entries, current = [], {}
-    for line in text.splitlines():
-        key, sep, value = line.strip().partition(": ")
-        if not sep:
-            continue
-        if key == "Name":
-            current = {"name": value}
-            entries.append(current)
-        elif current and key in ("Type", "Size", "CRC32", "Modified"):
-            current[key.lower()] = value
-    return [e for e in entries if e.get("type") == "File"]
 
 
 def crc32_of(path):
@@ -142,9 +128,17 @@ def build(raw_root=RAW, interim_root=INTERIM):
             "group_id": f"{DATASET}/{bui}",
             "n_artifacts": len(bands),
             "channels": sorted(bands),
-            "label_drone_present": present,
-            "label_model": MODELS[bui[1:3]] if present else None,
-            "label_mode": MODES[bui[3:]] if present else None,
+            "recorded_at": None,
+            "start_s": None,
+            "duration_s": None,  # 10 M samples at an unconfirmed 40 MS/s: not asserted here
+            "center_frequency_hz": None,
+            "sample_rate_hz": None,
+            "reference_snr_db": None,
+            "official_split": None,
+            "label_uas_present": present,
+            "label_emitter": "uas_link" if present else "none",
+            "label_class": MODELS[bui[1:3]] if present else None,
+            "label_condition": MODES[bui[3:]] if present else None,
             "label_source": "BUI digits in the file name; digit meaning from the DroneRF paper; "
                             "model digits agree with the release folder of every file",
             "label_status": "AUTHOR_DOC",
@@ -177,7 +171,7 @@ def build(raw_root=RAW, interim_root=INTERIM):
 
     segments_by_model = {}
     for c in captures:
-        segments_by_model[c["label_model"]] = segments_by_model.get(c["label_model"], 0) + 1
+        segments_by_model[c["label_class"]] = segments_by_model.get(c["label_class"], 0) + 1
     evidence = [
         _ev("rar_archives", len(listings), "VERIFIED", "zip central directory", len(listings)),
         _ev("csv_artifacts", len(artifacts), "VERIFIED", "RAR headers (UnRAR lt)", len(listings)),

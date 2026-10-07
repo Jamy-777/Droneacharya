@@ -10,7 +10,7 @@ Project decisions are not claims; they live in `configs/dataset_roles.yaml`.
 
 | Dataset | VERIFIED | EMPIRICAL | AUTHOR_DOC | AUTHOR_CODE | REPO_METADATA | INFERRED | CONFLICTING | UNKNOWN | NOT_APPLICABLE | claims |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| cardrf | 17 | 40 | 10 | 2 | 0 | 9 | 2 | 5 | 5 | 90 |
+| cardrf | 34 | 23 | 10 | 2 | 0 | 10 | 2 | 6 | 5 | 92 |
 | ddl | 17 | 1 | 6 | 0 | 1 | 1 | 2 | 0 | 0 | 28 |
 | drff_r2 | 3 | 41 | 27 | 0 | 0 | 7 | 2 | 12 | 2 | 94 |
 | dronenoise | 12 | 2 | 9 | 0 | 2 | 1 | 1 | 1 | 0 | 28 |
@@ -19,15 +19,15 @@ Project decisions are not claims; they live in `configs/dataset_roles.yaml`.
 | miesikowska_uav | 1 | 16 | 7 | 0 | 3 | 0 | 0 | 1 | 0 | 28 |
 | noisy_rf | 1 | 0 | 26 | 0 | 28 | 14 | 0 | 8 | 5 | 82 |
 | remote_controller_rf | 0 | 0 | 35 | 0 | 12 | 5 | 0 | 18 | 12 | 82 |
-| rfuav | 0 | 35 | 14 | 0 | 7 | 9 | 1 | 24 | 0 | 90 |
+| rfuav | 28 | 9 | 13 | 0 | 7 | 9 | 1 | 23 | 0 | 90 |
 | rma | 11 | 29 | 19 | 3 | 4 | 12 | 2 | 2 | 6 | 88 |
 | svanstrom | 15 | 1 | 10 | 0 | 0 | 0 | 0 | 2 | 0 | 28 |
 | uavirbase | 11 | 2 | 14 | 0 | 1 | 0 | 0 | 0 | 0 | 28 |
 | uavsig | 0 | 17 | 56 | 0 | 4 | 7 | 3 | 2 | 2 | 91 |
 | cross-dataset (acoustic) | 0 | 2 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 4 |
-| **total** | **116** | **212** | **267** | **5** | **65** | **86** | **14** | **90** | **36** | **891** |
+| **total** | **161** | **169** | **266** | **5** | **65** | **87** | **14** | **90** | **36** | **893** |
 
-Kinds: ASSESSMENT 188, FACT 703
+Kinds: ASSESSMENT 188, FACT 705
 
 ## Ungraded (0)
 
@@ -45,7 +45,7 @@ None.
 | drff_r2 | facts | `gain_scale` | File documentation inconsistent; gain unresolved in inspected files — AUTHOR_DOC: gain stored in every file (DRFF-R2 paper (arXiv:2603.00106)); EMPIRICAL: no gain field in the inspected Dataset-3/7 files (scripts/inspect_drff_r2.py + inspect_drff_environment.py on 5 diagnostic files (details.empirical_findings)) |
 | dronenoise | facts | `known_defects` | Filename `dw` vs sheet `uw` for Mini 3 Pro; weight column shifted — VERIFIED: Mini 3 Pro flyover files are named `dw` (scripts/inspect_acoustic.py: all 174 WAV headers + calibration-tone audit (interim/dronenoise)); AUTHOR_DOC: metrics sheet lists them as `uw` (figshare 22133411 description + DNM_SQM_FLYO_AESCT.xlsx (authors)) |
 | dronerf | supplementary | `Published prose sample-count claim` | CONFLICTING — states 1M/part — AUTHOR_DOC: paper prose: 1,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); AUTHOR_DOC: paper tables imply 10,000,000 samples per part (DroneRF paper, Al-Sa'd et al. 2019 (Europe PMC full text)); EMPIRICAL: 10,000,000 values per CSV (scripts/inspect_dronerf.py on 4 CSVs (details.empirical_inspection)) |
-| rfuav | facts | `label_taxonomy` | **AMBIGUOUS — UAV/RC-system-like classes** — AUTHOR_DOC: 37 distinct UAVs (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); AUTHOR_DOC: 35 drone types (repository README) (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); REPO_METADATA: public classes include RC transmitter products (e.g. FUTABA T14SG, FRSKY X20R) (Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)) |
+| rfuav | facts | `label_taxonomy` | **AMBIGUOUS — UAV/RC-system-like classes** — AUTHOR_DOC: 37 distinct UAVs (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); AUTHOR_DOC: 35 drone types (repository README) (RFUAV paper (arXiv:2503.09033) + GitHub README (kitoweeknd/RFUAV)); REPO_METADATA: public classes include RC transmitter products (e.g. FUTABA T14SG, FRSKY X20R) (Hugging Face kitofrank/RFUAV file listing (manifests/rfuav_hf_listing.json)); VERIFIED: XML Drone field disagrees with the class folder in 5 packs (e.g. RadioMaster BOXER → 'Radiolink AT10 II'; FrSky → 'FLYSKY') (index/rfuav: all 37 RAR listings and all 53 pack XMLs (scripts/build_index.py rfuav)) |
 | rma | facts | `public_release_caveat` | Full public release; README omits Mavic archives (~19 GB) — AUTHOR_DOC: README lists 9 systems, no Mavic (README.txt (authors)); VERIFIED: release holds 4 Mavic archives (60 files) (central directories of all 16 zips) |
 | rma | supplementary | `Documentation conflicts` | Mavic not in README; Frysky vs "Taranis Q X7"; SJRC F11 Pro "drone + RC" but one archive — AUTHOR_DOC: README: 9 systems incl. 'Taranis Q X7' and 'SJRC F11 Pro drone + remote controller' (README.txt (authors)); VERIFIED: archives: 4 undocumented Mavic archives, 'Frysky' archive, one SJRC archive (central directories of all 16 zips) |
 | uavsig | signal | `scalar_dtype` |  — EMPIRICAL: released MAT stores complex double holding int16 codes / 32767 (scripts/inspect_uavsig.py on 8 diagnostic captures (interim/uavsig/inspection)); AUTHOR_DOC: GNU Radio stored float32 (MILCOM 2024 paper (doi:10.1109/MILCOM61039.2024.10773837)) |
@@ -61,6 +61,7 @@ None.
 | cardrf | facts | `if_capture_bandwidth` | Nyquist 10 GHz; analog front-end bandwidth UNKNOWN |
 | cardrf | facts | `occupied_signal_bandwidth` | Device-dependent; not characterized |
 | cardrf | facts | `potential_shortcut_snr` | UNKNOWN; distance varies 8–12 m |
+| cardrf | supplementary | `Scope clock` | Hours run 22:00–07:59 across midnight every day; 12/24-hour convention and time zone not established |
 | drff_r2 | signal | `capture_bandwidth_hz` | matrix: VERIFY |
 | drff_r2 | facts | `if_capture_bandwidth` | UNKNOWN — not established |
 | drff_r2 | facts | `occupied_signal_bandwidth` | Not characterized (scenario/signal dependent) |
@@ -132,11 +133,10 @@ None.
 | rfuav | facts | `altitude_state_metadata` | Not established |
 | rfuav | facts | `multi_uav_mixtures` | Not established |
 | rfuav | facts | `controlled_environment` | Not established |
-| rfuav | facts | `independent_sessions_per_class` | UNKNOWN — 1 pack per condition in sampled classes |
+| rfuav | facts | `independent_sessions_per_class` | UNKNOWN — 1–3 packs per class/condition; whether packs share a session is not established |
 | rfuav | facts | `potential_shortcut_receiver` | Requires full-corpus audit |
 | rfuav | facts | `potential_shortcut_received_power` | Not yet established |
 | rfuav | facts | `potential_shortcut_position` | Not established |
-| rfuav | facts | `known_acquisition_defect` | Not established |
 | rfuav | facts | `window_label_reliability` | UNKNOWN — pack-level inspection only |
 | rfuav | supplementary | `Antenna documented` | UNKNOWN |
 | rfuav | supplementary | `Controller ID available` | UNKNOWN |
