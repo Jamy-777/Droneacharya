@@ -7,6 +7,7 @@ from droneacharya.cards import (
     Card, Fact, Measured, check_cards_against_spec, load_cards, load_spec, render_matrix,
 )
 from droneacharya.cards.io import REPO_ROOT
+from droneacharya.cards.matrix import render_ungraded
 
 DATA_ROOT = Path(r"D:\Weeeeeeee\DroneacharyaData")
 
@@ -26,6 +27,12 @@ def test_committed_matrix_is_generated_from_cards(cards, modality):
     spec = load_spec(modality)
     on_disk = (REPO_ROOT / spec.output).read_text(encoding="utf-8").replace("\r\n", "\n")
     assert on_disk == render_matrix(cards, spec), "run scripts/build_matrices.py"
+
+
+def test_committed_ungraded_worklist_is_current(cards):
+    specs = [load_spec("rf"), load_spec("acoustic")]
+    on_disk = (REPO_ROOT / "docs/datasets/ungraded_cells.md").read_text(encoding="utf-8").replace("\r\n", "\n")
+    assert on_disk == render_ungraded(cards, specs), "run scripts/build_matrices.py"
 
 
 def test_adopted_cards_store_raw_data_under_their_id(cards):
