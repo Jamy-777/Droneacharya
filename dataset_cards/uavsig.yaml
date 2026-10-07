@@ -1,408 +1,736 @@
-dataset:
-  id: uavsig
-  name: "UAVSig"
-  full_name: "UAVSig: Drone RF Signal Detection and Fingerprinting Dataset"
-  year: 2024
-  version: "4.0"
-  version_provenance:
-    dataverse_api: "4.0 released 2026-01-28; history 1.0, 1.1, 2.0, 3.0, 4.0 (manifests/uavsig_dataverse_versions.json)"
-    cached_web_index: "3.0 (search-engine snapshot; stale)"
-    author_dataset_info_pdf: "~222 GB full dataset (2024-09-30); v4.0 listing is 238.9 GB"
-  doi: "10.25346/S6/LVRRAE"
+# UAVSig dataset card (schema v1).
+#
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/rf_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
 
-provenance:
-  institution: "UCLA CORES Lab"
-  repository: "UCLA Dataverse"
-  related_publication:
-    title: "Drone RF Signal Detection and Fingerprinting: UAVSig Dataset and Deep Learning Approach"
-    venue: "MILCOM 2024"
-    doi: "10.1109/MILCOM61039.2024.10773837"
-
-license:
-  type: "CC0 1.0"
-
-modality:
-  - rf
-
-primary_tasks:
-  - uav_transmission_detection
-  - spectrum_localization
-  - rf_fingerprinting
-
-secondary_tasks:
-  - controller_detection
-  - simultaneous_multi_uav_detection
-  - same_model_physical_unit_identification
-
-public_release:
-  version: "4.0"
-  file_count: 726
-  total_size_gb: 238.91  # REPO_METADATA; MD5 for every file
-  directories: {one_drone/2024-05-09: 96, two_drone/2024-05-09: 432, controllers/2024-05-09: 192, root_docs: 6}
-  bulk_download_warning: true
-  automated_downloader_available: true
-
-population:
-  transmitters_total: 8
-
-  uavs:
-    count: 4
-    model: "DJI Matrice 100"
-    same_model_physical_units: true
-
-  controllers:
-    count: 4
-    model: "DJI C1"
-    same_model_physical_units: true
-
-  manufacturers:
-    - DJI
-
+schema_version: 1
+id: uavsig
+name: UAVSig
+full_name: 'UAVSig: Drone RF Signal Detection and Fingerprinting Dataset'
+modality: rf
+adoption: adopted
+storage:
+  raw_dir: uavsig
+  source:
+    repository: UCLA Dataverse
+    identifier: 10.25346/S6/LVRRAE
+    version: '4.0'
+structure:
+  artifact:
+    text: One 1 s `.mat` file
+    status: EMPIRICAL
+    n: 8
+  capture:
+    text: = artifact; whether a scenario's 6 consecutive captures are continuous is not established
+    status: INFERRED
+  group:
+    text: Scenario (transmitter set × channel) + day
+    status: ASSESSMENT
 signal:
-  representation: complex_iq
-
-  acquisition_precision:
-    iq_component_bits: 16
-
-  storage:
-    format: "MAT v5 (compressed)"
-    variable: "data, shape (1, 50000000), complex"
-    scalar_dtype:
-      value: "complex double holding int16 codes / 32767 (float32-representable)"
-      status: "EMPIRICAL (n=8)"
-      note: "Paper says GNU Radio stored float32; the released MAT stores double. Values are identical either way."
-    iq_layout:
-      value: "complex row vector"
-      status: "EMPIRICAL (n=8)"
-    noise_floor_rms_int16_codes: "40.8–41.9 in every file (EMPIRICAL n=7)"
-
-  sample_rate_sps:
+  complex_iq:
+    value: true
+    status: EMPIRICAL
+    n: 8
+  scalar_dtype:
+    value: complex128 holding int16 codes / 32767
+    status: EMPIRICAL
+    n: 8
+  container:
+    value: MAT v5 (compressed); variable data + label variables
+    status: EMPIRICAL
+    n: 8
+  sample_rate_hz:
     value: 50000000
-    status: SOURCE_VERIFIED
-
-  capture_bandwidth_hz:
-    value: 50000000
-    status: SOURCE_VERIFIED
-
+    status: AUTHOR_DOC
   center_frequency_hz:
     value: 2443500000
-    status: SOURCE_VERIFIED
-
-  capture_duration_seconds:
-    value: 1.0
-    status: SOURCE_VERIFIED
-
-  complex_samples_per_capture:
+    status: AUTHOR_DOC
+  capture_bandwidth_hz:
     value: 50000000
-    status: "EMPIRICAL (n=8)"
-
-filename_grammar:
-  status: "AUTHOR_README + EMPIRICAL (n=5 drone files, label ids agree)"
-  drones: "drone_ABCD_NN.mat: digit position k = drone k; digit value = channel (0 = off); NN = capture 00–05"
-  channel_offsets_mhz: {1: -17, 2: -7, 3: "+3 (INFERRED)", 4: "+13 (INFERRED)"}
-  controllers: "controller_pP_ABCD_NN.mat: P = physical arrangement (1, 2); digit k = controller k on/off"
-  examples:
-    drone_1000: "drone 1 on channel 1"
-    drone_2000: "drone 1 on channel 2"
-    drone_0001: "drone 4 on channel 1"
-    drone_1200: "drone 1 on channel 1 + drone 2 on channel 2"
-    controller_p1_0000: "no controller on (empty band)"
-
-acquisition:
+    status: AUTHOR_DOC
+  samples_per_artifact:
+    value: 50000000
+    status: EMPIRICAL
+    n: 8
+  artifact_duration_s:
+    value: 1.0
+    status: AUTHOR_DOC
+facts:
+  primary_purpose:
+    text: Transmission detection + spectrum localization + RF fingerprinting
+    status: UNGRADED
+  year:
+    text: '2024'
+    status: UNGRADED
+  license:
+    text: CC0 1.0
+    status: UNGRADED
+  full_reported_scale:
+    text: '8 transmitters: 4 DJI M100 UAVs + 4 DJI C1 controllers'
+    status: UNGRADED
+  public_release_caveat:
+    text: '**V4.0** (Dataverse API, 2026-01-28; cached web index shows 3.0); 726 files, 238.9 GB, MD5 per file'
+    status: REPO_METADATA
+  raw_representation:
+    text: Complex IQ
+    status: UNGRADED
+  scalar_dtype:
+    text: 'complex double holding int16 codes/32767 — EMPIRICAL n=8 (paper: float32)'
+    status: EMPIRICAL
+    n: 8
+  raw_format:
+    text: MAT v5 (compressed), variable `data` + label variables — EMPIRICAL n=8
+    status: EMPIRICAL
+    n: 8
+  i_q_layout:
+    text: Complex row vector (1, 50M) — EMPIRICAL n=8
+    status: EMPIRICAL
+    n: 8
+  samples_capture_chunk:
+    text: '**50,000,000 complex — EMPIRICAL n=8**'
+    status: EMPIRICAL
+    n: 8
+  chunk_duration:
+    text: 1 s — EMPIRICAL n=8
+    status: EMPIRICAL
+    n: 8
+  sample_rate:
+    text: '**50 MS/s SOURCE VERIFIED**'
+    status: AUTHOR_DOC
+  center_frequency:
+    text: '**2.4435 GHz SOURCE VERIFIED**'
+    status: AUTHOR_DOC
+  absolute_frequency_coverage:
+    text: 2.4185–2.4685 GHz
+    status: UNGRADED
+  if_capture_bandwidth:
+    text: 50 MHz (source)
+    status: UNGRADED
+  occupied_signal_bandwidth:
+    text: UAV channels ~10 MHz; controllers frequency-hop (hop domain exceeds 50 MHz capture)
+    status: UNGRADED
   receiver:
-    model: "USRP B205mini-i"
-    count: 1
+    text: USRP B205mini-i (single receiver)
+    status: UNGRADED
+  pack_unit_identifier:
+    text: Physical transmitter identity available
+    status: UNGRADED
+  manufacturer_coverage:
+    text: DJI only
+    status: UNGRADED
+  models_classes:
+    text: 1 UAV model + 1 controller model; 8 physical transmitters
+    status: UNGRADED
+  physical_units:
+    text: '**4 UAV + 4 controller**'
+    status: UNGRADED
+  same_model_multi_unit:
+    text: '**YES — core strength**'
+    status: UNGRADED
+  positive_signal_composition:
+    text: UAV fixed-channel transmissions + frequency-hopping controllers
+    status: UNGRADED
+  day_metadata:
+    text: 'Author doc: 5/9/24 (no-TX, controllers, one-drone) and 5/10/24 (two-drone); directories all say 2024-05-09 — CONFLICTING'
+    status: CONFLICTING
+  receiver_variation:
+    text: No — one receiver
+    status: UNGRADED
+  gain_scale:
+    text: 20 dB receiver gain (source)
+    status: UNGRADED
+  snr_metadata:
+    text: Not established per capture
+    status: UNKNOWN
+  environmental_negatives:
+    text: 'No-TX baseline: controller_p*_0000, 12 captures — no experimental TX on, ambient RF present (author doc + EMPIRICAL n=1)'
+    status: EMPIRICAL
+    n: 1
+  negative_taxonomy:
+    text: No-TX baseline + unlabelled ambient RF; not a curated negative corpus
+    status: UNGRADED
+  negative_diversity:
+    text: Weak
+    status: ASSESSMENT
+  negative_provenance:
+    text: Uncontrolled ambient 2.4-GHz activity, spatially suppressed (directional antenna)
+    status: UNGRADED
+  hard_negative_emitters:
+    text: None explicitly labeled
+    status: UNGRADED
+  recorded_interference_conditions:
+    text: Ambient RF + real simultaneous UAVs
+    status: UNGRADED
+  positive_negative_fs_matched:
+    text: N/A — no explicit negative corpus
+    status: NOT_APPLICABLE
+  positive_negative_fc_matched:
+    text: N/A
+    status: NOT_APPLICABLE
+  negative_difficulty:
+    text: Not suitable as standalone hard-negative benchmark
+    status: ASSESSMENT
+  indoor_outdoor:
+    text: '**Outdoor — neighbouring campus rooftops (author doc)**'
+    status: AUTHOR_DOC
+  distance_metadata:
+    text: Rooftop placement (drones upper roof, controllers lower roof); metres not given
+    status: UNGRADED
+  altitude_state_metadata:
+    text: No flight-state focus
+    status: UNGRADED
+  frequency_hopping:
+    text: '**YES — controllers**'
+    status: UNGRADED
+  video_transmission_signals:
+    text: Not established as separate label
+    status: UNKNOWN
+  multi_uav_mixtures:
+    text: '**YES — real OTA, two simultaneous drones**'
+    status: UNGRADED
+  controlled_environment:
+    text: No — outdoor rooftops; RX antenna angled upward to limit interference
+    status: UNGRADED
+  schema_consistency:
+    text: Consistent across 8 captures (EMPIRICAL)
+    status: EMPIRICAL
+    n: 8
+  parent_recording_identity:
+    text: Filename = transmitter set × channel × capture (decoded, EMPIRICAL n=5)
+    status: EMPIRICAL
+    n: 5
+  window_safe_splitting_possible:
+    text: YES, with scenario/capture grouping
+    status: ASSESSMENT
+  original_raw_representation:
+    text: Complex IQ in MAT files
+    status: UNGRADED
+  published_derived_representations:
+    text: 512×512 spectrograms + bounding labels; spectrogram generation code available
+    status: UNGRADED
+  raw_derived_reproducibility:
+    text: Strong; visualization/spectrogram/WHIRLS code available
+    status: UNGRADED
+  train_class_support:
+    text: Published same-scenario 5/6 capture training
+    status: UNGRADED
+  validation_class_support:
+    text: Published same-scenario 1/6 capture testing
+    status: UNGRADED
+  class_balance:
+    text: Scenario-controlled; complete empirical audit pending
+    status: UNGRADED
+  label_taxonomy:
+    text: Per-transmission start/end/fc/bw/id; id = drone, controller or active-controller set
+    status: UNGRADED
+  leakage_safe_keys:
+    text: scenario + capture sequence + physical transmitter + day
+    status: ASSESSMENT
+  independent_sessions_per_class:
+    text: 1 day per category; 6 consecutive captures per scenario
+    status: UNGRADED
+  potential_shortcut_receiver:
+    text: Low within dataset; fixed receiver
+    status: ASSESSMENT
+  potential_shortcut_center_frequency:
+    text: '**HIGH — assigned UAV channel must be controlled**'
+    status: ASSESSMENT
+  potential_shortcut_snr:
+    text: UNKNOWN
+    status: ASSESSMENT
+  potential_shortcut_received_power:
+    text: '**HIGH — drone 4 ≈ 2.7 dB above drone 1 on the same channel (n=1)**'
+    status: ASSESSMENT
+  potential_shortcut_dataset_source:
+    text: Yes in cross-dataset; **two-drone = day 2 only (category ↔ day)**
+    status: ASSESSMENT
+  potential_shortcut_position:
+    text: '**HIGH** — controllers in 2 positions; drones and controllers on different roofs'
+    status: ASSESSMENT
+  known_acquisition_defect:
+    text: '**Dropped samples (lab warning); candidate marker: 600–730 runs of 10–13 zeros/s (EMPIRICAL n=8, causal link not proven)**'
+    status: EMPIRICAL
+    n: 8
+  classical_ml_opportunity:
+    text: Strong spectral/fingerprint features
+    status: ASSESSMENT
+  phase_aware_experiments:
+    text: 'Yes'
+    status: ASSESSMENT
+  magnitude_common_experiments:
+    text: Yes (spectral-common)
+    status: ASSESSMENT
+  detection_usefulness:
+    text: Strong transmission-detector research; weak explicit negatives
+    status: ASSESSMENT
+  identification_usefulness:
+    text: '**Excellent** for same-model physical-unit fingerprinting'
+    status: ASSESSMENT
+  robustness_usefulness:
+    text: '**Excellent** for single→multi-UAV scenario shift; weak environmental diversity'
+    status: ASSESSMENT
+  unique_contribution:
+    text: same-model units + real multi-UAV + time-frequency labels
+    status: ASSESSMENT
+  claim_ceiling:
+    text: controlled-domain same-model fingerprinting and transmission detection
+    status: ASSESSMENT
+  provisional_droneacharya_role:
+    text: fingerprint/generalization diagnostic + activity-label reference + real multi-UAV
+    status: ASSESSMENT
+  primary_detection_foundation:
+    text: 'No'
+    status: ASSESSMENT
+  full_download_justification:
+    text: No — strategic subset sufficient initially
+    status: ASSESSMENT
+  window_label_reliability:
+    text: '**HIGH** — WHIRLS boxes align with energy (34–38 dB inside vs outside); gap markers every ~1.5 ms'
+    status: ASSESSMENT
+supplementary:
+  Label granularity:
+    text: Transmission time-frequency bounding box
+    status: UNGRADED
+  Label provenance:
+    text: WHIRLS DSP + known scenario/channel metadata
+    status: UNGRADED
+  Identity assignment:
+    text: 'Single transmitter: deterministic; two-UAV: frequency-assisted; multi-controller: active-set only (ambiguous)'
+    status: UNGRADED
+  Published detection baseline:
+    text: Yes (MILCOM 2024)
+    status: UNGRADED
+  Published fingerprinting baseline:
+    text: 'Yes'
+    status: UNGRADED
+  Scenarios:
+    text: 16 one-drone / 72 two-drone / 32 controller
+    status: UNGRADED
+  Captures per scenario:
+    text: 6 × 1 s
+    status: UNGRADED
+  Published split:
+    text: 5 train / 1 test per scenario; same-scenario, consecutive captures — weak for generalization
+    status: UNGRADED
+  Droneacharya split policy:
+    text: Do NOT use published split as primary; group by scenario + capture sequence + transmitter + day
+    status: ASSESSMENT
+  Known defects:
+    text: Dropped-sample gaps; controller hops can fall outside 50 MHz capture; no explicit negative class
+    status: UNGRADED
+  Empirical checks outstanding:
+    text: MAT schema, IQ layout, sample count, gap representation, label storage, filename decoding
+    status: UNGRADED
+details:
+  dataset:
+    id: uavsig
+    name: "UAVSig"
+    full_name: "UAVSig: Drone RF Signal Detection and Fingerprinting Dataset"
+    year: 2024
+    version: "4.0"
+    version_provenance:
+      dataverse_api: "4.0 released 2026-01-28; history 1.0, 1.1, 2.0, 3.0, 4.0 (manifests/uavsig_dataverse_versions.json)"
+      cached_web_index: "3.0 (search-engine snapshot; stale)"
+      author_dataset_info_pdf: "~222 GB full dataset (2024-09-30); v4.0 listing is 238.9 GB"
+    doi: "10.25346/S6/LVRRAE"
 
-  antenna:
-    type: "directional panel"
-    gain_dbi: 20
-    beamwidth_degrees: 18
+  provenance:
+    institution: "UCLA CORES Lab"
+    repository: "UCLA Dataverse"
+    related_publication:
+      title: "Drone RF Signal Detection and Fingerprinting: UAVSig Dataset and Deep Learning Approach"
+      venue: "MILCOM 2024"
+      doi: "10.1109/MILCOM61039.2024.10773837"
 
-  receiver_gain_db:
-    value: 20
-    status: SOURCE_VERIFIED
+  license:
+    type: "CC0 1.0"
 
-  band:
-    value: "2.4 GHz ISM"
+  modality:
+    - rf
 
-  environment:
-    description: "outdoor, neighbouring campus building roofs: RX and drones on the upper roof, controllers on the lower roof; RX antenna angled upward to avoid interference"
-    status: AUTHOR_DOC  # uavsig_dataset_info.pdf; corrects the earlier 'controlled lab-like OTA setting'
-  front_end: "6 ft coax, no LNA (AUTHOR_DOC)"
+  primary_tasks:
+    - uav_transmission_detection
+    - spectrum_localization
+    - rf_fingerprinting
 
-  synthetic_signal_mixing:
-    used: false
+  secondary_tasks:
+    - controller_detection
+    - simultaneous_multi_uav_detection
+    - same_model_physical_unit_identification
 
-scenarios:
-  captures_per_scenario:
-    value: 6
-    capture_duration_seconds: 1.0
+  public_release:
+    version: "4.0"
+    file_count: 726
+    total_size_gb: 238.91  # REPO_METADATA; MD5 for every file
+    directories: {one_drone/2024-05-09: 96, two_drone/2024-05-09: 432, controllers/2024-05-09: 192, root_docs: 6}
+    bulk_download_warning: true
+    automated_downloader_available: true
 
-  one_drone:
-    scenarios: 16
-    construction:
-      physical_uavs: 4
-      selected_channels: 4
-    simultaneous_transmitters: 1
+  population:
+    transmitters_total: 8
 
-  two_drone:
-    scenarios: 72
-    simultaneous_transmitters: 2
-    mixing: "real OTA simultaneous transmission"
+    uavs:
+      count: 4
+      model: "DJI Matrice 100"
+      same_model_physical_units: true
 
-  controllers:
-    scenarios: 32
-    physical_controllers: 4
-    arrangements: 2
-    hopping: true
+    controllers:
+      count: 4
+      model: "DJI C1"
+      same_model_physical_units: true
 
-frequency_structure:
-  uavs:
-    type: "wideband fixed-channel"
-    approximate_channel_bandwidth_hz: 10000000
-    selectable_channels: 4
+    manufacturers:
+      - DJI
 
-  controllers:
-    type: "frequency hopping"
-    observation_limitation:
-      - "The 50 MHz capture does not cover the entire controller hopping domain."
-      - "Some controller transmissions may be partially or entirely outside the captured bandwidth."
+  signal:
+    representation: complex_iq
 
-labels:
-  time_frequency_labels:
-    available: true
+    acquisition_precision:
+      iq_component_bits: 16
 
-  transmitter_identity:
-    available: true
+    storage:
+      format: "MAT v5 (compressed)"
+      variable: "data, shape (1, 50000000), complex"
+      scalar_dtype:
+        value: "complex double holding int16 codes / 32767 (float32-representable)"
+        status: "EMPIRICAL (n=8)"
+        note: "Paper says GNU Radio stored float32; the released MAT stores double. Values are identical either way."
+      iq_layout:
+        value: "complex row vector"
+        status: "EMPIRICAL (n=8)"
+      noise_floor_rms_int16_codes: "40.8–41.9 in every file (EMPIRICAL n=7)"
 
-  labeler:
-    name: "WHIRLS"
-    type: "algorithmic DSP labeling"
+    sample_rate_sps:
+      value: 50000000
+      status: SOURCE_VERIFIED
 
-  label_information:
-    - transmission_start
-    - transmission_end
-    - frequency_location
-    - bandwidth
-    - transmitter_identity_or_active_set
+    capture_bandwidth_hz:
+      value: 50000000
+      status: SOURCE_VERIFIED
 
-  storage:
-    status: "EMPIRICAL (n=8)"
-    variables: "start, end (int32 sample indices, 0-based INFERRED), fc and bw (Hz, fc as baseband offset within +/-25 MHz), id, num_transmission"
-    loading_note: "Stored as `end`; MATLAB exposes it as `end_` after load (visualize.m)."
-    id_vocabulary: "metadata.json DroneIndex: 0–3 drone_1–4, 4–7 controller_1–4, 8–18 controller sets, 19 none"
-  label_vs_energy:
-    inside_vs_outside_power_db: "34–38 dB in single-transmitter files"
-    status: "EMPIRICAL (n=6)"
+    center_frequency_hz:
+      value: 2443500000
+      status: SOURCE_VERIFIED
 
-  identity_assignment:
-    single_transmitter:
-      status: deterministic_from_scenario
+    capture_duration_seconds:
+      value: 1.0
+      status: SOURCE_VERIFIED
+
+    complex_samples_per_capture:
+      value: 50000000
+      status: "EMPIRICAL (n=8)"
+
+  filename_grammar:
+    status: "AUTHOR_README + EMPIRICAL (n=5 drone files, label ids agree)"
+    drones: "drone_ABCD_NN.mat: digit position k = drone k; digit value = channel (0 = off); NN = capture 00–05"
+    channel_offsets_mhz: {1: -17, 2: -7, 3: "+3 (INFERRED)", 4: "+13 (INFERRED)"}
+    controllers: "controller_pP_ABCD_NN.mat: P = physical arrangement (1, 2); digit k = controller k on/off"
+    examples:
+      drone_1000: "drone 1 on channel 1"
+      drone_2000: "drone 1 on channel 2"
+      drone_0001: "drone 4 on channel 1"
+      drone_1200: "drone 1 on channel 1 + drone 2 on channel 2"
+      controller_p1_0000: "no controller on (empty band)"
+
+  acquisition:
+    receiver:
+      model: "USRP B205mini-i"
+      count: 1
+
+    antenna:
+      type: "directional panel"
+      gain_dbi: 20
+      beamwidth_degrees: 18
+
+    receiver_gain_db:
+      value: 20
+      status: SOURCE_VERIFIED
+
+    band:
+      value: "2.4 GHz ISM"
+
+    environment:
+      description: "outdoor, neighbouring campus building roofs: RX and drones on the upper roof, controllers on the lower roof; RX antenna angled upward to avoid interference"
+      status: AUTHOR_DOC  # uavsig_dataset_info.pdf; corrects the earlier 'controlled lab-like OTA setting'
+    front_end: "6 ft coax, no LNA (AUTHOR_DOC)"
+
+    synthetic_signal_mixing:
+      used: false
+
+  scenarios:
+    captures_per_scenario:
+      value: 6
+      capture_duration_seconds: 1.0
+
+    one_drone:
+      scenarios: 16
+      construction:
+        physical_uavs: 4
+        selected_channels: 4
+      simultaneous_transmitters: 1
 
     two_drone:
-      status: frequency_assisted_from_known_channel_assignment
+      scenarios: 72
+      simultaneous_transmitters: 2
+      mixing: "real OTA simultaneous transmission"
 
-    multi_controller:
-      status: ambiguous
+    controllers:
+      scenarios: 32
+      physical_controllers: 4
+      arrangements: 2
+      hopping: true
+
+  frequency_structure:
+    uavs:
+      type: "wideband fixed-channel"
+      approximate_channel_bandwidth_hz: 10000000
+      selectable_channels: 4
+
+    controllers:
+      type: "frequency hopping"
+      observation_limitation:
+        - "The 50 MHz capture does not cover the entire controller hopping domain."
+        - "Some controller transmissions may be partially or entirely outside the captured bandwidth."
+
+  labels:
+    time_frequency_labels:
+      available: true
+
+    transmitter_identity:
+      available: true
+
+    labeler:
+      name: "WHIRLS"
+      type: "algorithmic DSP labeling"
+
+    label_information:
+      - transmission_start
+      - transmission_end
+      - frequency_location
+      - bandwidth
+      - transmitter_identity_or_active_set
+
+    storage:
+      status: "EMPIRICAL (n=8)"
+      variables: "start, end (int32 sample indices, 0-based INFERRED), fc and bw (Hz, fc as baseband offset within +/-25 MHz), id, num_transmission"
+      loading_note: "Stored as `end`; MATLAB exposes it as `end_` after load (visualize.m)."
+      id_vocabulary: "metadata.json DroneIndex: 0–3 drone_1–4, 4–7 controller_1–4, 8–18 controller sets, 19 none"
+    label_vs_energy:
+      inside_vs_outside_power_db: "34–38 dB in single-transmitter files"
+      status: "EMPIRICAL (n=6)"
+
+    identity_assignment:
+      single_transmitter:
+        status: deterministic_from_scenario
+
+      two_drone:
+        status: frequency_assisted_from_known_channel_assignment
+
+      multi_controller:
+        status: ambiguous
+        notes:
+          - "Individual hopping-controller transmission identity is not deterministic."
+          - "All active controllers are listed in the label."
+
+  known_acquisition_defects:
+    dropped_samples:
+      present: true
+      status: "OFFICIAL_LAB_WARNING + EMPIRICAL (n=8)"
+      cause: "sample segments dropped by B205mini SDR collection setup"
+      behavior: "random gaps in posted raw IQ"
+      empirical_candidate_marker:
+        pattern: "runs of 10–13 consecutive exact-zero complex samples"
+        observed_files_n: 8
+        runs_per_second: "600–730 (one every ~1.2–1.7 ms)"
+        present_under_strong_signal: true  # cannot be quantized noise
+        positions_recur_across_files: "e.g. first run at sample 52,885 in 5 of 8 files; 115,770 in 4 files, across controller, one-drone and two-drone categories"
+        interpretation: "strongly consistent with the documented dropped-sample defect"
+        causal_mapping_status: "NOT PROVEN — acquisition/storage code not seen; samples lost per marker UNKNOWN"
+        detection_rule: "runs of >= 8 exact-zero complex samples"
+      shortcut_audit: "Check whether gap positions or counts differ by class/scenario; if so, mask gaps before training."
+      implications:
+        - "Raw sample index may not represent uninterrupted elapsed time."
+        - "Long temporal and inter-arrival measurements across gaps require caution."
+        - "Hopping/burst timing analysis may be distorted."
+
+    out_of_band_controller_hops:
+      present: true
+      implications:
+        - "A controller can be active while its current hop is outside the captured 50 MHz band."
+        - "Observed RF silence does not necessarily imply controller inactivity."
+
+  negative_data:
+    explicit_background_class:
+      available: false  # not a curated negative corpus
+    no_tx_baseline:
+      available: true
+      files: "controller_p1_0000_*, controller_p2_0000_* (12 captures)"
+      interpretation: "no experimental transmitter on; ambient RF still present (authors: 'baseline to show interference')"
+      status: "AUTHOR_DOC (dataset_info 'No TX', 2 scenarios) + metadata.json label 19 'none' + EMPIRICAL (n=1: 0 transmissions)"
+
+    explicit_wifi_class:
+      available: false
+
+    explicit_bluetooth_class:
+      available: false
+
+    uncontrolled_ambient_rf:
+      present: true
       notes:
-        - "Individual hopping-controller transmission identity is not deterministic."
-        - "All active controllers are listed in the label."
+        - "Collection location was not devoid of other 2.4 GHz emitters."
+        - "Directional antenna was used to reduce unwanted interference."
 
-known_acquisition_defects:
-  dropped_samples:
-    present: true
-    status: "OFFICIAL_LAB_WARNING + EMPIRICAL (n=8)"
-    cause: "sample segments dropped by B205mini SDR collection setup"
-    behavior: "random gaps in posted raw IQ"
-    empirical_candidate_marker:
-      pattern: "runs of 10–13 consecutive exact-zero complex samples"
-      observed_files_n: 8
-      runs_per_second: "600–730 (one every ~1.2–1.7 ms)"
-      present_under_strong_signal: true  # cannot be quantized noise
-      positions_recur_across_files: "e.g. first run at sample 52,885 in 5 of 8 files; 115,770 in 4 files, across controller, one-drone and two-drone categories"
-      interpretation: "strongly consistent with the documented dropped-sample defect"
-      causal_mapping_status: "NOT PROVEN — acquisition/storage code not seen; samples lost per marker UNKNOWN"
-      detection_rule: "runs of >= 8 exact-zero complex samples"
-    shortcut_audit: "Check whether gap positions or counts differ by class/scenario; if so, mask gaps before training."
-    implications:
-      - "Raw sample index may not represent uninterrupted elapsed time."
-      - "Long temporal and inter-arrival measurements across gaps require caution."
-      - "Hopping/burst timing analysis may be distorted."
+    negative_taxonomy:
+      status: weak
 
-  out_of_band_controller_hops:
-    present: true
-    implications:
-      - "A controller can be active while its current hop is outside the captured 50 MHz band."
-      - "Observed RF silence does not necessarily imply controller inactivity."
+  multi_transmitter:
+    real_ota_multi_uav:
+      available: true
 
-negative_data:
-  explicit_background_class:
-    available: false  # not a curated negative corpus
-  no_tx_baseline:
+    synthetic_superposition:
+      used: false
+
+    significance:
+      - "Supports evaluation under real simultaneous UAV transmissions."
+      - "Avoids assuming synthetic addition reproduces OTA transmitter interaction."
+
+  split_structure:
+    published_protocol:
+      train_captures_per_scenario: 5
+      test_captures_per_scenario: 1
+
+    independence:
+      status: weak_for_generalization_claims
+      notes:
+        - "Training and testing captures come from the same scenario."
+        - "Captures are consecutive with small gaps."
+        - "Published split does not establish cross-environment, cross-receiver, or unseen-unit generalization."
+
+    droneacharya_policy:
+      use_published_split_as_primary: false
+      grouping_requirements:
+        - scenario
+        - capture_sequence
+        - physical_transmitter
+        - capture_day
+
+  day_metadata:
     available: true
-    files: "controller_p1_0000_*, controller_p2_0000_* (12 captures)"
-    interpretation: "no experimental transmitter on; ambient RF still present (authors: 'baseline to show interference')"
-    status: "AUTHOR_DOC (dataset_info 'No TX', 2 scenarios) + metadata.json label 19 'none' + EMPIRICAL (n=1: 0 transmissions)"
+    reported_collection_days: 2
+    day_by_category:  # AUTHOR_DOC: uavsig_dataset_info.pdf
+      2024-05-09: [no_tx, controllers, one_drone]
+      2024-05-10: [two_drone]
+    directory_dates: "all three directories labelled 2024-05-09 (REPO_METADATA); for two_drone this disagrees with the authors' table"
+    status: CONFLICTING  # author doc vs directory label; author doc is the more specific source
+    confound: "Category and capture day are entangled: every two-drone capture is from day 2."
 
-  explicit_wifi_class:
-    available: false
+    cross_day_same_task:
+      status: UNKNOWN
+      notes:
+        - "Capture categories may differ by day."
+        - "Empirical directory audit required before defining cross-day experiments."
 
-  explicit_bluetooth_class:
-    available: false
+  known_shortcut_risks:
+    - rf_channel_assignment
+    - physical_position
+    - scenario_identity
+    - consecutive_capture_similarity
+    - transmitter_power
+    - capture_day
+    - dropped_sample_pattern
+    - dataset_source
 
-  uncontrolled_ambient_rf:
-    present: true
-    notes:
-      - "Collection location was not devoid of other 2.4 GHz emitters."
-      - "Directional antenna was used to reduce unwanted interference."
+  potential_confounds:
+    channel_vs_transmitter:
+      priority: HIGH
 
-  negative_taxonomy:
-    status: weak
+    position_vs_transmitter:
+      priority: HIGH
 
-multi_transmitter:
-  real_ota_multi_uav:
-    available: true
+    scenario_vs_split:
+      priority: HIGH
 
-  synthetic_superposition:
-    used: false
+    dropped_samples_vs_recording:
+      priority: HIGH
 
-  significance:
-    - "Supports evaluation under real simultaneous UAV transmissions."
-    - "Avoids assuming synthetic addition reproduces OTA transmitter interaction."
+  compatible_experiments:
+    complex_iq: true
+    phase_dependent: true
+    spectral_common: true
+    engineered_spectral_features: true
+    time_frequency_detection: true
+    rf_fingerprinting: true
+    same_model_unit_identification: true
+    real_multi_uav_detection: true
 
-split_structure:
-  published_protocol:
-    train_captures_per_scenario: 5
-    test_captures_per_scenario: 1
+  unique_contribution:
+    - same_model_multi_unit_uav_fingerprinting
+    - same_model_multi_unit_controller_fingerprinting
+    - real_ota_simultaneous_multi_uav_captures
+    - time_frequency_transmission_labels
+    - activity_aware_signal_annotations
+    - controlled_channel_assignment
+    - 2_4_ghz_cross_dataset_overlap
 
-  independence:
-    status: weak_for_generalization_claims
-    notes:
-      - "Training and testing captures come from the same scenario."
-      - "Captures are consecutive with small gaps."
-      - "Published split does not establish cross-environment, cross-receiver, or unseen-unit generalization."
+  claim_ceiling:
+    supported:
+      - "Detection and localization of represented UAV/controller transmissions in the UAVSig acquisition domain."
+      - "RF fingerprinting among the four represented DJI Matrice 100 physical units."
+      - "Evaluation under represented simultaneous two-UAV OTA scenarios."
+      - "Same-model physical-unit RF fingerprint research."
 
-  droneacharya_policy:
-    use_published_split_as_primary: false
-    grouping_requirements:
-      - scenario
-      - capture_sequence
-      - physical_transmitter
-      - capture_day
+    unsupported:
+      - "Manufacturer-independent UAV detection."
+      - "Universal non-UAV rejection."
+      - "Cross-receiver generalization."
+      - "Broad cross-environment generalization."
+      - "Unseen UAV model detection."
+      - "Long-range operational detection."
+      - "Continuous hopping timing across dropped-sample gaps."
+      - "RF-silent UAV detection."
 
-day_metadata:
-  available: true
-  reported_collection_days: 2
-  day_by_category:  # AUTHOR_DOC: uavsig_dataset_info.pdf
-    2024-05-09: [no_tx, controllers, one_drone]
-    2024-05-10: [two_drone]
-  directory_dates: "all three directories labelled 2024-05-09 (REPO_METADATA); for two_drone this disagrees with the authors' table"
-  status: CONFLICTING  # author doc vs directory label; author doc is the more specific source
-  confound: "Category and capture day are entangled: every two-drone capture is from day 2."
+  empirical_findings:
+    status: "EMPIRICAL (n=8 diagnostic captures); scripts/inspect_uavsig.py, summary in interim/uavsig/inspection/"
+    time_occupancy_pct:
+      one_drone: "67–70% (transmissions 27 us to 24 ms)"
+      two_drone: "~100%"
+      one_controller: 9.5
+      four_controllers: 41
+    controller_hops: "bw 0.03–3 MHz, centres spread across the full +/-25 MHz"
+    received_power_by_transmitter:
+      note: "median 1 ms window RMS: drone 1 ch1 0.159, drone 1 ch2 0.178, drone 4 ch1 0.218"
+      interpretation: "Drone 4 is ~2.7 dB stronger than drone 1 on the same channel: power alone can separate units (fixed geometry)."
+      status: "EMPIRICAL (n=1 per condition)"
 
-  cross_day_same_task:
-    status: UNKNOWN
-    notes:
-      - "Capture categories may differ by day."
-      - "Empirical directory audit required before defining cross-day experiments."
+  empirical_checks_required:
+    - samples_lost_per_gap_marker
+    - channels_3_and_4_offsets
+    - physical_position_encoding
+    - day_mapping  # paper says 2 days, directories say 1
+    - power_by_transmitter_across_more_captures
+    - gap_positions_by_class
 
-known_shortcut_risks:
-  - rf_channel_assignment
-  - physical_position
-  - scenario_identity
-  - consecutive_capture_similarity
-  - transmitter_power
-  - capture_day
-  - dropped_sample_pattern
-  - dataset_source
+  resolved_by_author_docs:  # UAVSig Readme.pdf + uavsig_dataset_info.pdf, read 2026-10-05
+    - "Filename grammar (matches our empirical decoding)."
+    - "Capture days: two-drone on 2024-05-10, everything else on 2024-05-09."
+    - "Environment is outdoor rooftops, not a lab."
+    - "Drone units are DJI Matrice 100 #15–#18; channels are ~10 MHz wide, capture centre 2.4435 GHz slightly offset from the four channels."
+    - "Authors' training spectrograms: 5.2 ms, 512x512."
 
-potential_confounds:
-  channel_vs_transmitter:
-    priority: HIGH
+  droneacharya:
+    acquired: partial  # 8 diagnostic captures + documentation
+    inspected: true
+    adapter_implemented: false
 
-  position_vs_transmitter:
-    priority: HIGH
+    provisional_role:
+      - same_model_physical_unit_fingerprinting
+      - activity_label_reference
+      - real_multi_uav_robustness
+      - 2_4_ghz_cross_dataset_evaluation
 
-  scenario_vs_split:
-    priority: HIGH
-
-  dropped_samples_vs_recording:
-    priority: HIGH
-
-compatible_experiments:
-  complex_iq: true
-  phase_dependent: true
-  spectral_common: true
-  engineered_spectral_features: true
-  time_frequency_detection: true
-  rf_fingerprinting: true
-  same_model_unit_identification: true
-  real_multi_uav_detection: true
-
-unique_contribution:
-  - same_model_multi_unit_uav_fingerprinting
-  - same_model_multi_unit_controller_fingerprinting
-  - real_ota_simultaneous_multi_uav_captures
-  - time_frequency_transmission_labels
-  - activity_aware_signal_annotations
-  - controlled_channel_assignment
-  - 2_4_ghz_cross_dataset_overlap
-
-claim_ceiling:
-  supported:
-    - "Detection and localization of represented UAV/controller transmissions in the UAVSig acquisition domain."
-    - "RF fingerprinting among the four represented DJI Matrice 100 physical units."
-    - "Evaluation under represented simultaneous two-UAV OTA scenarios."
-    - "Same-model physical-unit RF fingerprint research."
-
-  unsupported:
-    - "Manufacturer-independent UAV detection."
-    - "Universal non-UAV rejection."
-    - "Cross-receiver generalization."
-    - "Broad cross-environment generalization."
-    - "Unseen UAV model detection."
-    - "Long-range operational detection."
-    - "Continuous hopping timing across dropped-sample gaps."
-    - "RF-silent UAV detection."
-
-empirical_findings:
-  status: "EMPIRICAL (n=8 diagnostic captures); scripts/inspect_uavsig.py, summary in interim/uavsig/inspection/"
-  time_occupancy_pct:
-    one_drone: "67–70% (transmissions 27 us to 24 ms)"
-    two_drone: "~100%"
-    one_controller: 9.5
-    four_controllers: 41
-  controller_hops: "bw 0.03–3 MHz, centres spread across the full +/-25 MHz"
-  received_power_by_transmitter:
-    note: "median 1 ms window RMS: drone 1 ch1 0.159, drone 1 ch2 0.178, drone 4 ch1 0.218"
-    interpretation: "Drone 4 is ~2.7 dB stronger than drone 1 on the same channel: power alone can separate units (fixed geometry)."
-    status: "EMPIRICAL (n=1 per condition)"
-
-empirical_checks_required:
-  - samples_lost_per_gap_marker
-  - channels_3_and_4_offsets
-  - physical_position_encoding
-  - day_mapping  # paper says 2 days, directories say 1
-  - power_by_transmitter_across_more_captures
-  - gap_positions_by_class
-
-resolved_by_author_docs:  # UAVSig Readme.pdf + uavsig_dataset_info.pdf, read 2026-10-05
-  - "Filename grammar (matches our empirical decoding)."
-  - "Capture days: two-drone on 2024-05-10, everything else on 2024-05-09."
-  - "Environment is outdoor rooftops, not a lab."
-  - "Drone units are DJI Matrice 100 #15–#18; channels are ~10 MHz wide, capture centre 2.4435 GHz slightly offset from the four channels."
-  - "Authors' training spectrograms: 5.2 ms, 512x512."
-
-droneacharya:
-  acquired: partial  # 8 diagnostic captures + documentation
-  inspected: true
-  adapter_implemented: false
-
-  provisional_role:
-    - same_model_physical_unit_fingerprinting
-    - activity_label_reference
-    - real_multi_uav_robustness
-    - 2_4_ghz_cross_dataset_evaluation
-
-  primary_detection_foundation: false
-  full_download_justified: false
+    primary_detection_foundation: false
+    full_download_justified: false

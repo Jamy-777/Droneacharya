@@ -1,0 +1,210 @@
+# Layout of docs/datasets/rf_compatibility_matrix.md. Cell contents live in the cards.
+
+modality: rf
+output: docs/datasets/rf_compatibility_matrix.md
+preamble: '# Droneacharya RF Dataset Compatibility Matrix
+
+
+  Status vocabulary:
+
+
+  - **VERIFIED** — confirmed by primary source or empirical inspection
+
+  - INFERRED — reasonable inference requiring confirmation
+
+  - CONFLICTING — sources disagree
+
+  - UNKNOWN — not established
+
+  - EMPIRICAL — requires inspection of actual data
+
+
+  CardRF and later columns also mark evidence level: `author doc` (the dataset authors'' own description), `n=…` (number of files a value was checked on), and VERIFIED only for values we measured ourselves.
+
+
+  ## Schema frozen after DRFF-R2 + RFUAV reconnaissance. No new rows/columns unless a dataset reveals a genuinely new dimension.
+
+
+  Schema amendment (UAVSig): two genuinely new dimensions added — `Potential shortcut: position` and `Known acquisition defect`.
+
+
+  Schema amendment (agreed review, applied 2026-10-05): `Absolute frequency coverage` and `Independent sessions per class`.'
+columns:
+- id: drff_r2
+  label: DRFF-R2
+- id: rfuav
+  label: RFUAV
+- id: dronerf
+  label: DroneRF
+- id: cardrf
+  label: CardRF
+- id: uavsig
+  label: UAVSig
+- id: rma
+  label: RMA
+- id: noisy_rf
+  label: Noisy RF
+- id: remote_controller_rf
+  label: Remote Controller RF (paper read only)
+rows:
+- key: primary_purpose
+  label: Primary purpose
+- key: year
+  label: Year
+- key: license
+  label: License
+- key: full_reported_scale
+  label: Full reported scale
+- key: public_release_caveat
+  label: Public-release caveat
+- key: raw_representation
+  label: Raw representation
+- key: scalar_dtype
+  label: Scalar dtype
+- key: raw_format
+  label: Raw format
+- key: i_q_layout
+  label: I/Q layout
+- key: samples_capture_chunk
+  label: Samples/capture chunk
+- key: chunk_duration
+  label: Chunk duration
+- key: sample_rate
+  label: Sample rate
+- key: center_frequency
+  label: Center frequency
+- key: absolute_frequency_coverage
+  label: Absolute frequency coverage
+- key: if_capture_bandwidth
+  label: IF/capture bandwidth
+- key: occupied_signal_bandwidth
+  label: Occupied signal bandwidth
+- key: receiver
+  label: Receiver
+- key: pack_unit_identifier
+  label: Pack/unit identifier
+- key: manufacturer_coverage
+  label: Manufacturer coverage
+- key: models_classes
+  label: Models/classes
+- key: physical_units
+  label: Physical units
+- key: same_model_multi_unit
+  label: Same-model multi-unit
+- key: positive_signal_composition
+  label: Positive signal composition
+- key: day_metadata
+  label: Day metadata
+- key: receiver_variation
+  label: Receiver variation
+- key: gain_scale
+  label: Gain/scale
+- key: snr_metadata
+  label: SNR metadata
+- key: environmental_negatives
+  label: Environmental negatives
+- key: negative_taxonomy
+  label: Negative taxonomy
+- key: negative_diversity
+  label: Negative diversity
+- key: negative_provenance
+  label: Negative provenance
+- key: hard_negative_emitters
+  label: Hard-negative emitters
+- key: recorded_interference_conditions
+  label: Recorded interference conditions
+- key: positive_negative_fs_matched
+  label: Positive/negative Fs matched
+- key: positive_negative_fc_matched
+  label: Positive/negative Fc matched
+- key: negative_difficulty
+  label: Negative difficulty
+- key: indoor_outdoor
+  label: Indoor/outdoor
+- key: distance_metadata
+  label: Distance metadata
+- key: altitude_state_metadata
+  label: Altitude/state metadata
+- key: frequency_hopping
+  label: Frequency hopping
+- key: video_transmission_signals
+  label: Video transmission signals
+- key: multi_uav_mixtures
+  label: Multi-UAV mixtures
+- key: controlled_environment
+  label: Controlled environment
+- key: schema_consistency
+  label: Schema consistency
+- key: parent_recording_identity
+  label: Parent-recording identity
+- key: window_safe_splitting_possible
+  label: Window-safe splitting possible
+- key: original_raw_representation
+  label: Original/raw representation
+- key: published_derived_representations
+  label: Published derived representations
+- key: raw_derived_reproducibility
+  label: Raw→derived reproducibility
+- key: train_class_support
+  label: Train class support
+- key: validation_class_support
+  label: Validation class support
+- key: class_balance
+  label: Class balance
+- key: label_taxonomy
+  label: Label taxonomy
+- key: leakage_safe_keys
+  label: Leakage-safe keys
+- key: independent_sessions_per_class
+  label: Independent sessions per class
+- key: potential_shortcut_receiver
+  label: 'Potential shortcut: receiver'
+- key: potential_shortcut_center_frequency
+  label: 'Potential shortcut: center frequency'
+- key: potential_shortcut_snr
+  label: 'Potential shortcut: SNR'
+- key: potential_shortcut_received_power
+  label: 'Potential shortcut: received power'
+- key: potential_shortcut_dataset_source
+  label: 'Potential shortcut: dataset source'
+- key: potential_shortcut_position
+  label: 'Potential shortcut: position'
+- key: known_acquisition_defect
+  label: Known acquisition defect
+- key: classical_ml_opportunity
+  label: Classical-ML opportunity
+- key: phase_aware_experiments
+  label: Phase-aware experiments
+- key: magnitude_common_experiments
+  label: Magnitude-common experiments
+- key: detection_usefulness
+  label: Detection usefulness
+- key: identification_usefulness
+  label: Identification usefulness
+- key: robustness_usefulness
+  label: Robustness usefulness
+- key: unique_contribution
+  label: Unique contribution
+- key: claim_ceiling
+  label: Claim ceiling
+- key: provisional_droneacharya_role
+  label: Provisional Droneacharya role
+- key: primary_detection_foundation
+  label: Primary detection foundation?
+- key: full_download_justification
+  label: Full-download justification
+- key: window_label_reliability
+  label: Window-label reliability
+supplements:
+- id: drff_r2
+  heading: DRFF-R2 supplementary detail (not duplicated into main matrix)
+- id: rfuav
+  heading: RFUAV supplementary detail (not duplicated into main matrix)
+- id: dronerf
+  heading: DroneRF supplementary detail (not duplicated into main matrix)
+- id: uavsig
+  heading: UAVSig supplementary detail (not duplicated into main matrix)
+- id: cardrf
+  heading: CardRF supplementary detail (not duplicated into main matrix)
+- id: rma
+  heading: RMA supplementary detail (not duplicated into main matrix)

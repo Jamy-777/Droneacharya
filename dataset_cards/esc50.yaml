@@ -1,34 +1,152 @@
-dataset:
-  id: esc50
-  name: ESC-50
-  source: github.com/karolpiczak/ESC-50
-  modality: acoustic
-license: CC BY-NC 3.0 (ESC-10 subset CC BY)
+# ESC-50 dataset card (schema v1).
+#
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/acoustic_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
+
+schema_version: 1
+id: esc50
+name: ESC-50
+modality: acoustic
+adoption: adopted
+storage:
+  raw_dir: esc50
+  source:
+    repository: GitHub
+    identifier: karolpiczak/ESC-50
+structure:
+  artifact:
+    text: One 5 s mono WAV clip
+    status: EMPIRICAL
+    n: 2000
+  capture:
+    text: = artifact
+    status: EMPIRICAL
+    n: 2000
+  group:
+    text: '`src_file` (Freesound source recording)'
+    status: ASSESSMENT
 signal:
-  format: WAV, 16-bit PCM
-  sample_rate_hz: 44100
-  channels: 1
-  clip_s: 5
-  status: EMPIRICAL (n=2000)
-content:
-  classes: 50
-  clips_per_class: 40
-  selected_negatives:
-  - helicopter
-  - airplane
-  - engine
-  - chainsaw
-  - hand_saw
-  - vacuum_cleaner
-  - wind
-  - rain
-  - thunderstorm
-  - train
-  - insects
-  - crickets
-  - chirping_birds
-  - washing_machine
-leakage_safe_keys:
-- src_file
-note: 'helicopter: 40 clips from only 15 source recordings'
-role: Negatives-only layer; never positives.
+  container:
+    value: WAV
+    status: EMPIRICAL
+    n: 2000
+  sample_format:
+    value: pcm_s16
+    status: EMPIRICAL
+    n: 2000
+  sample_rate_hz:
+    value: 44100
+    status: EMPIRICAL
+    n: 2000
+  channels_per_artifact:
+    value: 1
+    status: EMPIRICAL
+    n: 2000
+  artifact_duration_s:
+    value: 5.0
+    status: EMPIRICAL
+    n: 2000
+facts:
+  primary_purpose:
+    text: Environmental sound classification
+    status: UNGRADED
+  licence:
+    text: 'CC BY-NC 3.0 (ESC-10: CC BY)'
+    status: UNGRADED
+  local_artifact:
+    text: '`ESC-50-master.zip`'
+    status: UNGRADED
+  recording_type:
+    text: Freesound clips (mixed sources)
+    status: UNGRADED
+  positives:
+    text: None
+    status: UNGRADED
+  negatives:
+    text: Helicopter, airplane, engine, chainsaw, wind, rain, … (40 clips per class)
+    status: UNGRADED
+  same_chain_negatives:
+    text: N/A (no positives)
+    status: NOT_APPLICABLE
+  sample_rate_format:
+    text: 44.1 kHz, 16-bit, mono (EMPIRICAL n=2000)
+    status: EMPIRICAL
+    n: 2000
+  clip_recording_length:
+    text: 5 s
+    status: UNGRADED
+  microphones_channels:
+    text: Unknown / various
+    status: UNGRADED
+  calibration:
+    text: 'No'
+    status: UNGRADED
+  sessions_days:
+    text: Freesound source files
+    status: UNGRADED
+  site:
+    text: —
+    status: UNGRADED
+  geometry_metadata:
+    text: —
+    status: UNGRADED
+  weather:
+    text: —
+    status: UNGRADED
+  speech_other_confounds:
+    text: —
+    status: UNGRADED
+  known_defects:
+    text: Some clips clip heavily (up to 10.6%)
+    status: UNGRADED
+  leakage_safe_keys:
+    text: '`src_file` (helicopter: 15 sources for 40 clips)'
+    status: ASSESSMENT
+  published_split:
+    text: 5 folds by `src_file`
+    status: UNGRADED
+  level_shortcut_risk:
+    text: Varies by source
+    status: ASSESSMENT
+  provisional_role:
+    text: Hard-negative layer (labelled classes)
+    status: ASSESSMENT
+details:
+  dataset:
+    id: esc50
+    name: ESC-50
+    source: github.com/karolpiczak/ESC-50
+    modality: acoustic
+  license: CC BY-NC 3.0 (ESC-10 subset CC BY)
+  signal:
+    format: WAV, 16-bit PCM
+    sample_rate_hz: 44100
+    channels: 1
+    clip_s: 5
+    status: EMPIRICAL (n=2000)
+  content:
+    classes: 50
+    clips_per_class: 40
+    selected_negatives:
+    - helicopter
+    - airplane
+    - engine
+    - chainsaw
+    - hand_saw
+    - vacuum_cleaner
+    - wind
+    - rain
+    - thunderstorm
+    - train
+    - insects
+    - crickets
+    - chirping_birds
+    - washing_machine
+  leakage_safe_keys:
+  - src_file
+  note: 'helicopter: 40 clips from only 15 source recordings'
+  role: Negatives-only layer; never positives.

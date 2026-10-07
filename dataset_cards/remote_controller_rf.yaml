@@ -1,0 +1,276 @@
+# Remote Controller RF dataset card (schema v1).
+#
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/rf_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
+
+schema_version: 1
+id: remote_controller_rf
+name: Remote Controller RF
+modality: rf
+adoption: backlog
+structure:
+  artifact:
+    text: Not assessed (paper read only)
+    status: UNKNOWN
+  capture:
+    text: Not assessed (paper read only)
+    status: UNKNOWN
+  group:
+    text: Not assessed (paper read only)
+    status: UNKNOWN
+signal:
+  complex_iq:
+    value: false
+    status: AUTHOR_DOC
+  scalar_dtype:
+    status: UNKNOWN
+  container:
+    value: .mat
+    status: AUTHOR_DOC
+  sample_rate_hz:
+    value: 20000000000
+    status: AUTHOR_DOC
+  center_frequency_hz:
+    status: NOT_APPLICABLE
+    note: direct RF sampling
+  capture_bandwidth_hz:
+    value: 6000000000
+    status: AUTHOR_DOC
+    note: oscilloscope analog bandwidth
+  samples_per_artifact:
+    value: 5000000
+    status: REPO_METADATA
+  artifact_duration_s:
+    value: 0.00025
+    status: AUTHOR_DOC
+facts:
+  primary_purpose:
+    text: RC detection/classification with Wi-Fi/BT rejection (paper)
+    status: AUTHOR_DOC
+  year:
+    text: 2020 (DataPort; OJ-COMS 2020)
+    status: UNGRADED
+  license:
+    text: Open access (login); license text UNKNOWN
+    status: UNGRADED
+  full_reported_scale:
+    text: 17 RCs, 8 makers, ~1000 signals/RC; 124 GB single zip
+    status: UNGRADED
+  public_release_caveat:
+    text: Release lists RC signals only; paper's Wi-Fi/BT captures not listed
+    status: AUTHOR_DOC
+  raw_representation:
+    text: Real-valued direct RF (oscilloscope)
+    status: UNGRADED
+  scalar_dtype:
+    text: UNKNOWN (paper-read only)
+    status: UNKNOWN
+  raw_format:
+    text: '`.mat` + MATLAB class scripts'
+    status: UNGRADED
+  i_q_layout:
+    text: N/A — real samples
+    status: NOT_APPLICABLE
+  samples_capture_chunk:
+    text: 5,000,000 (DataPort)
+    status: UNGRADED
+  chunk_duration:
+    text: 0.25 ms
+    status: UNGRADED
+  sample_rate:
+    text: 20 GSa/s (paper)
+    status: AUTHOR_DOC
+  center_frequency:
+    text: N/A — direct RF sampling, 2.4 GHz band
+    status: NOT_APPLICABLE
+  absolute_frequency_coverage:
+    text: Direct RF; 2.4 GHz
+    status: UNGRADED
+  if_capture_bandwidth:
+    text: Oscilloscope analog bandwidth 6 GHz (paper)
+    status: AUTHOR_DOC
+  occupied_signal_bandwidth:
+    text: RC links; paper rejects Wi-Fi by >20 MHz bandwidth
+    status: AUTHOR_DOC
+  receiver:
+    text: Keysight MSOS604A + 2 dBi omni / 24 dBi grid + LNA
+    status: UNGRADED
+  pack_unit_identifier:
+    text: Controller label incl. unit tags (Mpact/Ngat)
+    status: UNGRADED
+  manufacturer_coverage:
+    text: DJI, Spektrum, Futaba, Graupner, HobbyKing, FlySky, Turnigy, Jeti
+    status: UNGRADED
+  models_classes:
+    text: 15 models / 17 controllers
+    status: UNGRADED
+  physical_units:
+    text: '17'
+    status: UNGRADED
+  same_model_multi_unit:
+    text: Yes — 2 pairs (Matrice 600, Phantom 4 Pro)
+    status: UNGRADED
+  positive_signal_composition:
+    text: RC uplinks only
+    status: UNGRADED
+  day_metadata:
+    text: UNKNOWN
+    status: UNKNOWN
+  receiver_variation:
+    text: Antenna variation (omni/grid); per-file UNKNOWN
+    status: UNGRADED
+  gain_scale:
+    text: UNKNOWN
+    status: UNKNOWN
+  snr_metadata:
+    text: Paper sweeps SNR; per-file not documented
+    status: AUTHOR_DOC
+  environmental_negatives:
+    text: Not in release (as listed)
+    status: UNGRADED
+  negative_taxonomy:
+    text: 'Paper: Wi-Fi routers + 6 Bluetooth phones; not released'
+    status: AUTHOR_DOC
+  negative_diversity:
+    text: N/A in release
+    status: ASSESSMENT
+  negative_provenance:
+    text: N/A in release
+    status: NOT_APPLICABLE
+  hard_negative_emitters:
+    text: Not in release
+    status: UNGRADED
+  recorded_interference_conditions:
+    text: Paper only
+    status: AUTHOR_DOC
+  positive_negative_fs_matched:
+    text: N/A
+    status: NOT_APPLICABLE
+  positive_negative_fc_matched:
+    text: N/A
+    status: NOT_APPLICABLE
+  negative_difficulty:
+    text: N/A
+    status: ASSESSMENT
+  indoor_outdoor:
+    text: Indoor reported; outdoor shown, not reported
+    status: UNGRADED
+  distance_metadata:
+    text: UNKNOWN
+    status: UNKNOWN
+  altitude_state_metadata:
+    text: None
+    status: UNGRADED
+  frequency_hopping:
+    text: Yes (RC links), not labelled
+    status: UNGRADED
+  video_transmission_signals:
+    text: 'No'
+    status: UNGRADED
+  multi_uav_mixtures:
+    text: 'No'
+    status: UNGRADED
+  controlled_environment:
+    text: Indoor lab (paper)
+    status: AUTHOR_DOC
+  schema_consistency:
+    text: Not inspected
+    status: UNKNOWN
+  parent_recording_identity:
+    text: Per-signal files; session UNKNOWN
+    status: UNGRADED
+  window_safe_splitting_possible:
+    text: Not assessed
+    status: ASSESSMENT
+  original_raw_representation:
+    text: Real direct-RF in MAT
+    status: UNGRADED
+  published_derived_representations:
+    text: 15 statistical transient features (paper)
+    status: AUTHOR_DOC
+  raw_derived_reproducibility:
+    text: Paper code not in release
+    status: AUTHOR_DOC
+  train_class_support:
+    text: N/A
+    status: NOT_APPLICABLE
+  validation_class_support:
+    text: N/A
+    status: NOT_APPLICABLE
+  class_balance:
+    text: ~1000 per controller
+    status: UNGRADED
+  label_taxonomy:
+    text: Controller make/model/unit
+    status: UNGRADED
+  leakage_safe_keys:
+    text: Not assessed
+    status: ASSESSMENT
+  independent_sessions_per_class:
+    text: Not assessed
+    status: UNKNOWN
+  potential_shortcut_receiver:
+    text: Not assessed
+    status: ASSESSMENT
+  potential_shortcut_center_frequency:
+    text: N/A (direct RF)
+    status: ASSESSMENT
+  potential_shortcut_snr:
+    text: Not assessed
+    status: ASSESSMENT
+  potential_shortcut_received_power:
+    text: Not assessed
+    status: ASSESSMENT
+  potential_shortcut_dataset_source:
+    text: 'Yes'
+    status: ASSESSMENT
+  potential_shortcut_position:
+    text: Not assessed
+    status: ASSESSMENT
+  known_acquisition_defect:
+    text: Not assessed
+    status: UNKNOWN
+  classical_ml_opportunity:
+    text: Strong — paper's 15 transient features
+    status: ASSESSMENT
+  phase_aware_experiments:
+    text: 'No'
+    status: ASSESSMENT
+  magnitude_common_experiments:
+    text: Spectral-common after down-conversion
+    status: ASSESSMENT
+  detection_usefulness:
+    text: Paper-level only
+    status: ASSESSMENT
+  identification_usefulness:
+    text: Strong in paper (98.13% kNN at 25 dB)
+    status: ASSESSMENT
+  robustness_usefulness:
+    text: Paper SNR study only
+    status: ASSESSMENT
+  unique_contribution:
+    text: None new vs CardRF + UAVSig (see notes)
+    status: ASSESSMENT
+  claim_ceiling:
+    text: N/A — not adopted
+    status: ASSESSMENT
+  provisional_droneacharya_role:
+    text: Backlog — paper read only
+    status: ASSESSMENT
+  primary_detection_foundation:
+    text: 'No'
+    status: ASSESSMENT
+  full_download_justification:
+    text: No — 124 GB, no new axis
+    status: ASSESSMENT
+  window_label_reliability:
+    text: Triggered captures (INFERRED, as CardRF)
+    status: ASSESSMENT
+details:
+  notes: docs/datasets/remote_controller_rf_notes.md
+  source: IEEE DataPort, DOI 10.21227/ss99-8d56; Ezuma et al., IEEE OJ-COMS 2020 (arXiv:1909.05429)
+  decision: paper read only, no download

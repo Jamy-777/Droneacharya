@@ -1,88 +1,208 @@
-dataset:
-  id: ddl
-  name: DDL
-  full_name: 'DDL: Dataset and Baseline Methods for Drone Detection and Localization Using Sound'
-  doi: 10.5281/zenodo.6459183
-  modality: acoustic
-provenance:
-  authors:
-  - Saeid Safavi
-  - Mohammad Amin Safavi
-  - Ben Cook
-  - Wenwu Wang
-  institution: University of Surrey
-  paper: Safavi et al., MLSP 2025
-license: CC BY 4.0
-local_artifact:
-  file: MLSP_2022_Real_Data.zip
-  bytes: 12628837686
-  md5: 4a6d4da4e1c732550c1ccd8d29dd16f8
-  md5_verified: true
-  not_downloaded: MLSP_2022_Synth_Data.zip (4.6 GB, synthetic)
+# DDL dataset card (schema v1).
+#
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/acoustic_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
+
+schema_version: 1
+id: ddl
+name: DDL
+full_name: 'DDL: Dataset and Baseline Methods for Drone Detection and Localization Using Sound'
+modality: acoustic
+adoption: adopted
+storage:
+  raw_dir: ddl
+  source:
+    repository: Zenodo
+    identifier: 10.5281/zenodo.6459183
+structure:
+  artifact:
+    text: One 0.1 s 8-channel WAV clip
+    status: EMPIRICAL
+    n: 62103
+  capture:
+    text: Contiguous run of clips within a recording segment, split at gaps in the clip sequence
+    status: INFERRED
+  group:
+    text: Flight day + recording segment
+    status: ASSESSMENT
 signal:
-  format: WAV, 32-bit integer PCM
-  sample_rate_hz: 96000
-  channels: 8
-  clip_s: 0.1
-  status: EMPIRICAL (n=62,103 headers)
-  array: 8-channel cube array, Zoom F8N (author)
-content:
-  clips: 62092
-  minutes: 103.5
-  classes:
-    MINI: 37238
-    PRO4: 24854
-    XXXX_no_drone: 0
-  status: EMPIRICAL (all filenames)
-  author_claim_conflict: Paper and Zenodo describe an XXXX (no-drone) class and two 10-min environment-only sessions; none
-    are in the released real data.
-filename_grammar: timestamp(14) class(4) bearing(3) range_m(3) altitude_m(3) temp_dK(4) R/S(1) flight_session(6)-recording_segment-sequence
-sessions:
-  flight_days:
-  - 2021-03-29 (Mini 2 only)
-  - 2021-03-31 (Phantom 4 Pro 17:14-18:20, Mini 2 18:24-19:10)
-  recording_segments: 36
-  site_note: 'Both drones on 31 Mar likely at the same site (INFERRED: 4 min between Phantom end 18:20 and Mini start 18:24);
-    the paper figure implied separate sites.'
-  missing_segment_numbers: 29 Mar starts at T004; 31 Mar lacks T001, T002, T005, T028 - possibly where the environment-only
-    sessions were removed (INFERRED)
-geometry:
-  range_m:
-  - 0
-  - 249
-  altitude_m:
-  - 0
-  - 34
-  bearing: 0-359 deg
-defects:
-  empty_clips: 3,945 files of 44 bytes (header only), in 10 segments on 31 Mar
-  garbled_filenames: 11
-  low_frequency_comb: 58/70/82/93/105 Hz lines (~11.7 Hz spacing) in both drones on both days; likely site or equipment (INFERRED)
-level_audit:
-  broadband:
-    n_clips: 1945
-    by_day_dbfs:
-      '2021-03-29': -34 to -42 (session medians)
-      '2021-03-31': -49 to -60
-  band_300_8000_hz:
-    n_clips: 720
-    day_medians_db:
-      '2021-03-29': -67.1
-      '2021-03-31': -67.9
-    corr_log_range:
-      2021-03-31 PRO4: -0.89
-      2021-03-31 MINI: -0.59
-      2021-03-29 MINI: 0.12
-  interpretation: The 15-20 dB day difference is low-frequency content below 300 Hz (hum comb or wind), not recorder gain.
-    In the drone band, level falls with range as expected, except the 29 Mar Mini sessions (no range trend - unexplained).
-  correction: Earlier same-day claim 'level follows recording day, not range' was based on broadband RMS and is withdrawn
-    (2026-10-06).
-published_split: random by sample (leaky)
-leakage_safe_keys:
-- flight_day
-- recording_segment
-role: 'Range-labelled positives (high-pass or band-limit below ~300 Hz); future localization. Not a detection backbone: no
-  negatives.'
-open_actions:
-- Ask the authors whether the XXXX / environment sessions can be released.
-- Verify drone audibility vs range spectrally per session.
+  container:
+    value: WAV
+    status: EMPIRICAL
+    n: 62103
+  sample_format:
+    value: pcm_s32
+    status: EMPIRICAL
+    n: 62103
+  sample_rate_hz:
+    value: 96000
+    status: EMPIRICAL
+    n: 62103
+  channels_per_artifact:
+    value: 8
+    status: EMPIRICAL
+    n: 62103
+  artifact_duration_s:
+    value: 0.1
+    status: EMPIRICAL
+    n: 62103
+    note: 3,945 clips are empty 44-byte files
+facts:
+  primary_purpose:
+    text: Drone detection + localization (author)
+    status: AUTHOR_DOC
+  licence:
+    text: CC BY 4.0
+    status: UNGRADED
+  local_artifact:
+    text: '`MLSP_2022_Real_Data.zip` 12.6 GB, MD5 OK'
+    status: UNGRADED
+  recording_type:
+    text: Field, outdoor
+    status: UNGRADED
+  positives:
+    text: DJI Mini 2, Phantom 4 Pro
+    status: UNGRADED
+  negatives:
+    text: '**None in release** — 0 `XXXX` clips (EMPIRICAL, all 62,092 parsed)'
+    status: EMPIRICAL
+    n: 62092
+  same_chain_negatives:
+    text: 'No'
+    status: UNGRADED
+  sample_rate_format:
+    text: '**96 kHz, 32-bit integer PCM, 8 ch (EMPIRICAL n=62,103 headers)**'
+    status: EMPIRICAL
+    n: 62103
+  clip_recording_length:
+    text: 0.1 s clips (62,092) ≈ 103.5 min
+    status: UNGRADED
+  microphones_channels:
+    text: 8-ch cube array, Zoom F8N
+    status: UNGRADED
+  calibration:
+    text: 'No'
+    status: UNGRADED
+  sessions_days:
+    text: '**2 flight days** (29 & 31 Mar 2021), 36 recording segments'
+    status: UNGRADED
+  site:
+    text: '31 Mar: Phantom 17:14–18:20 then Mini 18:24–19:10 → **same site that day** (paper implied separate sites)'
+    status: AUTHOR_DOC
+  geometry_metadata:
+    text: Range 0–249 m, bearing, altitude per clip (filename)
+    status: UNGRADED
+  weather:
+    text: Temperature only (1 value per day)
+    status: UNGRADED
+  speech_other_confounds:
+    text: 'Suburban site: cars, people (author)'
+    status: AUTHOR_DOC
+  known_defects:
+    text: '**3,945 empty 44-byte clips (6.4%)** in 10 sessions on 31 Mar; 11 garbled filenames; low-frequency comb (58–105 Hz, ~11.7 Hz spacing) in both drones and both days — likely site/equipment'
+    status: UNGRADED
+  leakage_safe_keys:
+    text: flight day + recording segment (filename)
+    status: ASSESSMENT
+  published_split:
+    text: Random by sample (Train/Val/Test tables) — leaky
+    status: UNGRADED
+  level_shortcut_risk:
+    text: Broadband level differs 15–20 dB by day, but **only below 300 Hz**; in 300–8000 Hz days match (−67.1 / −67.9 dB) and level falls with range (r = −0.89 Phantom, −0.59 Mini on 31 Mar; 29 Mar Mini shows no trend) (n=720)
+    status: ASSESSMENT
+  provisional_role:
+    text: '**Demoted:** range-labelled positives (high-pass below ~300 Hz); future localization. Not a detection backbone (no negatives)'
+    status: ASSESSMENT
+details:
+  dataset:
+    id: ddl
+    name: DDL
+    full_name: 'DDL: Dataset and Baseline Methods for Drone Detection and Localization Using Sound'
+    doi: 10.5281/zenodo.6459183
+    modality: acoustic
+  provenance:
+    authors:
+    - Saeid Safavi
+    - Mohammad Amin Safavi
+    - Ben Cook
+    - Wenwu Wang
+    institution: University of Surrey
+    paper: Safavi et al., MLSP 2025
+  license: CC BY 4.0
+  local_artifact:
+    file: MLSP_2022_Real_Data.zip
+    bytes: 12628837686
+    md5: 4a6d4da4e1c732550c1ccd8d29dd16f8
+    md5_verified: true
+    not_downloaded: MLSP_2022_Synth_Data.zip (4.6 GB, synthetic)
+  signal:
+    format: WAV, 32-bit integer PCM
+    sample_rate_hz: 96000
+    channels: 8
+    clip_s: 0.1
+    status: EMPIRICAL (n=62,103 headers)
+    array: 8-channel cube array, Zoom F8N (author)
+  content:
+    clips: 62092
+    minutes: 103.5
+    classes:
+      MINI: 37238
+      PRO4: 24854
+      XXXX_no_drone: 0
+    status: EMPIRICAL (all filenames)
+    author_claim_conflict: Paper and Zenodo describe an XXXX (no-drone) class and two 10-min environment-only sessions; none
+      are in the released real data.
+  filename_grammar: timestamp(14) class(4) bearing(3) range_m(3) altitude_m(3) temp_dK(4) R/S(1) flight_session(6)-recording_segment-sequence
+  sessions:
+    flight_days:
+    - 2021-03-29 (Mini 2 only)
+    - 2021-03-31 (Phantom 4 Pro 17:14-18:20, Mini 2 18:24-19:10)
+    recording_segments: 36
+    site_note: 'Both drones on 31 Mar likely at the same site (INFERRED: 4 min between Phantom end 18:20 and Mini start 18:24);
+      the paper figure implied separate sites.'
+    missing_segment_numbers: 29 Mar starts at T004; 31 Mar lacks T001, T002, T005, T028 - possibly where the environment-only
+      sessions were removed (INFERRED)
+  geometry:
+    range_m:
+    - 0
+    - 249
+    altitude_m:
+    - 0
+    - 34
+    bearing: 0-359 deg
+  defects:
+    empty_clips: 3,945 files of 44 bytes (header only), in 10 segments on 31 Mar
+    garbled_filenames: 11
+    low_frequency_comb: 58/70/82/93/105 Hz lines (~11.7 Hz spacing) in both drones on both days; likely site or equipment (INFERRED)
+  level_audit:
+    broadband:
+      n_clips: 1945
+      by_day_dbfs:
+        '2021-03-29': -34 to -42 (session medians)
+        '2021-03-31': -49 to -60
+    band_300_8000_hz:
+      n_clips: 720
+      day_medians_db:
+        '2021-03-29': -67.1
+        '2021-03-31': -67.9
+      corr_log_range:
+        2021-03-31 PRO4: -0.89
+        2021-03-31 MINI: -0.59
+        2021-03-29 MINI: 0.12
+    interpretation: The 15-20 dB day difference is low-frequency content below 300 Hz (hum comb or wind), not recorder gain.
+      In the drone band, level falls with range as expected, except the 29 Mar Mini sessions (no range trend - unexplained).
+    correction: Earlier same-day claim 'level follows recording day, not range' was based on broadband RMS and is withdrawn
+      (2026-10-06).
+  published_split: random by sample (leaky)
+  leakage_safe_keys:
+  - flight_day
+  - recording_segment
+  role: 'Range-labelled positives (high-pass or band-limit below ~300 Hz); future localization. Not a detection backbone: no
+    negatives.'
+  open_actions:
+  - Ask the authors whether the XXXX / environment sessions can be released.
+  - Verify drone audibility vs range spectrally per session.

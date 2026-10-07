@@ -1,33 +1,152 @@
-dataset:
-  id: svanstrom
-  name: Drone detection dataset (audio part)
-  source: github.com/DroneDetectionThesis/Drone-detection-dataset
-  modality: acoustic
-provenance:
-  author: Fredrik Svanström
-  institution: Halmstad University
-  paper: Data in Brief 2021, doi:10.1016/j.dib.2021.107521
-license: Free to download, use and edit (repository README)
-local_artifact:
-  files: 90
-  folder: Data/Audio
+# Drone detection dataset (audio part) dataset card (schema v1).
+#
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/acoustic_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
+
+schema_version: 1
+id: svanstrom
+name: Drone detection dataset (audio part)
+modality: acoustic
+adoption: adopted
+storage:
+  raw_dir: svanstrom
+  source:
+    repository: GitHub
+    identifier: DroneDetectionThesis/Drone-detection-dataset
+structure:
+  artifact:
+    text: One 10 s stereo WAV
+    status: EMPIRICAL
+    n: 90
+  capture:
+    text: = artifact
+    status: EMPIRICAL
+    n: 90
+  group:
+    text: Clip (event grouping UNKNOWN)
+    status: ASSESSMENT
 signal:
-  format: WAV, 16-bit PCM
-  sample_rate_hz: 44100
-  channels: 2
-  dual_mono_files: 23
-  clip_s: 10
-  status: EMPIRICAL (n=90)
-content:
-  DRONE: 30
-  HELICOPTER: 30
-  BACKGROUND: 30
-level_audit:
-  median_dbfs:
-    BACKGROUND: -35.8
-    DRONE: -24.8
-    HELICOPTER: -19.2
-  interpretation: 'Strong loudness shortcut: normalise level or report the energy baseline.'
-leakage_safe_keys:
-- clip (event grouping unknown)
-role: Same-chain hard negatives (helicopter) and background; small test set.
+  container:
+    value: WAV
+    status: EMPIRICAL
+    n: 90
+  sample_format:
+    value: pcm_s16
+    status: EMPIRICAL
+    n: 90
+  sample_rate_hz:
+    value: 44100
+    status: EMPIRICAL
+    n: 90
+  channels_per_artifact:
+    value: 2
+    status: EMPIRICAL
+    n: 90
+    note: 23 of 90 dual-mono
+  artifact_duration_s:
+    value: 10.0
+    status: EMPIRICAL
+    n: 90
+facts:
+  primary_purpose:
+    text: Multi-sensor drone detection (author)
+    status: AUTHOR_DOC
+  licence:
+    text: '"Free to download, use and edit"'
+    status: UNGRADED
+  local_artifact:
+    text: 90 WAVs from `Data/Audio`
+    status: UNGRADED
+  recording_type:
+    text: Field, outdoor (airports)
+    status: UNGRADED
+  positives:
+    text: Drone (30 clips)
+    status: UNGRADED
+  negatives:
+    text: Background (30) + helicopter (30), same equipment
+    status: UNGRADED
+  same_chain_negatives:
+    text: '**Yes**'
+    status: UNGRADED
+  sample_rate_format:
+    text: '**44.1 kHz, 16-bit, stereo (EMPIRICAL n=90)**'
+    status: EMPIRICAL
+    n: 90
+  clip_recording_length:
+    text: 10 s
+    status: UNGRADED
+  microphones_channels:
+    text: Stereo; 23/90 clips dual-mono
+    status: UNGRADED
+  calibration:
+    text: 'No'
+    status: UNGRADED
+  sessions_days:
+    text: 3 airports (author)
+    status: AUTHOR_DOC
+  site:
+    text: Halmstad, Gothenburg, Malmö airports
+    status: UNGRADED
+  geometry_metadata:
+    text: Close / medium / distant (author)
+    status: AUTHOR_DOC
+  weather:
+    text: —
+    status: UNGRADED
+  speech_other_confounds:
+    text: —
+    status: UNGRADED
+  known_defects:
+    text: —
+    status: UNGRADED
+  leakage_safe_keys:
+    text: clip (event grouping unknown)
+    status: ASSESSMENT
+  published_split:
+    text: None
+    status: UNGRADED
+  level_shortcut_risk:
+    text: '**High — background −35.8, drone −24.8, helicopter −19.2 dBFS (median)**'
+    status: ASSESSMENT
+  provisional_role:
+    text: '**Same-chain hard negatives** (helicopter)'
+    status: ASSESSMENT
+details:
+  dataset:
+    id: svanstrom
+    name: Drone detection dataset (audio part)
+    source: github.com/DroneDetectionThesis/Drone-detection-dataset
+    modality: acoustic
+  provenance:
+    author: Fredrik Svanström
+    institution: Halmstad University
+    paper: Data in Brief 2021, doi:10.1016/j.dib.2021.107521
+  license: Free to download, use and edit (repository README)
+  local_artifact:
+    files: 90
+    folder: Data/Audio
+  signal:
+    format: WAV, 16-bit PCM
+    sample_rate_hz: 44100
+    channels: 2
+    dual_mono_files: 23
+    clip_s: 10
+    status: EMPIRICAL (n=90)
+  content:
+    DRONE: 30
+    HELICOPTER: 30
+    BACKGROUND: 30
+  level_audit:
+    median_dbfs:
+      BACKGROUND: -35.8
+      DRONE: -24.8
+      HELICOPTER: -19.2
+    interpretation: 'Strong loudness shortcut: normalise level or report the energy baseline.'
+  leakage_safe_keys:
+  - clip (event grouping unknown)
+  role: Same-chain hard negatives (helicopter) and background; small test set.

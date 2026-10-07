@@ -1,0 +1,81 @@
+# Layout of docs/datasets/acoustic_compatibility_matrix.md. Cell contents live in the cards.
+
+modality: acoustic
+output: docs/datasets/acoustic_compatibility_matrix.md
+preamble: '# Droneacharya Acoustic Dataset Compatibility Matrix
+
+
+  Same evidence vocabulary as the RF matrix: `author doc` (dataset authors'' own description), `repo` (repository record), `n=…` (files checked), VERIFIED only for values we measured. Audit scripts: `scripts/inspect_acoustic.py`; per-file audit CSVs in `interim/<dataset>/`.
+
+
+  Datasets were selected on 2026-10-05 (selection record and audit conclusions: `acoustic_notes.md`) and downloaded 2026-10-06; every archive matched its published MD5.'
+columns:
+- id: ddl
+  label: DDL
+- id: uavirbase
+  label: UaVirBASE
+- id: miesikowska_uav
+  label: Mięsikowska
+- id: dronenoise
+  label: DroneNoise
+- id: svanstrom
+  label: Svanström
+- id: esc50
+  label: ESC-50 (selected)
+rows:
+- key: primary_purpose
+  label: Primary purpose
+- key: licence
+  label: Licence
+- key: local_artifact
+  label: Local artifact
+- key: recording_type
+  label: Recording type
+- key: positives
+  label: Positives
+- key: negatives
+  label: Negatives
+- key: same_chain_negatives
+  label: Same-chain negatives?
+- key: sample_rate_format
+  label: Sample rate / format
+- key: clip_recording_length
+  label: Clip / recording length
+- key: microphones_channels
+  label: Microphones / channels
+- key: calibration
+  label: Calibration
+- key: sessions_days
+  label: Sessions / days
+- key: site
+  label: Site
+- key: geometry_metadata
+  label: Geometry metadata
+- key: weather
+  label: Weather
+- key: speech_other_confounds
+  label: Speech / other confounds
+- key: known_defects
+  label: Known defects
+- key: leakage_safe_keys
+  label: Leakage-safe keys
+- key: published_split
+  label: Published split
+- key: level_shortcut_risk
+  label: Level shortcut risk
+- key: provisional_role
+  label: Provisional role
+cross_dataset_heading: Cross-dataset facts
+cross_dataset:
+  Sample rates:
+    text: 96 kHz (DDL, UaVirBASE), 50 kHz (DroneNoise), 44.1 kHz (Mięsikowska, Svanström, ESC-50) → common band limited to 22.05 kHz unless 44.1 kHz sets are excluded
+    status: UNGRADED
+  Same-chain negatives:
+    text: Only UaVirBASE (4 ambient recordings, 416 s) and Svanström (30 background + 30 helicopter, 10 s each)
+    status: UNGRADED
+  Main shortcut:
+    text: 'Recording chain ↔ label: drones come from 5 chains, most negatives from others. Run a "predict the dataset" baseline and leave-one-dataset-out tests'
+    status: ASSESSMENT
+  Units:
+    text: DroneNoise M6–M9 in pascals (M1–M5 ±5 dB); all others uncalibrated full-scale
+    status: UNGRADED

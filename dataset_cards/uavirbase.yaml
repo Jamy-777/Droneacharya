@@ -1,57 +1,176 @@
-dataset:
-  id: uavirbase
-  name: UaVirBASE
-  doi: 10.5281/zenodo.15391924
-  modality: acoustic
-provenance:
-  authors:
-  - Gabriel Jekateryńczuk
-  - Rafał Szadkowski
-  - Zbigniew Piotrowski
-  institution: Military University of Technology, Warsaw
-  paper: Appl. Sci. 2025, 15, 5378
-  code: gitlab.com/g.jekaterynczuk/uavirbase_ssl
-license: CC BY 4.0
-local_artifact:
-  file: Microphone_array.zip
-  bytes: 13783664678
-  md5: 3c4081511630f8045fda0347cac45534
-  md5_verified: true
+# UaVirBASE dataset card (schema v1).
+#
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/acoustic_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
+
+schema_version: 1
+id: uavirbase
+name: UaVirBASE
+modality: acoustic
+adoption: adopted
+storage:
+  raw_dir: uavirbase
+  source:
+    repository: Zenodo
+    identifier: 10.5281/zenodo.15391924
+structure:
+  artifact:
+    text: One 8-channel WAV recording
+    status: EMPIRICAL
+    n: 132
+  capture:
+    text: '= artifact: one 40 s hover, or one 40–256 s ambient recording'
+    status: EMPIRICAL
+    n: 132
+  group:
+    text: Recording; only 4 ambient recordings, so leave one ambient recording out
+    status: ASSESSMENT
 signal:
-  format: WAV, 32-bit integer PCM
-  sample_rate_hz: 96000
-  channels: 8
-  microphones: 8 x Rode NTG-2, Behringer UMC1820
-  status: EMPIRICAL (n=132)
-content:
-  drone_recordings: 128
-  ambient_recordings: 4
-  ambient_s: 416
-  drone: DJI Mavic 3 Cine, hovering (Static)
-  design: distance 10/20 m x height 10/20 m x azimuth 8 x orientation 4 (fully crossed)
-  status: EMPIRICAL (label.json)
-sessions:
-  days: 1
-  date: '2024-11-15'
-  ambient_times:
-  - 09:31
-  - '10:39'
-  - '11:17'
-  - '12:47'
-  site: Warsaw (single array position)
-metadata_per_recording:
-- start/end time
-- weather station (temperature, humidity, wind, pressure, light)
-- GPS of each microphone
-level_audit:
-  ambient_dbfs: -24 to -14 (first 10 s)
-  drone_dbfs: -28 to -13
-  interpretation: 'No loudness shortcut: urban ambient is as loud as the drone.'
-  drone_clipping: up to 1.2% of samples at 10 m
-published_split: first 30 s train / last 10 s test within each recording (leaky)
-leakage_safe_keys:
-- recording_folder
-role: Same-chain detection backbone (drone vs ambient) + geometry robustness.
-limits:
-- One drone, one day, one site, hovering only.
-- 'Only 4 ambient recordings: evaluate leave-one-ambient-recording-out.'
+  container:
+    value: WAV
+    status: EMPIRICAL
+    n: 132
+  sample_format:
+    value: pcm_s32
+    status: EMPIRICAL
+    n: 132
+  sample_rate_hz:
+    value: 96000
+    status: EMPIRICAL
+    n: 132
+  channels_per_artifact:
+    value: 8
+    status: EMPIRICAL
+    n: 132
+  artifact_duration_s:
+    varies: true
+    status: EMPIRICAL
+    n: 132
+    note: 40 s drone; 40–256 s ambient
+facts:
+  primary_purpose:
+    text: UAV sound-source localization (author)
+    status: AUTHOR_DOC
+  licence:
+    text: CC BY 4.0
+    status: UNGRADED
+  local_artifact:
+    text: '`Microphone_array.zip` 13.8 GB, MD5 OK'
+    status: UNGRADED
+  recording_type:
+    text: Field, outdoor (urban)
+    status: UNGRADED
+  positives:
+    text: DJI Mavic 3 Cine
+    status: UNGRADED
+  negatives:
+    text: 4 ambient recordings, 416 s, same array
+    status: UNGRADED
+  same_chain_negatives:
+    text: '**Yes**'
+    status: UNGRADED
+  sample_rate_format:
+    text: '**96 kHz, 32-bit integer PCM, 8 ch (EMPIRICAL n=132)**'
+    status: EMPIRICAL
+    n: 132
+  clip_recording_length:
+    text: 40 s (128 drone), 40–256 s ambient
+    status: UNGRADED
+  microphones_channels:
+    text: 8 × Rode NTG-2, Behringer UMC1820
+    status: UNGRADED
+  calibration:
+    text: 'No'
+    status: UNGRADED
+  sessions_days:
+    text: '**1 day** (15 Nov 2024)'
+    status: UNGRADED
+  site:
+    text: Warsaw, one site
+    status: UNGRADED
+  geometry_metadata:
+    text: Distance 10/20 m × height 10/20 m × 8 azimuths × 4 orientations, hovering
+    status: UNGRADED
+  weather:
+    text: Per-recording weather station (wind 0–2.9 m/s)
+    status: UNGRADED
+  speech_other_confounds:
+    text: Urban ambient
+    status: UNGRADED
+  known_defects:
+    text: —
+    status: UNGRADED
+  leakage_safe_keys:
+    text: recording folder (each 40 s file = one hover)
+    status: ASSESSMENT
+  published_split:
+    text: 30 s / 10 s within recording — leaky
+    status: UNGRADED
+  level_shortcut_risk:
+    text: '**Low — ambient −24…−14 dBFS vs drone −28…−13 dBFS** (n=28)'
+    status: ASSESSMENT
+  provisional_role:
+    text: '**Detection backbone (same chain)** + geometry robustness'
+    status: ASSESSMENT
+details:
+  dataset:
+    id: uavirbase
+    name: UaVirBASE
+    doi: 10.5281/zenodo.15391924
+    modality: acoustic
+  provenance:
+    authors:
+    - Gabriel Jekateryńczuk
+    - Rafał Szadkowski
+    - Zbigniew Piotrowski
+    institution: Military University of Technology, Warsaw
+    paper: Appl. Sci. 2025, 15, 5378
+    code: gitlab.com/g.jekaterynczuk/uavirbase_ssl
+  license: CC BY 4.0
+  local_artifact:
+    file: Microphone_array.zip
+    bytes: 13783664678
+    md5: 3c4081511630f8045fda0347cac45534
+    md5_verified: true
+  signal:
+    format: WAV, 32-bit integer PCM
+    sample_rate_hz: 96000
+    channels: 8
+    microphones: 8 x Rode NTG-2, Behringer UMC1820
+    status: EMPIRICAL (n=132)
+  content:
+    drone_recordings: 128
+    ambient_recordings: 4
+    ambient_s: 416
+    drone: DJI Mavic 3 Cine, hovering (Static)
+    design: distance 10/20 m x height 10/20 m x azimuth 8 x orientation 4 (fully crossed)
+    status: EMPIRICAL (label.json)
+  sessions:
+    days: 1
+    date: '2024-11-15'
+    ambient_times:
+    - 09:31
+    - '10:39'
+    - '11:17'
+    - '12:47'
+    site: Warsaw (single array position)
+  metadata_per_recording:
+  - start/end time
+  - weather station (temperature, humidity, wind, pressure, light)
+  - GPS of each microphone
+  level_audit:
+    ambient_dbfs: -24 to -14 (first 10 s)
+    drone_dbfs: -28 to -13
+    interpretation: 'No loudness shortcut: urban ambient is as loud as the drone.'
+    drone_clipping: up to 1.2% of samples at 10 m
+  published_split: first 30 s train / last 10 s test within each recording (leaky)
+  leakage_safe_keys:
+  - recording_folder
+  role: Same-chain detection backbone (drone vs ambient) + geometry robustness.
+  limits:
+  - One drone, one day, one site, hovering only.
+  - 'Only 4 ambient recordings: evaluate leave-one-ambient-recording-out.'

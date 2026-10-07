@@ -1,3 +1,5 @@
+<!-- Generated from dataset_cards/*.yaml and configs/matrices/acoustic.yaml by scripts/build_matrices.py. Edit the cards, not this file. -->
+
 # Droneacharya Acoustic Dataset Compatibility Matrix
 
 Same evidence vocabulary as the RF matrix: `author doc` (dataset authors' own description), `repo` (repository record), `n=…` (files checked), VERIFIED only for values we measured. Audit scripts: `scripts/inspect_acoustic.py`; per-file audit CSVs in `interim/<dataset>/`.

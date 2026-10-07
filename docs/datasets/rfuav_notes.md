@@ -25,9 +25,10 @@ Card: `dataset_cards/rfuav.yaml`. Detail of the original inspection: handover §
 - Class-conditioned SNR and Fc distributions across all classes.
 - Detection-subset negative construction.
 
-## Public release as of 2026-10-06 (Hugging Face `kitofrank/RFUAV`, last modified 2026-07-27)
+## Public release (Hugging Face `kitofrank/RFUAV`, last modified 2026-07-27; full paginated listing 2026-10-07)
 
-- 18 raw RAR archives, 69.4 GB total (Apache-2.0): DJI FPV COMBO 15.0, DJI AVATA2 11.4, DJI MINI3 6.5, DJI MAVIC3 PRO 5.2, DJI MINI4 PRO 5.0, DAUTEL EVO NANO 3.4, FUTABA T14SG 2.7, Herelink Hx4 2.3, FRSKY X20R 2.1, FRSKY X9DP2019 2.1, FRSKY X14 2.1, FLYSKY EL 18 1.8, FUTABA T18SZ 1.8, FUTABA T16IZ 1.8, FUTABA T10J 1.7, FLYSKY NV 14 1.6, FLYSKY FS I6X 1.6, DEVENTION DEVO 1.5 GB.
-- Image set: `ImageSet-AllDrones-MatlabPipeline/train`, 895 files, 4 classes.
-- The README still describes ~1.3 TB from 37 UAVs; the public raw release covers 18 classes. Earlier notes (37 classes, ~299 GB) describe a previous state of the repository.
+- **37 class archives, 109.2 GB** (all on disk, matched by exact size; SHA-256 from `manifests/rfuav_hf_listing.json`). Local filenames were URL-mangled by the browser; `manifests/rfuav_local_to_official.json` maps each to its official name.
+- **`ValidationSet_5Drones`: 5 archives, 162.1 GB** — DJI Mini 4 Pro 38.8, FPV Combo 43.2, Avata 2 13.6, Mavic 3 Pro 35.7, Mini 3 30.9 GB. Not downloaded. Likely separate recordings of classes that are also in the main set — potentially a cross-session test; to be confirmed.
+- Image set `ImageSet-AllDrones-MatlabPipeline` (~19,085 files) + model weights: 27.7 GB. Not needed (we build our own representations).
+- **Correction:** a note written 2026-10-06 said "18 archives, 69.4 GB, 4-class image set". That listing read only the first page of a paginated API response and was wrong.
 - RAR cannot be read in place by Python: extract only the `.iq` chunks we use, with WinRAR's command-line tool.

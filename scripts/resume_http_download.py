@@ -132,7 +132,14 @@ def main():
     have = part.stat().st_size
     if total and have != total:
         sys.exit(f"Size mismatch: have {have:,}, expected {total:,}. The .part file is kept.")
-    part.replace(dest)
+    for _ in range(12):  # Windows antivirus may hold a freshly written file briefly
+        try:
+            part.replace(dest)
+            break
+        except PermissionError:
+            time.sleep(5)
+    else:
+        sys.exit(f"{part.name} is complete but still locked; rename it to {dest.name} by hand.")
     print(f"Done: {dest} ({have / 1e9:.2f} GB). Verify the archive before extracting anything.")
 
 

@@ -1,222 +1,537 @@
-# RMA (Royal Military Academy / KU Leuven) Drone RF Dataset card
+# RMA Drone RF Dataset dataset card (schema v1).
 #
-# Evidence levels:
-#   REPO_METADATA     KU Leuven RDR (Dataverse) API: file list, sizes, MD5, license, version
-#   AUTHOR_README     README.txt shipped with the dataset
-#   AUTHOR_CODE       signal_visualize.m / get_spectrogram2.m shipped with the dataset
-#   REMOTE_LISTING    zip contents read remotely via HTTP Range (no download), all 16 archives
-#   EMPIRICAL (n=..)  measured by us on downloaded captures
-#   INFERRED          derived from the above; requires confirmation
-#   UNKNOWN           not established
-#
-# Paper-level claims (TCCN 2022, ICACT 2023) have not been read yet and are not used here.
+# Everything above `details` is validated by src/droneacharya/cards/schema.py
+# (unknown keys are errors). `facts` and `supplementary` generate
+# docs/datasets/rf_compatibility_matrix.md (scripts/build_matrices.py).
+# `details` is the pre-schema card, kept verbatim with its comments until its
+# content moves into typed fields. Status UNGRADED = carried over from the
+# hand-written matrix without an evidence marker; grade it before citing it.
 
-dataset:
-  id: rma
-  name: "RMA Drone RF Dataset"
-  full_name: "Drone RF Dataset (Royal Military Academy / KU Leuven)"
-  version: "1.0"
-  release_date: "2024-01-16"
-  doi: "10.48804/HZRVNZ"
-  status: REPO_METADATA
-
-provenance:
-  authors: ["Sanjoy Basak", "Sofie Pollin", "Bart Scheers"]
-  institutions: ["KU Leuven (Networked Systems, WaveCore)", "Royal Military Academy (CISS, Radio Networks)"]
-  repository: "KU Leuven Research Data Repository (RDR, Dataverse)"
-  project: "PhD: Drone Detection and Classification using Artificial Intelligence based RF Sensing"
-  related_publications:
-    - "Basak et al., Combined RF-Based Drone Detection and Classification, IEEE TCCN 8(1), 2022, doi:10.1109/TCCN.2021.3099114"
-    - "Basak et al., Autoencoder based framework for drone RF signal classification and novelty detection, ICACT 2023, doi:10.23919/ICACT56868.2023.10079363"
-  not_to_be_confused_with: "Zenodo 10.5281/zenodo.21428081 (ZHAW, 2026): different drones (DJI, Futaba T7/T14, Graupner, Taranis, Turnigy) + Wi-Fi/Bluetooth background, spectrogram images only."
-
-license:
-  type: "CC BY-NC 4.0"
-  status: REPO_METADATA
-  note: "Non-commercial. Fine for research; matters if Droneacharya is ever commercialised."
-
-modality:
-  - rf
-
-primary_tasks:
-  - uav_system_identification
-  - rc_vs_video_link_classification
-secondary_tasks:
-  - novelty_detection  # per ICACT 2023 title; protocol not yet read
-
-public_release:
-  archives: 16
-  mat_files: 812
-  total_size_gb: 46.7  # decimal GB; = 43.5 GiB, which is what the KU Leuven page shows
-  checksums: "MD5 per archive (REPO_METADATA)"
-  zip_compression_ratio: "~0.96 (MAT payload already compressed)"
-  extras: ["README.txt", "signal_visualize.m", "get_spectrogram2.m"]
-
-population:
-  readme_list:  # AUTHOR_README, verbatim order
-    - "Spektrum DX4e remote controller"
-    - "DJI Mini 2 drone + remote controller"
-    - "DJI Inspire 2 drone + remote controller"
-    - "DJI Matrice 300 drone + remote controller"
-    - "Taranis Q X7 remote controller"
-    - "Nine Eagles remote controller"
-    - "WLtoys remote controller"
-    - "Q205 remote controller"
-    - "SJRC F11 Pro drone + remote controller"
-  archives:  # REMOTE_LISTING: archive -> files
-    Spektrum_DX4e: 71
-    mini2RC: 71
-    mini2vid: 71
-    inspire2RC: 71
-    inspire2Vid: 71
-    matriceRC: 71
-    matricevid: 71
-    Frysky: 51
-    NineEagles: 51
-    wltoys: 51
-    Q205: 51
-    SJRC_pro: 51
-    MavicRC1: 15
-    MavicRC2: 16
-    MavicVid1: 14
-    MavicVid2: 15
-  documentation_conflicts:
-    - "Mavic archives (60 files, ~19 GB) are not in the README list; Mavic model unknown."
-    - "README says 'Taranis Q X7'; archive is named 'Frysky' (FrSky makes the Taranis) — INFERRED to be the same system."
-    - "README says SJRC F11 Pro 'drone + remote controller', but only one SJRC archive exists; whether it is RC, video or both is UNKNOWN."
-  physical_units_per_system:
-    value: 1
-    status: INFERRED
-    consequence: "System identity and physical-unit identity are inseparable."
-
+schema_version: 1
+id: rma
+name: RMA Drone RF Dataset
+full_name: Drone RF Dataset (Royal Military Academy / KU Leuven)
+modality: rf
+adoption: adopted
+storage:
+  raw_dir: rma
+  source:
+    repository: KU Leuven Research Data Repository
+    identifier: 10.48804/HZRVNZ
+    version: '1.0'
+structure:
+  artifact:
+    text: One `.mat` member of a system archive (zip)
+    status: VERIFIED
+  capture:
+    text: = artifact; files are separate captures seconds apart, not continuous
+    status: EMPIRICAL
+    n: 9
+  group:
+    text: Archive (system × RC/Vid session)
+    status: ASSESSMENT
 signal:
-  representation: complex_iq
-  sample_rate_sps: {value: 100000000, status: AUTHOR_README}
-  center_frequency_hz: {value: 2440000000, status: AUTHOR_README}
-  capture_bandwidth_hz: {value: 100000000, status: INFERRED}  # complex sampling at 100 MS/s
-  storage:
-    format: "MAT v7.3 (HDF5)"
-    variable: "uhd_samps"
-    stored_type: "complex double (HDF5 compound real/imag, float64) holding int16 codes / 32768"
-    shape: "(1, N)"
-    status: "EMPIRICAL (n=9: 8 audited archives + SJRC_pro)"
-  samples_per_file:
-    status: "EMPIRICAL (n=9)"
-    by_archive:
-      Frysky: {samples: 10000000, duration_ms: 100}
-      Spektrum_DX4e: {samples: 10000000, duration_ms: 100}
-      SJRC_pro: {samples: 10000000, duration_ms: 100}
-      mini2RC: {samples: 10000000, duration_ms: 100}
-      matricevid: {samples: 10000000, duration_ms: 100}
-      mini2vid: {samples: 20000000, duration_ms: 200}
-      MavicRC1: {samples: 100000000, duration_ms: 1000}
-      MavicVid1: {samples: 100000000, duration_ms: 1000}
-    consequence: "Capture length differs by class (100 ms to 1 s). Fixed-length windows must be cut from every file; never use file length as a feature."
-  file_created:
-    status: "EMPIRICAL (n=9, MAT header)"
-    april_2022_session: "Apr 4–6 2022: Mini 2, Matrice, Spektrum DX4e, Frysky (SJRC_pro: May 5 2022)"
-    mavic_session: "Oct 30 2022 (MavicVid1), Nov 2 2022 (MavicRC1)"
-    consequence: "Mavic was recorded ~7 months after the rest and is absent from the README: session and class are confounded for Mavic."
+  complex_iq:
+    value: true
+    status: EMPIRICAL
+    n: 9
+  scalar_dtype:
+    value: complex128 (HDF5 compound) holding int16 codes / 32768
+    status: EMPIRICAL
+    n: 9
+  container:
+    value: MAT v7.3 (HDF5); variable uhd_samps, shape (1, N)
+    status: EMPIRICAL
+    n: 9
+  sample_rate_hz:
+    value: 100000000
+    status: AUTHOR_DOC
+  center_frequency_hz:
+    value: 2440000000
+    status: AUTHOR_DOC
+  capture_bandwidth_hz:
+    value: 100000000
+    status: INFERRED
+    note: complex sampling at 100 MS/s
+  samples_per_artifact:
+    varies: true
+    status: EMPIRICAL
+    n: 9
+    note: 10M most archives; 20M Mini 2 video; 100M Mavic
+  artifact_duration_s:
+    varies: true
+    status: EMPIRICAL
+    n: 9
+    note: 0.1 s / 0.2 s / 1 s by archive
+facts:
+  primary_purpose:
+    text: RC + video-link identification; novelty detection (per publication titles)
+    status: UNGRADED
+  year:
+    text: 2024 release (v1.0); captures created 2022 (MAT header, n=1)
+    status: EMPIRICAL
+    n: 1
+  license:
+    text: '**CC BY-NC 4.0** (non-commercial)'
+    status: UNGRADED
+  full_reported_scale:
+    text: 46.7 GB (= 43.5 GiB); 16 zips; 812 `.mat` captures; 10 systems
+    status: UNGRADED
+  public_release_caveat:
+    text: Full public release; README omits Mavic archives (~19 GB)
+    status: AUTHOR_DOC
+  raw_representation:
+    text: Complex IQ
+    status: UNGRADED
+  scalar_dtype:
+    text: complex double holding int16 codes/32768 — EMPIRICAL n=9
+    status: EMPIRICAL
+    n: 9
+  raw_format:
+    text: MAT v7.3 (HDF5), variable `uhd_samps` — EMPIRICAL n=9
+    status: EMPIRICAL
+    n: 9
+  i_q_layout:
+    text: HDF5 compound real/imag, shape (1, N) — EMPIRICAL n=9
+    status: EMPIRICAL
+    n: 9
+  samples_capture_chunk:
+    text: '**Varies by class: 10M (100 ms) most; 20M Mini 2 video; 100M (1 s) Mavic — EMPIRICAL n=9**'
+    status: EMPIRICAL
+    n: 9
+  chunk_duration:
+    text: 100 ms / 200 ms / 1 s by archive
+    status: UNGRADED
+  sample_rate:
+    text: 100 MS/s (author README + code)
+    status: AUTHOR_DOC
+  center_frequency:
+    text: 2.44 GHz (author README + code)
+    status: AUTHOR_DOC
+  absolute_frequency_coverage:
+    text: 2.39–2.49 GHz
+    status: UNGRADED
+  if_capture_bandwidth:
+    text: 100 MHz (INFERRED from complex 100 MS/s)
+    status: INFERRED
+  occupied_signal_bandwidth:
+    text: System and link dependent; RC vs video recorded separately
+    status: UNGRADED
+  receiver:
+    text: USRP X310 (single) + OmniLOG 70600 omni
+    status: UNGRADED
+  pack_unit_identifier:
+    text: Archive (system × RC/Vid) + file index; one unit per system (INFERRED)
+    status: INFERRED
+  manufacturer_coverage:
+    text: DJI + Spektrum, FrSky, Nine Eagles, WLtoys, Q205, SJRC
+    status: UNGRADED
+  models_classes:
+    text: 10 systems (9 in README + undocumented Mavic); RC/Vid split for DJI
+    status: AUTHOR_DOC
+  physical_units:
+    text: 1 per system (INFERRED)
+    status: INFERRED
+  same_model_multi_unit:
+    text: No (as documented)
+    status: UNGRADED
+  positive_signal_composition:
+    text: RC uplink and video downlink recorded separately; hobby controllers RC only
+    status: UNGRADED
+  day_metadata:
+    text: 'MAT headers: Apr 4–6 2022 (most), May 2022 (SJRC), **Oct 30 / Nov 2 2022 (Mavic)**'
+    status: UNGRADED
+  receiver_variation:
+    text: No — one receiver
+    status: UNGRADED
+  gain_scale:
+    text: Noise floor similar in the 9 inspected captures (min window RMS 4.5–4.6e-4) — gain likely constant (INFERRED)
+    status: INFERRED
+  snr_metadata:
+    text: Not provided; fixed 7 m in chamber
+    status: UNGRADED
+  environmental_negatives:
+    text: '**None in release**'
+    status: UNGRADED
+  negative_taxonomy:
+    text: None
+    status: UNGRADED
+  negative_diversity:
+    text: None
+    status: ASSESSMENT
+  negative_provenance:
+    text: N/A
+    status: NOT_APPLICABLE
+  hard_negative_emitters:
+    text: None
+    status: UNGRADED
+  recorded_interference_conditions:
+    text: None (semi-anechoic chamber)
+    status: UNGRADED
+  positive_negative_fs_matched:
+    text: N/A — no negatives
+    status: NOT_APPLICABLE
+  positive_negative_fc_matched:
+    text: N/A
+    status: NOT_APPLICABLE
+  negative_difficulty:
+    text: N/A — no negatives
+    status: ASSESSMENT
+  indoor_outdoor:
+    text: Indoor semi-anechoic chamber
+    status: UNGRADED
+  distance_metadata:
+    text: Fixed 7 m (author README)
+    status: AUTHOR_DOC
+  altitude_state_metadata:
+    text: None
+    status: UNGRADED
+  frequency_hopping:
+    text: Likely in hobby RC links; not labeled (INFERRED)
+    status: INFERRED
+  video_transmission_signals:
+    text: '**YES — separate Vid archives (Mini 2, Inspire 2, Matrice, Mavic)**'
+    status: UNGRADED
+  multi_uav_mixtures:
+    text: 'No'
+    status: UNGRADED
+  controlled_environment:
+    text: Yes — semi-anechoic chamber
+    status: UNGRADED
+  schema_consistency:
+    text: EMPIRICAL (n=1)
+    status: EMPIRICAL
+    n: 1
+  parent_recording_identity:
+    text: Archive = session; files are separate captures seconds apart (not continuous)
+    status: UNGRADED
+  window_safe_splitting_possible:
+    text: Yes by archive/session; file-level splits are same-session
+    status: ASSESSMENT
+  original_raw_representation:
+    text: Complex IQ (double) in MAT v7.3
+    status: UNGRADED
+  published_derived_representations:
+    text: 'Author code: 1024-pt Hann spectrogram, log-amplitude, z-scored per spectrogram'
+    status: AUTHOR_CODE
+  raw_derived_reproducibility:
+    text: Strong — raw IQ + author code
+    status: AUTHOR_CODE
+  train_class_support:
+    text: N/A — no published split
+    status: NOT_APPLICABLE
+  validation_class_support:
+    text: N/A
+    status: NOT_APPLICABLE
+  class_balance:
+    text: 51–71 files per archive; capture length differs by class (100 ms–1 s)
+    status: UNGRADED
+  label_taxonomy:
+    text: System × signal type (RC / Vid) from archive name
+    status: UNGRADED
+  leakage_safe_keys:
+    text: archive (session) + file; names repeat across RC/Vid archives
+    status: ASSESSMENT
+  independent_sessions_per_class:
+    text: '**1 per archive** (EMPIRICAL); Mavic in a separate campaign'
+    status: EMPIRICAL
+    n: 9
+  potential_shortcut_receiver:
+    text: None within; same receiver model as RFUAV (low cross-dataset receiver gap)
+    status: ASSESSMENT
+  potential_shortcut_center_frequency:
+    text: Low — fixed 2.44 GHz
+    status: ASSESSMENT
+  potential_shortcut_snr:
+    text: UNKNOWN; fixed geometry
+    status: ASSESSMENT
+  potential_shortcut_received_power:
+    text: Audit — RC vs video power; author code z-scores it away
+    status: ASSESSMENT
+  potential_shortcut_dataset_source:
+    text: Yes in cross-dataset experiments; **Mavic session 7 months later**
+    status: ASSESSMENT
+  potential_shortcut_position:
+    text: Low — fixed 7 m
+    status: ASSESSMENT
+  known_acquisition_defect:
+    text: No zero-gap/dropout pattern in the 9 inspected captures (zeros 0.03–0.13% = quantization)
+    status: UNGRADED
+  classical_ml_opportunity:
+    text: 'Strong: burst, hop and bandwidth features on clean signals'
+    status: ASSESSMENT
+  phase_aware_experiments:
+    text: 'Yes'
+    status: ASSESSMENT
+  magnitude_common_experiments:
+    text: Yes (spectral-common)
+    status: ASSESSMENT
+  detection_usefulness:
+    text: Positive-only; needs negatives from another dataset
+    status: ASSESSMENT
+  identification_usefulness:
+    text: '**Strong** — 10 systems incl. hobby RC; RC vs video'
+    status: ASSESSMENT
+  robustness_usefulness:
+    text: Low — single chamber, fixed distance
+    status: ASSESSMENT
+  unique_contribution:
+    text: Clean anechoic RC + video references for 10 systems; closest acquisition match to RFUAV
+    status: ASSESSMENT
+  claim_ceiling:
+    text: Identification of represented RC/video emissions in a semi-anechoic chamber at 7 m
+    status: ASSESSMENT
+  provisional_droneacharya_role:
+    text: Clean-reference identification + leave-system-out novelty + RFUAV cross-dataset partner
+    status: ASSESSMENT
+  primary_detection_foundation:
+    text: No — no negatives
+    status: ASSESSMENT
+  full_download_justification:
+    text: No — fetch individual captures from the remote zips
+    status: ASSESSMENT
+  window_label_reliability:
+    text: RC bursty (12–65% of 1 ms windows active); video 40–93% — activity-aware labels needed
+    status: ASSESSMENT
+supplementary:
+  Repository:
+    text: KU Leuven RDR, DOI 10.48804/HZRVNZ, v1.0 (2024-01-16)
+    status: UNGRADED
+  Archives:
+    text: Spektrum_DX4e, mini2RC, mini2vid, inspire2RC, inspire2Vid, matriceRC, matricevid (71 files each); Frysky, NineEagles, wltoys, Q205, SJRC_pro (51 each); MavicRC1/2 (15+16), MavicVid1/2 (14+15)
+    status: UNGRADED
+  Documentation conflicts:
+    text: Mavic not in README; Frysky vs "Taranis Q X7"; SJRC F11 Pro "drone + RC" but one archive
+    status: AUTHOR_DOC
+  Antenna / distance:
+    text: OmniLOG 70600 omni; 7 m
+    status: UNGRADED
+  Published preprocessing:
+    text: '`get_spectrogram2.m`: NFFT 1024, Hann, no overlap, log-amplitude, per-spectrogram z-score'
+    status: UNGRADED
+  Not to be confused with:
+    text: 'Zenodo 10.5281/zenodo.21428081 (ZHAW 2026): different drones + Wi-Fi/BT background, spectrogram images only'
+    status: UNGRADED
+details:
+  # RMA (Royal Military Academy / KU Leuven) Drone RF Dataset card
+  #
+  # Evidence levels:
+  #   REPO_METADATA     KU Leuven RDR (Dataverse) API: file list, sizes, MD5, license, version
+  #   AUTHOR_README     README.txt shipped with the dataset
+  #   AUTHOR_CODE       signal_visualize.m / get_spectrogram2.m shipped with the dataset
+  #   REMOTE_LISTING    zip contents read remotely via HTTP Range (no download), all 16 archives
+  #   EMPIRICAL (n=..)  measured by us on downloaded captures
+  #   INFERRED          derived from the above; requires confirmation
+  #   UNKNOWN           not established
+  #
+  # Paper-level claims (TCCN 2022, ICACT 2023) have not been read yet and are not used here.
 
-acquisition:
-  receiver: {model: "Ettus USRP X310", count: 1, status: AUTHOR_README}
-  antenna: {model: "OmniLOG 70600", type: omnidirectional, status: AUTHOR_README}
-  environment: {value: "semi-anechoic chamber, CISS, Royal Military Academy", status: AUTHOR_README}
-  distance_m: {value: 7, status: AUTHOR_README}
-  gain: {value: null, status: UNKNOWN}
-  link: "10 Gbit Ethernet to host (AUTHOR_README)"
+  dataset:
+    id: rma
+    name: "RMA Drone RF Dataset"
+    full_name: "Drone RF Dataset (Royal Military Academy / KU Leuven)"
+    version: "1.0"
+    release_date: "2024-01-16"
+    doi: "10.48804/HZRVNZ"
+    status: REPO_METADATA
 
-labels:
-  granularity: file
-  provenance: "archive name (system x signal type)"
-  axes: [system, signal_type]
-  signal_type_values: [RC, Vid]  # 'Vid' archives exist for Mini 2, Inspire 2, Matrice, Mavic
-  filename_collision: "Mavic_N.mat and matrice_N.mat names repeat across RC and Vid archives; keys must include the archive."
+  provenance:
+    authors: ["Sanjoy Basak", "Sofie Pollin", "Bart Scheers"]
+    institutions: ["KU Leuven (Networked Systems, WaveCore)", "Royal Military Academy (CISS, Radio Networks)"]
+    repository: "KU Leuven Research Data Repository (RDR, Dataverse)"
+    project: "PhD: Drone Detection and Classification using Artificial Intelligence based RF Sensing"
+    related_publications:
+      - "Basak et al., Combined RF-Based Drone Detection and Classification, IEEE TCCN 8(1), 2022, doi:10.1109/TCCN.2021.3099114"
+      - "Basak et al., Autoencoder based framework for drone RF signal classification and novelty detection, ICACT 2023, doi:10.23919/ICACT56868.2023.10079363"
+    not_to_be_confused_with: "Zenodo 10.5281/zenodo.21428081 (ZHAW, 2026): different drones (DJI, Futaba T7/T14, Graupner, Taranis, Turnigy) + Wi-Fi/Bluetooth background, spectrogram images only."
 
-published_preprocessing:  # AUTHOR_CODE (get_spectrogram2.m)
-  nfft: 1024
-  window: hann
-  overlap: none
-  output: "10*log10(|FFT|), then z-scored per spectrogram (removes absolute power)"
-  frequency_axis: "fc +/- Fs/2"
+  license:
+    type: "CC BY-NC 4.0"
+    status: REPO_METADATA
+    note: "Non-commercial. Fine for research; matters if Droneacharya is ever commercialised."
 
-empirical_findings:
-  status: "EMPIRICAL (n=9); audit script scripts/inspect_rma.py, summary in interim/rma/inspection/"
-  activity_1ms_windows_pct:  # windows >10 dB above the file's quietest 5%
-    Spektrum_DX4e: 23
-    Frysky: 65
-    mini2RC: 20
-    MavicRC1: 12.5
-    mini2vid: 40
-    matricevid: 93
-    MavicVid1: 93
-  interpretation: "RC links are bursty (12–65% active); video links are mostly continuous (Matrice, Mavic) except Mini 2 (40%)."
-  active_vs_noise_db: "15–29 dB"
-  noise_floor:  # n=9 inspected captures, not the whole dataset
-    min_window_rms: "4.5e-4 to 4.6e-4 in every file, April and November sessions alike"
-    interpretation: "Receiver gain appears unchanged across sessions (INFERRED)."
-  exact_zero_samples: "0.03–0.13% per file; consistent with int16 quantization of weak noise, no runs suggesting gaps"
-  consecutive_files:
-    pair: "mini2RC/mini2_0 (13:57:11) and mini2_1 (13:57:08)"
-    interpretation: "Separate 100 ms captures a few seconds apart in one session, not one continuous recording. File order is not time order."
+  modality:
+    - rf
 
-negative_data:
-  available: false
-  notes:
-    - "No background, Wi-Fi, Bluetooth or empty-chamber recordings in the release."
+  primary_tasks:
+    - uav_system_identification
+    - rc_vs_video_link_classification
+  secondary_tasks:
+    - novelty_detection  # per ICACT 2023 title; protocol not yet read
 
-leakage_safe_group_keys:
-  available: [archive, file_index]
-  session: "archive = one recording session (INFERRED from MAT creation times); captures within it are seconds apart"
-  policy: "Split by archive/session for generalization claims; file-level splits within an archive are same-session."
+  public_release:
+    archives: 16
+    mat_files: 812
+    total_size_gb: 46.7  # decimal GB; = 43.5 GiB, which is what the KU Leuven page shows
+    checksums: "MD5 per archive (REPO_METADATA)"
+    zip_compression_ratio: "~0.96 (MAT payload already compressed)"
+    extras: ["README.txt", "signal_visualize.m", "get_spectrogram2.m"]
 
-potential_shortcuts:
-  - signal_type_vs_system  # only some systems have Vid archives
-  - capture_length_by_class  # 100 ms / 200 ms / 1 s
-  - received_power
-  - recording_session  # Mavic recorded ~7 months later
-  - dataset_source_in_cross_dataset_training
+  population:
+    readme_list:  # AUTHOR_README, verbatim order
+      - "Spektrum DX4e remote controller"
+      - "DJI Mini 2 drone + remote controller"
+      - "DJI Inspire 2 drone + remote controller"
+      - "DJI Matrice 300 drone + remote controller"
+      - "Taranis Q X7 remote controller"
+      - "Nine Eagles remote controller"
+      - "WLtoys remote controller"
+      - "Q205 remote controller"
+      - "SJRC F11 Pro drone + remote controller"
+    archives:  # REMOTE_LISTING: archive -> files
+      Spektrum_DX4e: 71
+      mini2RC: 71
+      mini2vid: 71
+      inspire2RC: 71
+      inspire2Vid: 71
+      matriceRC: 71
+      matricevid: 71
+      Frysky: 51
+      NineEagles: 51
+      wltoys: 51
+      Q205: 51
+      SJRC_pro: 51
+      MavicRC1: 15
+      MavicRC2: 16
+      MavicVid1: 14
+      MavicVid2: 15
+    documentation_conflicts:
+      - "Mavic archives (60 files, ~19 GB) are not in the README list; Mavic model unknown."
+      - "README says 'Taranis Q X7'; archive is named 'Frysky' (FrSky makes the Taranis) — INFERRED to be the same system."
+      - "README says SJRC F11 Pro 'drone + remote controller', but only one SJRC archive exists; whether it is RC, video or both is UNKNOWN."
+    physical_units_per_system:
+      value: 1
+      status: INFERRED
+      consequence: "System identity and physical-unit identity are inseparable."
 
-cross_dataset_note: >
-  Same receiver model (USRP X310), sample rate (100 MS/s) and centre frequency
-  (2.44 GHz) as the sampled RFUAV packs. This is the closest acquisition match
-  in the portfolio, which makes RMA <-> RFUAV the cleanest cross-dataset test
-  (differences are site and devices, not receiver settings).
+  signal:
+    representation: complex_iq
+    sample_rate_sps: {value: 100000000, status: AUTHOR_README}
+    center_frequency_hz: {value: 2440000000, status: AUTHOR_README}
+    capture_bandwidth_hz: {value: 100000000, status: INFERRED}  # complex sampling at 100 MS/s
+    storage:
+      format: "MAT v7.3 (HDF5)"
+      variable: "uhd_samps"
+      stored_type: "complex double (HDF5 compound real/imag, float64) holding int16 codes / 32768"
+      shape: "(1, N)"
+      status: "EMPIRICAL (n=9: 8 audited archives + SJRC_pro)"
+    samples_per_file:
+      status: "EMPIRICAL (n=9)"
+      by_archive:
+        Frysky: {samples: 10000000, duration_ms: 100}
+        Spektrum_DX4e: {samples: 10000000, duration_ms: 100}
+        SJRC_pro: {samples: 10000000, duration_ms: 100}
+        mini2RC: {samples: 10000000, duration_ms: 100}
+        matricevid: {samples: 10000000, duration_ms: 100}
+        mini2vid: {samples: 20000000, duration_ms: 200}
+        MavicRC1: {samples: 100000000, duration_ms: 1000}
+        MavicVid1: {samples: 100000000, duration_ms: 1000}
+      consequence: "Capture length differs by class (100 ms to 1 s). Fixed-length windows must be cut from every file; never use file length as a feature."
+    file_created:
+      status: "EMPIRICAL (n=9, MAT header)"
+      april_2022_session: "Apr 4–6 2022: Mini 2, Matrice, Spektrum DX4e, Frysky (SJRC_pro: May 5 2022)"
+      mavic_session: "Oct 30 2022 (MavicVid1), Nov 2 2022 (MavicRC1)"
+      consequence: "Mavic was recorded ~7 months after the rest and is absent from the README: session and class are confounded for Mavic."
 
-known_limitations:
-  - "No negative data of any kind."
-  - "Single semi-anechoic chamber, fixed 7 m: no propagation or environment variation."
-  - "One unit per system (INFERRED): unit and system are confounded."
-  - "README does not document the Mavic archives; SJRC and Frysky naming need confirmation."
-  - "CC BY-NC 4.0: non-commercial only."
+  acquisition:
+    receiver: {model: "Ettus USRP X310", count: 1, status: AUTHOR_README}
+    antenna: {model: "OmniLOG 70600", type: omnidirectional, status: AUTHOR_README}
+    environment: {value: "semi-anechoic chamber, CISS, Royal Military Academy", status: AUTHOR_README}
+    distance_m: {value: 7, status: AUTHOR_README}
+    gain: {value: null, status: UNKNOWN}
+    link: "10 Gbit Ethernet to host (AUTHOR_README)"
 
-claim_ceiling:
-  supported:
-    - "Identification of the represented RC and video-link emissions in a semi-anechoic chamber at 7 m."
-    - "Leave-one-system-out novelty/open-set experiments across the represented systems."
-  unsupported:
-    - "Detection against any negative class (none exists)."
-    - "Robustness to propagation, distance, interference or environment."
-    - "Unit-level generalization."
+  labels:
+    granularity: file
+    provenance: "archive name (system x signal type)"
+    axes: [system, signal_type]
+    signal_type_values: [RC, Vid]  # 'Vid' archives exist for Mini 2, Inspire 2, Matrice, Mavic
+    filename_collision: "Mavic_N.mat and matrice_N.mat names repeat across RC and Vid archives; keys must include the archive."
 
-empirical_checks_required:
-  - samples_per_file_for_unaudited_archives  # inspire2RC/Vid, matriceRC, NineEagles, wltoys, Q205
-  - mavic_model_identity
-  - sjrc_signal_type
-  - per_class_received_power
+  published_preprocessing:  # AUTHOR_CODE (get_spectrogram2.m)
+    nfft: 1024
+    window: hann
+    overlap: none
+    output: "10*log10(|FFT|), then z-scored per spectrogram (removes absolute power)"
+    frequency_axis: "fc +/- Fs/2"
 
-resolved_checks:
-  - "Mavic files are 8–12x larger because each is 1 s (100M samples), not 100 ms."
-  - "Consecutive file indices are separate captures seconds apart, not a continuous stream."
-  - "Exact zeros are quantization, not gaps."
+  empirical_findings:
+    status: "EMPIRICAL (n=9); audit script scripts/inspect_rma.py, summary in interim/rma/inspection/"
+    activity_1ms_windows_pct:  # windows >10 dB above the file's quietest 5%
+      Spektrum_DX4e: 23
+      Frysky: 65
+      mini2RC: 20
+      MavicRC1: 12.5
+      mini2vid: 40
+      matricevid: 93
+      MavicVid1: 93
+    interpretation: "RC links are bursty (12–65% active); video links are mostly continuous (Matrice, Mavic) except Mini 2 (40%)."
+    active_vs_noise_db: "15–29 dB"
+    noise_floor:  # n=9 inspected captures, not the whole dataset
+      min_window_rms: "4.5e-4 to 4.6e-4 in every file, April and November sessions alike"
+      interpretation: "Receiver gain appears unchanged across sessions (INFERRED)."
+    exact_zero_samples: "0.03–0.13% per file; consistent with int16 quantization of weak noise, no runs suggesting gaps"
+    consecutive_files:
+      pair: "mini2RC/mini2_0 (13:57:11) and mini2_1 (13:57:08)"
+      interpretation: "Separate 100 ms captures a few seconds apart in one session, not one continuous recording. File order is not time order."
 
-droneacharya:
-  acquired: partial  # 9 diagnostic captures
-  inspected: true
-  adapter_implemented: false
-  provisional_role:
-    - clean_reference_identification
-    - leave_system_out_novelty_tests
-    - rfuav_cross_dataset_partner
-  primary_detection_foundation: false
-  full_download_justified: false  # members can be fetched individually from the remote zips
+  negative_data:
+    available: false
+    notes:
+      - "No background, Wi-Fi, Bluetooth or empty-chamber recordings in the release."
+
+  leakage_safe_group_keys:
+    available: [archive, file_index]
+    session: "archive = one recording session (INFERRED from MAT creation times); captures within it are seconds apart"
+    policy: "Split by archive/session for generalization claims; file-level splits within an archive are same-session."
+
+  potential_shortcuts:
+    - signal_type_vs_system  # only some systems have Vid archives
+    - capture_length_by_class  # 100 ms / 200 ms / 1 s
+    - received_power
+    - recording_session  # Mavic recorded ~7 months later
+    - dataset_source_in_cross_dataset_training
+
+  cross_dataset_note: >
+    Same receiver model (USRP X310), sample rate (100 MS/s) and centre frequency
+    (2.44 GHz) as the sampled RFUAV packs. This is the closest acquisition match
+    in the portfolio, which makes RMA <-> RFUAV the cleanest cross-dataset test
+    (differences are site and devices, not receiver settings).
+
+  known_limitations:
+    - "No negative data of any kind."
+    - "Single semi-anechoic chamber, fixed 7 m: no propagation or environment variation."
+    - "One unit per system (INFERRED): unit and system are confounded."
+    - "README does not document the Mavic archives; SJRC and Frysky naming need confirmation."
+    - "CC BY-NC 4.0: non-commercial only."
+
+  claim_ceiling:
+    supported:
+      - "Identification of the represented RC and video-link emissions in a semi-anechoic chamber at 7 m."
+      - "Leave-one-system-out novelty/open-set experiments across the represented systems."
+    unsupported:
+      - "Detection against any negative class (none exists)."
+      - "Robustness to propagation, distance, interference or environment."
+      - "Unit-level generalization."
+
+  empirical_checks_required:
+    - samples_per_file_for_unaudited_archives  # inspire2RC/Vid, matriceRC, NineEagles, wltoys, Q205
+    - mavic_model_identity
+    - sjrc_signal_type
+    - per_class_received_power
+
+  resolved_checks:
+    - "Mavic files are 8–12x larger because each is 1 s (100M samples), not 100 ms."
+    - "Consecutive file indices are separate captures seconds apart, not a continuous stream."
+    - "Exact zeros are quantization, not gaps."
+
+  droneacharya:
+    acquired: partial  # 9 diagnostic captures
+    inspected: true
+    adapter_implemented: false
+    provisional_role:
+      - clean_reference_identification
+      - leave_system_out_novelty_tests
+      - rfuav_cross_dataset_partner
+    primary_detection_foundation: false
+    full_download_justified: false  # members can be fetched individually from the remote zips
