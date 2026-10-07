@@ -125,5 +125,5 @@ datasets:
   esc50:
     rows:
       provisional_role:
-        text: Hard-negative layer (labelled classes)
-        basis: docs/datasets/acoustic_notes.md
+        text: 'Evaluation negatives only: as training negatives it inverted transfer to Svanström (AUC 0.68 → 0.35) by teaching recording chain, not drone'
+        basis: docs/datasets/acoustic_notes.md; docs/results/acoustic_widening.md (2026-10-08)

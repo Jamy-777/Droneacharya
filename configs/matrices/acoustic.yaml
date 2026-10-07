@@ -87,7 +87,7 @@ cross_dataset:
     status: AUTHOR_DOC
     source: UaVirBASE label.json + Svanström paper (same equipment)
   Main shortcut:
-    text: 'Recording chain ↔ label. **Measured (32 band energies 0–8 kHz after resampling to 16 kHz, unseen groups): the dataset of a 1 s window is named with balanced accuracy 0.69 [0.63, 0.74], p=0.00 (6 datasets, chance 0.17), and 0.81 [0.74, 0.88], p=0.00 among drone windows only (5 datasets, chance 0.20), loudness removed** — lower bounds; drones-only removes the drone/non-drone content difference. Use leave-one-dataset-out tests and report this baseline beside every cross-dataset result'
+    text: 'Recording chain ↔ label. **Measured (32 band energies 0–8 kHz after resampling to 16 kHz, unseen groups): the dataset of a 1 s window is named with balanced accuracy 0.69 [0.63, 0.74], p=0.00 (6 datasets, chance 0.17), and 0.81 [0.74, 0.88], p=0.00 among drone windows only (5 datasets, chance 0.20), loudness removed** — lower bounds; drones-only removes the drone/non-drone content difference. Use leave-one-dataset-out tests and report this baseline beside every cross-dataset result; **consequence measured: adding ESC-50 (negatives only) to training inverted UaVirBASE→Svanström detection from AUC 0.68 to 0.35, and leave-one-dataset-out training gave no gain** (docs/results/acoustic_widening.md) — train only on sources holding both classes from one chain'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 1112
