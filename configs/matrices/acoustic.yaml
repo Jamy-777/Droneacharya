@@ -87,7 +87,7 @@ cross_dataset:
     status: AUTHOR_DOC
     source: UaVirBASE label.json + Svanström paper (same equipment)
   Main shortcut:
-    text: 'Recording chain ↔ label: drones come from 5 chains, most negatives from others. **Measured: 32 band energies name the dataset of a 1 s window with balanced accuracy 0.71 vs chance 0.17, even with loudness removed** (upper bound: content differs too). Use leave-one-dataset-out tests and report the dataset-ID baseline'
+    text: 'Recording chain ↔ label: drones come from 5 chains, most negatives from others. **Measured: 32 band energies (0–8 kHz, every recording resampled to 16 kHz) name the dataset of a 1 s window with balanced accuracy 0.71 vs chance 0.17, even with loudness removed** — a lower bound on identifiability (a stronger model will do better); part of it is content, not chain. Use leave-one-dataset-out tests and report the dataset-ID baseline beside every cross-dataset result'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 1112

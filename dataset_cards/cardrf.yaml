@@ -385,7 +385,7 @@ facts:
     kind: ASSESSMENT
     status: UNKNOWN
   potential_shortcut_received_power:
-    text: '**HIGH — measured on unseen devices: pre-trigger RMS alone AUC 0.80, clipping alone AUC up to 0.71, both + post-trigger RMS balanced accuracy 0.79**; NLOS ~13 dB weaker'
+    text: '**HIGH — unseen devices: pre-trigger RMS alone AUC 0.80; on burst emitters only (pre-trigger = noise) still AUC 0.69 with folds 0.00–0.99 = session/device leakage; clipping alone AUC up to 0.71; combined balanced accuracy 0.79**; NLOS ~13 dB weaker'
     kind: ASSESSMENT
     status: EMPIRICAL
     n: 1080

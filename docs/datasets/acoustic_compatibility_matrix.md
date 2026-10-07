@@ -40,5 +40,5 @@ Datasets were selected on 2026-10-05 (selection record and audit conclusions: `a
 | --- | --- |
 | Sample rates | 96 kHz (DDL, UaVirBASE), 50 kHz (DroneNoise), 44.1 kHz (Mięsikowska, Svanström, ESC-50) → common band limited to 22.05 kHz unless 44.1 kHz sets are excluded |
 | Same-chain negatives | Only UaVirBASE (4 ambient recordings, 416 s) and Svanström (30 background + 30 helicopter, 10 s each) |
-| Main shortcut | Recording chain ↔ label: drones come from 5 chains, most negatives from others. **Measured: 32 band energies name the dataset of a 1 s window with balanced accuracy 0.71 vs chance 0.17, even with loudness removed** (upper bound: content differs too). Use leave-one-dataset-out tests and report the dataset-ID baseline |
+| Main shortcut | Recording chain ↔ label: drones come from 5 chains, most negatives from others. **Measured: 32 band energies (0–8 kHz, every recording resampled to 16 kHz) name the dataset of a 1 s window with balanced accuracy 0.71 vs chance 0.17, even with loudness removed** — a lower bound on identifiability (a stronger model will do better); part of it is content, not chain. Use leave-one-dataset-out tests and report the dataset-ID baseline beside every cross-dataset result |
 | Units | DroneNoise M6–M9 in pascals (M1–M5 ±5 dB); all others uncalibrated full-scale |

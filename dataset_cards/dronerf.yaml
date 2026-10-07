@@ -420,7 +420,7 @@ facts:
     status: INFERRED
     source: dataset_cards/dronerf.yaml details
   claim_ceiling:
-    text: DroneRF-domain benchmark detection/identification only
+    text: 'DroneRF-domain identification and mode experiments; **detection cannot be tested across sessions: all 41 background segments are one recording**, so detection numbers are within-session repeatability only'
     kind: ASSESSMENT
     status: INFERRED
     source: dataset_cards/dronerf.yaml details

@@ -3,8 +3,12 @@
 # Shortcut baselines
 
 Each model sees one confound only and is scored on groups it never saw (saved, leakage-checked splits).
-Chance is 0.50 balanced accuracy / 0.50 ROC AUC for the binary tasks. A real detector must clearly beat
-the baseline for its task before its result means anything.
+Chance is 0.50 balanced accuracy / 0.50 ROC AUC for the binary tasks.
+
+These bars are **minimums**: a stronger model can exploit the same confound better. Beating them is
+necessary, not sufficient — detectors are also scored with the confound removed (post-trigger only,
+amplitude normalised, per emitter type). Where two model kinds were tried, the one with the higher mean
+balanced accuracy on the test folds is shown: a deliberate selection on test data that raises the bar.
 
 | Baseline | Task | Split | Model | Balanced accuracy, mean (fold min–max) | ROC AUC, mean (min–max) |
 | --- | --- | --- | --- | --- | --- |
@@ -12,6 +16,7 @@ the baseline for its task before its result means anything.
 | cardrf_rms_pre_trigger | UAS (aircraft or controller) vs Wi-Fi/Bluetooth, unseen devices | `cardrf/group-kfold-s0` | linear | 0.77 (0.50–0.98) | 0.80 (0.47–0.99) |
 | cardrf_rms_post_trigger | UAS (aircraft or controller) vs Wi-Fi/Bluetooth, unseen devices | `cardrf/group-kfold-s0` | linear | 0.54 (0.29–0.75) | 0.50 (0.23–0.67) |
 | cardrf_clip_and_energy | UAS (aircraft or controller) vs Wi-Fi/Bluetooth, unseen devices | `cardrf/group-kfold-s0` | linear | 0.79 (0.59–0.97) | 0.72 (0.50–0.98) |
+| cardrf_rms_pre_trigger_burst_only | same task, burst emitters only (Wi-Fi, Bluetooth, controllers, Beebeerun): their pre-trigger half is noise, so any skill here is session/device leakage | `cardrf/group-kfold-s0` | linear | 0.65 (0.40–0.91) | 0.69 (0.00–0.99) |
 | svanstrom_loudness | drone vs non-drone from loudness only (1 s windows, unseen groups) | `svanstrom/group-kfold-s0` | tree | 0.63 (0.62–0.64) | 0.64 (0.54–0.74) |
 | uavirbase_loudness | drone vs non-drone from loudness only (1 s windows, unseen groups) | `uavirbase/group-kfold-s0` | tree | 0.57 (0.54–0.62) | 0.64 (0.49–0.74) |
 | acoustic_dataset_id_raw | which dataset a 1 s window comes from (6 datasets), unseen groups | `groups dealt round-robin into 5 folds (deterministic)` | linear | 0.69 (0.58–0.78) | — |
@@ -19,5 +24,6 @@ the baseline for its task before its result means anything.
 
 RFUAV metadata-only identification (leave one pack out, 12 classes with ≥ 2 packs, 31 captures): accuracy 0.52 vs chance 0.08. 25 classes have a single pack, so unseen-pack identification cannot be tested for them at all.
 
+Dataset identification uses 0–8 kHz only (every recording resampled to 16 kHz), so sample rate and anti-alias roll-off cannot drive it; groups never span folds. It is a lower bound on how identifiable the recording chains are, and part of it is content (ESC-50 sounds differ from drones), not chain.
 Acoustic dataset identification (level kept): balanced accuracy 0.69 vs chance 0.17 (windows: {'ddl': 200, 'uavirbase': 200, 'svanstrom': 200, 'dronenoise': 110, 'miesikowska_uav': 200, 'esc50': 202}).
 Acoustic dataset identification (each window scaled to unit RMS): balanced accuracy 0.71 vs chance 0.17 (windows: {'ddl': 200, 'uavirbase': 200, 'svanstrom': 200, 'dronenoise': 110, 'miesikowska_uav': 200, 'esc50': 202}).
