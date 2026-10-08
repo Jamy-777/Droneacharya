@@ -60,5 +60,16 @@ def test_audio_features_ignore_level():
     assert a["peakiness_125_250"] > 20  # a 180 Hz tone stands far above its octave's median
 
 
+def test_mfcc_ignores_level_and_sees_spectral_shape():
+    from droneacharya.mfcc import mfcc_features
+    rng = np.random.default_rng(6)
+    t = np.arange(44100) / 44100
+    tone = np.sin(2 * np.pi * 300 * t) + 0.05 * rng.normal(size=t.size)
+    a, b = mfcc_features(tone, 44100), mfcc_features(40 * tone, 44100)
+    assert len(a) == 26 and all(abs(a[k] - b[k]) < 1e-6 * max(1, abs(a[k])) for k in a)
+    hiss = mfcc_features(rng.normal(size=t.size), 44100)
+    assert abs(hiss["mfcc_mean_01"] - a["mfcc_mean_01"]) > 1   # a low tone and white noise differ in spectral tilt
+
+
 def test_detector_model_is_fixed_and_known():
     assert type(E.model("gbm")).__name__ == "HistGradientBoostingClassifier"
