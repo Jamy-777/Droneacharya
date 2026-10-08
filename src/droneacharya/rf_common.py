@@ -157,3 +157,24 @@ def noisy_rf_tile(capture_id):
     """Noisy RF: already 14 MHz complex baseband at 14 MS/s; the first 250 us of the vector, DC notched."""
     s = signal.read(capture_id, count=int(round(STAGE2_WIDTH * TILE / FS)))
     return notch_dc(s.samples[0], s.sample_rate_hz)
+
+
+def iq_steered(capture_id, starts, width=STAGE2_WIDTH):
+    """Complex I/Q captures at any band (RFUAV, RMA, DRFF-R2): steered tiles at the given sample starts.
+
+    The search band is what the receiver saw; inside 2.4 GHz it is also limited to the ISM search range, so
+    2.4 GHz captures follow the same rule as CardRF. 5.8 GHz captures are steered within their own band:
+    models only see baseband, so this is the frequency-agnostic path."""
+    first = signal.read(capture_id, count=1)
+    fs, fc = first.sample_rate_hz, first.center_frequency_hz
+    block = int(round(TILE / FS * fs))
+    band = (fc - fs / 2, fc + fs / 2)
+    if SEARCH_24[0] < fc < SEARCH_24[1]:
+        band = (max(band[0], SEARCH_24[0]), min(band[1], SEARCH_24[1]))
+    out = []
+    for start in starts:
+        x = signal.read(capture_id, start=int(start), count=block).samples[0].astype(np.complex128)
+        if len(x) < block:
+            break
+        out.append(steered_tile(x, fs, fc, search=band, width=width))
+    return out, fc

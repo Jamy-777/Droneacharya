@@ -72,3 +72,37 @@ def predict(model, specs, batch=2048):
     model.eval()
     return torch.cat([torch.sigmoid(model(specs[i:i + batch].to(DEVICE))).cpu()
                       for i in range(0, len(specs), batch)]).numpy()
+
+
+def train_multiclass(specs, labels):
+    """TileNet with one output per class (cross-entropy, class-balanced weights); same fixed recipe as train()."""
+    torch.manual_seed(SEED)
+    classes = sorted(set(labels))
+    y = torch.as_tensor([classes.index(v) for v in labels])
+    counts = torch.bincount(y, minlength=len(classes)).float()
+    model = TileNet().to(DEVICE)
+    model.head = nn.Linear(64, len(classes)).to(DEVICE)
+    loss_fn = nn.CrossEntropyLoss(weight=(counts.sum() / (len(classes) * counts)).to(DEVICE))
+    opt = torch.optim.AdamW(model.parameters(), lr=LR)
+    generator = torch.Generator().manual_seed(SEED)
+    for _ in range(EPOCHS):
+        model.train()
+        order = torch.randperm(len(y), generator=generator)
+        for i in range(0, len(y), BATCH):
+            idx = order[i:i + BATCH]
+            xb = torch.roll(specs[idx].to(DEVICE), shifts=int(torch.randint(0, specs.shape[2], (1,), generator=generator)),
+                            dims=2)
+            loss = loss_fn(model.head(model.features(xb).mean(dim=(2, 3))), y[idx].to(DEVICE))
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+    model.classes_ = classes
+    return model
+
+
+@torch.no_grad()
+def predict_multiclass(model, specs, batch=2048):
+    model.eval()
+    out = [model.head(model.features(specs[i:i + batch].to(DEVICE)).mean(dim=(2, 3))).argmax(1).cpu()
+           for i in range(0, len(specs), batch)]
+    return np.array([model.classes_[k] for k in torch.cat(out).tolist()], dtype=object)

@@ -146,3 +146,14 @@ def subset_auc(scores, y, groups, keep, n_bootstrap=2000, seed=0):
     return {"roc_auc": metric(y, scores), "n": int(keep.sum()),
             "groups_per_label": {str(k): int(v) for k, v in zip(*np.unique(labels, return_counts=True))},
             "ci95": _bootstrap(y, scores, members, np.random.default_rng(seed), n_bootstrap)}
+
+
+def evaluate_external_labels(predicted, y, groups, n_permutations=2000, n_bootstrap=2000, seed=0):
+    """Multi-class external test: balanced accuracy of fixed predictions, labels permuted between label-pure
+    groups (e.g. physical units), group-bootstrap interval."""
+    predicted, y = np.asarray(predicted).astype(object), np.asarray(y).astype(object)
+    group_index, labels, members = _groups(np.asarray(groups), y)
+    observed = metric(y, predicted)
+    rng = np.random.default_rng(seed)
+    null = np.asarray([metric(rng.permutation(labels)[group_index], predicted) for _ in range(n_permutations)])
+    return _summary("labels", y, labels, observed, _bootstrap(y, predicted, members, rng, n_bootstrap), null)

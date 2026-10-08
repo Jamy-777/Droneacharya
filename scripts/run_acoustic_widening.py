@@ -44,6 +44,7 @@ WINDOWS = {"svanstrom": (10, None), "uavirbase": (10, 10), "esc50": (5, None), "
            "miesikowska_uav": (10, 10), "dronenoise": (10, 10)}
 DRONE_ONLY = ("ddl", "miesikowska_uav", "dronenoise")
 TESTS = ("svanstrom", "uavirbase")
+WORKERS = 8   # RAM cap: a DDL worker holds up to 60 s of 8-channel 96 kHz audio
 
 
 def _capture_rows(capture_id, max_windows, max_seconds):
@@ -62,7 +63,7 @@ def dataset_rows(dataset):
     captures = {c["capture_id"]: c for c in splits.captures_of(dataset) if c["label_uas_present"] is not None}
 
     def compute():
-        chunks = Parallel(n_jobs=-1)(delayed(_capture_rows)(cid, max_windows, max_seconds) for cid in sorted(captures))
+        chunks = Parallel(n_jobs=WORKERS)(delayed(_capture_rows)(cid, max_windows, max_seconds) for cid in sorted(captures))
         return [row for chunk in chunks for row in chunk]
 
     rows = cached(OUT, dataset, compute, {"max_windows": max_windows, "max_seconds": max_seconds}, [dataset])
