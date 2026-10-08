@@ -44,6 +44,43 @@ Both are quotable only with the limits written beside them. No RF detection resu
 It is picked with hindsight, so it is optimistic for the baseline. "Power" means log RMS of the tile before
 normalisation, with no training and the direction fixed in advance (more power = drone).
 
+## Capabilities and acceptance criteria
+
+Each test still gets its own design committed before it runs. This table says which question each capability
+answers and what counts as passing.
+
+| Capability | Question | Test | Passes if | Status |
+| --- | --- | --- | --- | --- |
+| Acoustic presence | Is a drone audible? | Train on one recording chain, test on another held out whole | Interval above 0.5; every non-drone class holds; beats in-test loudness and the best single feature | **A1:** passes as a ranking. Does not beat a 7 kHz band chosen with hindsight. Threshold transfer and false alarms per hour are untested |
+| RF activity | Is anything transmitting? | Energy above an estimated noise floor | Classical signal processing, not ML. Power inside UAVSig: 0.95–0.96 | Implementation only |
+| RF presence (stage 2) | Is the transmitter a drone, not Wi-Fi/Bluetooth? | Both classes from one receiver, receiver unseen in training | Beats power and the best single feature inside the test set | **NOT ESTABLISHED.** Needs a set like DroneRFb-DIR (`docs/datasets/candidates.md`) or our own recordings |
+| RF identification | Which known drone model is this? | Unseen unit on an unseen day; then another receiver | Interval above the permutation null's 95th percentile; beats bandwidth alone | **I-D:** passes at the same receiver. Across receivers: not established |
+| Robustness | How does it degrade with SNR, distance, receiver? | Curves, never one number | Reported as curves | Noisy RF SNR curve only (floor unresolved) |
+| Fusion | Does combining RF and audio beat the best single channel? | RF and audio recorded of the same events | Beats the stronger channel on paired data | **Not testable:** no public set records both |
+
+## What the system outputs
+
+- **Two separate channels, each labelled with what it measures and how far it is validated:**
+  - **Acoustic score:** a drone-presence ranking score. It is validated as a ranking across two recording chains.
+    It is not a calibrated probability.
+  - **RF score:** identification ("resembles known model X", with its score) plus activity (energy above the noise
+    floor). It is not a drone-presence probability.
+- **No merged probability.** A combined number may be displayed only as a "provisional decision score", defined by a
+  fixed written rule. It stays that way until RF and audio recorded of the same events exist to validate it.
+
+## Demonstration operating envelope (proposed; the project owner decides)
+
+| Item | Proposed for the demo | Reason |
+| --- | --- | --- |
+| Sensors | Recorded files from public datasets; no live hardware | No project hardware yet |
+| RF band | 2.4 GHz only | 5.8 GHz identification is untested |
+| Latency | One decision per second per channel | Acoustic uses 1 s windows; RF tiles are aggregated per second |
+| False-alarm budget | Target ≤ 1 per hour per channel | Currently unmeasurable: each public chain holds minutes, not hours, of continuous negatives (UaVirBASE ambient: 416 s). Zero alarms in 416 s still allows up to ~26 per hour at 95% confidence |
+| Range | Not specified | Distance is not modelled yet |
+| Unknown drones | RF identification must be able to answer "unknown" | Not implemented yet |
+| Missing modality | Each channel works alone | The channels are separate by design |
+| Compute | Real-time on a laptop CPU | To be measured |
+
 ## Acoustic
 
 ### A1. Detection on an unseen recording chain: QUOTABLE, with limits
@@ -289,9 +326,15 @@ The CNN (secondary) is weaker, at 0.21–0.29.
 
 ## Open questions (each needs its own committed design before any run)
 
-1. **Acoustic:** does the 6.75–7.25 kHz energy share, chosen on the training chain, transfer to the other chain?
-   And does the detector add anything beyond it?
+1. **Acoustic, one design with three parts:**
+   - Does the 6.75–7.25 kHz energy share, chosen on the training chain, transfer to the other chain, and does the
+     detector add anything beyond it?
+   - Does a threshold set on the training chain hold on the other chain (recall and false alarms)?
+   - False alarms per hour of continuous negative audio, with time integration, reported with its upper bound
+     given only minutes of negatives.
 2. **RF identification:** test D at the other receiver with enough units. Dataset 3 has only 4 such units at u1.
-3. **RF detection across receivers** can't be tested with public data: every public set defines "drone vs not"
-   differently, and power dominates within each set. It needs matched recordings of drones and background through
-   one receiver.
+   DroneRFb-DIR (3 units per model; Air 2S and Mini 4 Pro shared with DRFF-R2) could supply a second receiver.
+3. **RF presence across receivers** can't be tested with the data we hold: every set we hold defines "drone vs not"
+   differently, and power dominates within each set. DroneRFb-DIR may change that, if its background proves to be
+   from the same receiver and site (`docs/datasets/candidates.md`). Otherwise it needs our own matched recordings of
+   drones and background through one receiver.
