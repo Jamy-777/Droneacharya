@@ -5,8 +5,9 @@ Every other file here is raw generator output and is rewritten on each run.
 
 **State on 2026-10-08, after the gate checks:** two results have passed the gate:
 
-- **A0:** acoustic ranking on an unseen recording chain, by one band near 7 kHz chosen on the training chain. It is
-  better than the gbm detector (A1), which adds nothing beyond it.
+- **A1:** acoustic ranking on an unseen recording chain by the trained detector, and also by MFCC. It holds with or
+  without averaging the microphone channels. The single 7 kHz band (A0) does **not**: it came from channel averaging
+  and is withdrawn as a cue (A-SM, W6).
 - **I-D:** RF identification of an unseen unit on an unseen day, at the same receiver.
 
 Both are quotable only with the limits written beside them. No RF detection result has passed.
@@ -52,10 +53,10 @@ answers and what counts as passing.
 
 | Capability | Question | Test | Passes if | Status |
 | --- | --- | --- | --- | --- |
-| Acoustic presence | Is a drone audible? | Train on one recording chain, test on another held out whole | Interval above 0.5; every non-drone class holds; beats in-test loudness and the best single feature | **A0:** one band near 7 kHz, chosen on the training chain, passes as a ranking (0.84 / 0.89). The detector adds nothing beyond it. Thresholds do not transfer between chains. False alarms per hour are not measurable with this data |
+| Acoustic presence | Is a drone audible? | Train on one recording chain, test on another held out whole | Interval above 0.5; every non-drone class holds; beats in-test loudness and the best single feature | **A1:** the trained detector passes as a ranking (0.68 / 0.85; 0.65 / 0.85 on a single microphone); MFCC performs alike. The 7 kHz single band (A0) is withdrawn: it came from channel averaging. Thresholds do not transfer between chains. False alarms per hour are not measurable with this data. Both acoustic sets are now development data |
 | RF activity | Is anything transmitting? | Energy above an estimated noise floor | Classical signal processing, not ML. Power inside UAVSig: 0.95–0.96 | Implementation only |
 | RF presence (stage 2) | Is the transmitter a drone, not Wi-Fi/Bluetooth? | Both classes from one receiver, receiver unseen in training | Beats power and the best single feature inside the test set | **NOT ESTABLISHED.** Needs a set like DroneRFb-DIR (`docs/datasets/candidates.md`) or our own recordings |
-| RF identification | Which known drone model is this? | Unseen unit on an unseen day; then another receiver | Interval above the permutation null's 95th percentile; beats bandwidth alone | **I-D:** passes at the same receiver. Across receivers: not established |
+| RF identification | Which known drone model is this? | Unseen unit on an unseen day; then another receiver | Interval above the permutation null's 95th percentile; beats bandwidth alone | **I-D:** passes at the same receiver, survives the SNR audit; behaviour features 0.62 (0.69 per capture). Across receivers: not established (behaviour features at chance; receiver fully predictable from them) |
 | Robustness | How does it degrade with SNR, distance, receiver? | Curves, never one number | Reported as curves | Noisy RF SNR curve only (floor unresolved) |
 | Fusion | Does combining RF and audio beat the best single channel? | RF and audio recorded of the same events | Beats the stronger channel on paired data | **Not testable:** no public set records both |
 
@@ -84,9 +85,69 @@ answers and what counts as passing.
 
 ## Acoustic
 
-### A0. One band near 7 kHz, chosen on the training chain: QUOTABLE as a ranking
+### A-SM. Single microphone and MFCC: A0 does not survive; A1 does
 
-This is the best acoustic result, and it is simpler than the detector. Source:
+Source: `scripts/check_acoustic_single_mic_mfcc.py` (design committed in `ffbb935` before the run) →
+`results/checks/acoustic_single_mic_mfcc.json`.
+
+**Why this test.** Every earlier acoustic number averaged a recording's channels before extracting features.
+UaVirBASE is 8 directional shotgun microphones (Rode NTG-2) metres apart, and Svanström is stereo. Averaging
+spaced or directional microphones comb-filters the sum, most strongly at high frequency, which is where the 7 kHz
+cue sat. Svanström and UaVirBASE are development data, so this test could only weaken a claim, never upgrade one.
+
+**Primary: channel 0 only.**
+
+| Train → test | Rule chosen on training | Rule | Detector (41 features) | MFCC gbm | MFCC logistic | Detector − rule | MFCC gbm − rule |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| UaVirBASE → Svanström | 500–1000 Hz tonality (not 7 kHz) | 0.58 [0.47, 0.69], p = 0.06 | **0.65 [0.56, 0.73]**, p = 0.002 | 0.67 [0.60, 0.75] | 0.68 [0.57, 0.77] | +0.07 [+0.01, +0.13] | +0.09 [−0.04, +0.22] |
+| Svanström → UaVirBASE | 3.5–3.75 kHz share (not 7 kHz) | 0.67 [0.45, 0.86], p = 0.11 | **0.85 [0.81, 0.88]**, p = 0.0005 | 0.81 [0.66, 0.89] | 0.87 [0.81, 0.92] | +0.18 [+0.01, +0.39] | +0.14 [+0.01, +0.29] |
+
+The channel-averaged results were rule 0.84 / 0.89 and detector 0.68 / 0.85.
+
+**Decisions under the committed rules:**
+
+- **A0 does not survive without channel averaging.** On one microphone, neither training chain picks the 7 kHz band,
+  and the chosen rule's interval reaches 0.5 in both directions. The 7 kHz cue was produced by averaging the
+  channels. A0 is withdrawn (W6).
+- **The detector survives:** 0.65 / 0.85 on one microphone against 0.68 / 0.85 averaged. It now beats the
+  training-chosen single feature in both directions.
+- **MFCC adds beyond the rule in Svanström → UaVirBASE only.** MFCC performs like the 41-feature detector, not
+  better.
+
+**Secondary: features computed per channel, then averaged.**
+
+| Train → test | Rule | Detector | MFCC gbm | MFCC logistic |
+| --- | --- | --- | --- | --- |
+| UaVirBASE → Svanström | 0.60 [0.49, 0.71] | 0.61 | 0.66 | **0.85 [0.78, 0.90]** |
+| Svanström → UaVirBASE | 0.89 [0.76, 0.97] (7.0–7.25 kHz) | 0.87 | 0.89 | **0.97 [0.93, 1.00]** |
+
+MFCC with logistic regression on per-channel-averaged features gives the highest acoustic numbers so far. It is a
+**HINT**: a secondary variant, on development data, after many looks at these two sets. It needs an untouched third
+recording setup.
+
+**Per recording:** window scores within a recording are highly correlated (ICC 0.11–0.88; 0.69–0.88 for the rule), so
+averaging windows changes little. Per recording, the detector and MFCC gbm score 0.64 / 0.71 (90 Svanström
+recordings) and 0.88 / 0.88 (132 UaVirBASE recordings). More recordings are the cure, not more windows.
+
+### A-R. How the cues fade with range (DDL, drones only, channel 0)
+
+Source: `scripts/check_acoustic_single_mic_mfcc.py` part 4 → `results/checks/ddl_cues_vs_range.json` and `.png`.
+
+| Drone, day | Windows | Range | 7 kHz share vs range (Spearman) | Harmonic prominence vs range |
+| --- | --- | --- | --- | --- |
+| DJI Mini 2, 29 Mar | 300 | 22–149 m | −0.48 (p ≈ 1e−18) | +0.14 (p = 0.015) |
+| DJI Mini 2, 31 Mar | 319 | 2–150 m | −0.52 (p ≈ 2e−23) | −0.36 (p ≈ 3e−11) |
+| DJI Phantom 4 Pro, 31 Mar | 438 | 12–249 m | −0.63 (p ≈ 1e−50) | −0.83 (p ≈ 9e−111) |
+
+- **The 7 kHz share falls with range for every drone and day,** as air absorption predicts.
+- **The rotor-harmonic prominence also falls,** strongly for the Phantom and inconsistently for the Mini 2. The
+  expectation that low-frequency harmonics survive distance better is not supported by this measure.
+- Descriptive only: DDL has no negatives.
+
+### A0. One band near 7 kHz, chosen on the training chain: WITHDRAWN as a cue (see A-SM)
+
+Kept for the record. It was the best acoustic result on channel-averaged windows. On a single microphone it does not
+hold (A-SM). Source:
 `scripts/check_acoustic_single_feature_transfer.py` (design committed in `87f8417` before the run) →
 `results/checks/acoustic_single_feature_transfer.json`.
 
@@ -130,10 +191,11 @@ loudness, then apply it unchanged to the other chain. Both training chains pick 
   - On UaVirBASE: 0 in 40 s, which still allows up to 270/h.
   - Not a deployment figure.
 
-### A1. Detection on an unseen recording chain (gbm detector): superseded by A0
+### A1. Detection on an unseen recording chain (gbm detector): QUOTABLE as a ranking
 
-A detector trained on one chain ranks drones above non-drones on the other chain. A0 shows that a single band chosen
-on the training chain does as well or better.
+A detector trained on one chain ranks drones above non-drones on the other chain. It holds on a single microphone
+(0.65 / 0.85, A-SM), where it beats the training-chosen single feature. The gate breakdowns below were computed on
+channel-averaged windows.
 
 | Train → test | AUC [95% CI] | p | Rests on |
 | --- | --- | --- | --- |
@@ -330,6 +392,53 @@ receiver u2. The design and rule were committed in `e68d5dc` before the run.
   - Only models with ≥ 2 units can be tested this way, and DJI models only.
   - Mavic 3, 3C and 3S (one unit each) are not covered.
 
+### I-SNR. The SNR audit of I-D: it survives, and behaviour features do better at one receiver
+
+Source: `scripts/check_drff_snr_audit.py` (design committed in `ffbb935` before the run) →
+`results/checks/drff_snr_audit.json`. Motivation: on synthetic signals, the tile features change with SNR alone (the
+shape quantiles move about 1 unit per 10 dB), while the emitter behaviour features did not move from 10 to 30 dB.
+
+| Test | Tiles | Tiles, SNR-equalised | Emitter behaviour | SNR alone (tiles / emitters) |
+| --- | --- | --- | --- | --- |
+| D: unseen unit + unseen day (null 95th 0.33 / 0.29 / 0.39) | 0.44 [0.38, 0.61] | 0.36 [0.30, 0.51] | **0.62 [0.55, 0.83]** | 0.15 / 0.16 |
+| D, scored per capture | 0.56 | 0.55 | **0.69** | |
+| I3: unseen unit, same day | 0.51 | 0.41 | **0.61** (per capture **0.82**) | 0.20 / 0.18 |
+| I2: same drones, other receiver | 0.24 | 0.19 (fails) | **0.125 = chance** | 0.20 / 0.13 |
+| D-rx: unseen unit + day + receiver | 0.37 (fails) | 0.33 (fails) | 0.25 (fails) | |
+| Receiver predictable from the features (AUC; same drones, day 2) | 0.65 [0.55, 0.75] | 0.75 | **1.00** | |
+
+**Decisions under the committed rules:**
+
+- **I-D survives the SNR audit.** SNR alone never meets the rule; it is at or below the null everywhere. The
+  equalisation was severe: 90% of tiles were noised down to −2.3 dB, the committed 10th-percentile target, against
+  a median of +21 dB. Even so, the tiles still meet the D rule.
+- **The emitter behaviour features re-establish I-D, and do better: 0.62 against 0.44, and 0.69 per capture.**
+  Per model (learning curve below), recall rises with training units.
+- **Behaviour features do not transfer across receivers at all:**
+  - I2 and D-rx are at chance, and the receiver is perfectly predictable from them (AUC 1.00).
+  - The cause is measured: both receivers ran at 100 MS/s and 5.745 GHz, yet the dominant video link looks
+    continuous on u1 (duty 1.0, 100 ms bursts) and like ~5 ms bursts at 42% duty on u2.
+  - Burst segmentation depends on the receiver's dynamic range and placement.
+  - The fix to test next: segment bursts relative to each emitter's own peak, not the noise floor.
+- **Scoring per capture helps:** +0.07 to +0.21. The within-capture correlation of scores is moderate (ICC
+  0.2–0.6), so tiles within a capture carry partly independent evidence.
+
+**Learning curve** (D test, recall of held-out units with only k training units of their own model; 15 draws each):
+
+| k training units | 1 | 2 | 4 | 6 |
+| --- | --- | --- | --- | --- |
+| mavicAir2, tiles | 0.33 | 0.45 | 0.59 | 0.61 |
+| mavicAir2, emitters | 0.32 | 0.50 | 0.77 | **0.85** |
+| mavicAir2s, tiles | 0.29 | 0.46 | 0.56 | 0.59 |
+| mavicAir2s, emitters | 0.12 | 0.37 | 0.61 | **0.73** |
+
+More physical units per model is the lever. Behaviour features keep improving through 6 units; tiles flatten after
+about 4. This is a forecast for next semester's data collection: aim for ≥ 6 units per model.
+
+**Updated I-D statement:** at one receiver, a model identifies the drone model of a physical unit and day it never
+saw: 0.62 balanced accuracy with behaviour features (0.69 per capture), not explained by SNR or bandwidth. It does
+not carry over to another receiver.
+
 ### I-other. The remaining identification tests
 
 | Test | What it tests | Balanced accuracy | Full − bandwidth | Status |
@@ -387,6 +496,7 @@ same-day sibling in training, and the model may be recognising the late-2022 rec
 | W2 | "AUC is unaffected by a receiver change because a shift raises both classes equally" | An assumption. It holds only if the change moves both classes' scores equally, which has to be measured each time |
 | W3 | "Site calibration" as a performance property | Calibration on local background places a threshold. It does not improve how well drones separate from background. It remains a deployment requirement, because thresholds don't transfer between receivers |
 | W4 | "CardRF session leakage confirmed" (2026-10-07) | An artefact of fold-averaged AUC with test-fold model selection |
+| W6 | **"One band near 7 kHz is the acoustic cue and beats the detector"** (A0, 2026-10-08) | On a single microphone the training chains no longer pick 7 kHz and the rule fails (0.58 / 0.67, intervals reaching 0.5). The cue was produced by averaging spaced or directional microphones (A-SM) |
 | W5 | "Beats the power shortcut" / "beats loudness" margins in `rf_cross*.md` and `detectors.md` | Those baselines were trained on the other receiver or chain. Inside the test sets, power beats every RF detection result (R1, R4), and loudness is inverted (A1) |
 
 ## Corrections to reports and commit messages
@@ -414,11 +524,11 @@ same-day sibling in training, and the model may be recognising the late-2022 rec
 
 ## Open questions (each needs its own committed design before any run)
 
-1. **Acoustic.** Answered in A0: the band transfers, the detector adds nothing, and thresholds do not transfer.
-   Still open, each needing its own design:
-   - a frequency ablation with features recomputed from audio low-passed at 6 kHz;
+1. **Acoustic.** A-SM settled the 7 kHz question (an averaging artifact) and showed MFCC performs like the detector.
+   Still open:
+   - an untouched third recording setup with both classes, to confirm A1 and test the MFCC hint;
    - false alarms per hour over the full ambient recordings;
-   - whether the 7 kHz cue survives distance.
+   - pretrained audio embeddings, needing a licence check and a download.
 2. **RF identification:** test D at the other receiver with enough units. Dataset 3 has only 4 such units at u1.
    DroneRFb-DIR (3 units per model; Air 2S and Mini 4 Pro shared with DRFF-R2) could supply a second receiver.
 3. **RF presence across receivers** can't be tested with the data we hold: every set we hold defines "drone vs not"

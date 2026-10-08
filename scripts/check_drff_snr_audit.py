@@ -26,7 +26,7 @@ per 10 dB), while rf_emitters' behaviour features stay the same from 10 to 30 dB
             permutation null's 95th percentile with p < 0.05) and (b) tiles_eq still meets it.
             Emitter features "re-establish I-D" if they meet the D rule. Receiver check and curve: reported, not ruled on.
 
-GPU not needed. CPU: emitter extraction on 8 workers (workers import no torch); fits on every core.
+GPU not needed. CPU: emitter extraction on 4 workers (~0.8 GB each; workers import no torch); fits on every core.
 Output: DroneacharyaData/results/checks/drff_snr_audit.json
 """
 import hashlib
@@ -120,7 +120,7 @@ def load():
     tag = key(_emitter_rows, {"windows": WINDOWS, "window_s": WINDOW_S, "code": CODE_HASH}, ["drff_r2"])
     path = OUT / f"drff_emitters-{tag}.json"
     if not path.exists():
-        out = Parallel(n_jobs=8)(delayed(_emitter_rows)(c["capture_id"]) for c in captures)
+        out = Parallel(n_jobs=4)(delayed(_emitter_rows)(c["capture_id"]) for c in captures)   # ~0.8 GB per worker
         path.write_text(json.dumps([r for rows in out for r in rows]), encoding="utf-8")
     em = json.loads(path.read_text(encoding="utf-8"))
     em_names = sorted(k for k in em[0] if k != "snr_db")
