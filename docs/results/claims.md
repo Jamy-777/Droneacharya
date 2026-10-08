@@ -342,6 +342,43 @@ receiver u2. The design and rule were committed in `e68d5dc` before the run.
 
 The CNN (secondary) is weaker, at 0.21–0.29.
 
+### I-RFUAV and I-RMA. Identification within RFUAV and RMA
+
+Source: `scripts/check_rfuav_rma_identification.py` (design committed in `9541847` before the run) →
+`results/checks/rfuav_rma_identification.json`. Two representations, both gbm:
+
+- **Tiles:** snapshot features of 250 µs steered 40 MHz tiles (as DRFF-R2).
+- **Emitters:** behaviour of the 3 dominant emitters over 100 ms (`rf_emitters`).
+
+**RFUAV: an unseen recording pack.** Each of the 28 packs of the 12 classes with ≥ 2 packs is held out in turn;
+predictions are over all 37 classes.
+
+| Representation | Balanced accuracy [95% CI] | Null median / 95th | Metadata alone (same rows) | Full − metadata | Bandwidth alone | Best single feature |
+| --- | --- | --- | --- | --- | --- | --- |
+| Tiles | 0.22 [0.17, 0.28] | 0.05 / 0.10 | 0.52 | **−0.30 [−0.45, −0.16]** | 0.10 | 0.18 |
+| Emitters | **0.50 [0.41, 0.61]** | 0.07 / 0.15 | 0.37 | +0.13 [−0.03, +0.33] | 0.26 | 0.59 (dominant emitter's burst length) |
+
+- **Both meet "works"** (interval above the null's 95th percentile, p = 0.0005), and both are beyond bandwidth.
+- **Neither is shown beyond acquisition metadata.** Centre frequency, reference SNR and ScaleFactor alone identify
+  the class on unseen packs, because packs of one class were recorded with the same settings. **Status: NOT
+  ESTABLISHED beyond the metadata shortcut.**
+- **Behaviour beats snapshots on the same 28 packs: 0.50 vs 0.22.** The rows differ, so this is not a paired
+  comparison. A single behaviour feature, burst length (picked on the test rows), reaches 0.59.
+- **Per class (emitters):**
+  - Strong: FPV Combo 1.00, Mini 4 Pro 0.83, Herelink 0.83, SIYI MK32 0.83, Avata 2 0.73.
+  - Weak or failing: Yunzhuo H12 0.00, H30 0.00, H16 0.25.
+
+**RMA:** one session per system and link type.
+
+| Test | Tiles | Emitters | Status |
+| --- | --- | --- | --- |
+| RMA-a: within session, 5-fold over files (session = class) | 0.66 | 0.99 | Upper bound only. This is the protocol most published results use |
+| RMA-b: unseen Mavic archive, share predicted "Mavic" (RC1 / RC2 / Vid1 / Vid2) | 0.07 / 0.13 / 0.75 / 0.88 | 1.00 / 1.00 / 1.00 / 1.00 | Descriptive only |
+
+**RMA-b is confounded with recording date.** Both Mavic RC archives were recorded on 2 Nov 2022 and both Vid archives
+on 30 Oct 2022, while every other system was recorded in April–May 2022. A held-out Mavic archive therefore has a
+same-day sibling in training, and the model may be recognising the late-2022 recording conditions.
+
 ## Withdrawn
 
 | ID | Claim | Why |
