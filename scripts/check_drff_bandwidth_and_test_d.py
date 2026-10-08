@@ -105,6 +105,7 @@ def main():
         tag = name.split()[0]
         saved = RESULTS / "drff_identification" / f"{tag}_gbm.json"
         r.update({"test": name, "units_held_out": sorted(set(g)), "chance": 1 / 8,
+                  "per_model_recall": {m: float(np.mean(full[y == m] == m)) for m in sorted(set(y))},
                   "saved_balanced_accuracy": json.loads(saved.read_text(encoding="utf-8"))["balanced_accuracy"]
                   if saved.exists() else None,
                   "bandwidth_only": E.metric(y, bandwidth),

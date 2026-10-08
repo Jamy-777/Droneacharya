@@ -3,7 +3,12 @@
 Hand-written. This is the only file in `docs/results/` that says which numbers may be quoted and with what limits.
 Every other file here is raw generator output and is rewritten on each run.
 
-**State on 2026-10-08: no result has passed the full gate below.** Each entry lists which gate items are missing.
+**State on 2026-10-08, after the gate checks:** two results have passed the gate:
+
+- **A1:** acoustic ranking on an unseen recording chain.
+- **I-D:** RF identification of an unseen unit on an unseen day, at the same receiver.
+
+Both are quotable only with the limits written beside them. No RF detection result has passed.
 
 ## Rules
 
@@ -18,6 +23,7 @@ Every other file here is raw generator output and is rewritten on each run.
 
 - A test's design is committed before the test runs. In every script committed up to `0e188c0`, the
   "design fixed before results" docstring was committed together with its results, so git history cannot verify it.
+  The gate checks below were designed in `e68d5dc` and run after it.
 - CardRF is development data. It has been scored more than a dozen times, and tile width and steering were changed
   in response to its results. No CardRF number counts as evidence for a new claim.
 - One revision per test set.
@@ -28,33 +34,68 @@ Every other file here is raw generator output and is rewritten on each run.
 
 | Status | Meaning |
 | --- | --- |
+| QUOTABLE | All four gate items are done; quote only with the limits beside it |
 | PENDING GATE | The number stands, but some gate items are missing |
 | HINT | Not a claim |
 | NOT ESTABLISHED | Tested, and didn't hold |
 | WITHDRAWN | Was claimed, is wrong |
 
+**"Best single feature"** in this log means the feature, and the direction, that score best on the test set itself.
+It is picked with hindsight, so it is optimistic for the baseline. "Power" means log RMS of the tile before
+normalisation, with no training and the direction fixed in advance (more power = drone).
+
 ## Acoustic
 
-### A1. Detection on an unseen recording chain: PENDING GATE
+### A1. Detection on an unseen recording chain: QUOTABLE, with limits
+
+A detector trained on one chain ranks drones above non-drones on the other chain.
 
 | Train → test | AUC [95% CI] | p | Rests on |
 | --- | --- | --- | --- |
-| Svanström → UaVirBASE | 0.85 [0.74, 0.98] | 0.001 | 1 drone model (DJI Mavic 3 Cine, 128 recordings); 4 ambient recordings, one day, one site |
+| Svanström → UaVirBASE | 0.85 [0.74, 0.98] | 0.001 | 1 drone model (DJI Mavic 3 Cine, 128 recordings); 4 ambient recordings, one morning, one site |
 | UaVirBASE → Svanström | 0.68 [0.59, 0.76] | 0.001 | 30 drone clips; 30 background + 30 helicopter clips |
 
-Source: `detectors.md`. The test sets were held out whole, and both test classes come from one chain.
+Sources: `detectors.md`, and `scripts/check_acoustic_gate.py` → `results/checks/acoustic_gate.json`. The rerun
+reproduced both AUCs exactly.
 
-- **Missing gate item 1:** the Svanström breakdown into background and helicopter (not saved).
-- **Missing gate item 2:** the strongest single feature inside each test set. The loudness comparison in
-  `detectors.md` was trained on the other chain and is inverted on the test chain (0.41). So the "+0.26 / +0.45
-  over loudness" margins are not quotable; the margins over chance are +0.18 / +0.35.
-- **Missing gate item 3:** a check for session effects inside each test chain. UaVirBASE's 4 ambient recordings
-  span one morning.
-- **Limits:**
-  - Only two chains.
-  - Only ranking has been tested across chains; no threshold has.
-  - A deployed microphone is a third chain, and chains are highly identifiable (dataset identification 0.81
-    balanced accuracy on drone windows alone, `shortcut_baselines.md`).
+**1. Breakdown by non-drone type.** Every part holds (interval above 0.5):
+
+| Test set | Non-drone part | AUC [95% CI] |
+| --- | --- | --- |
+| Svanström | Background | 0.65 [0.54, 0.75] |
+| Svanström | Helicopter | 0.70 [0.61, 0.79] |
+| UaVirBASE | Ambient 09:31 | 0.98 [0.97, 0.99] |
+| UaVirBASE | Ambient 10:39 | 0.93 [0.91, 0.95] |
+| UaVirBASE | Ambient 11:17 | 0.74 [0.70, 0.78] |
+| UaVirBASE | Ambient 12:47 | 0.77 [0.73, 0.80] |
+
+UaVirBASE has one drone model, so it can't be broken down by drone type. Each UaVirBASE interval resamples drone
+recordings only, because each row holds one ambient recording.
+
+**2. Single-feature baselines inside each test set:**
+
+| Test set | Loudness | Detector − loudness | Best single feature | Detector − best |
+| --- | --- | --- | --- | --- |
+| Svanström | 0.43 [0.31, 0.55] (drones are not louder) | +0.25 [0.13, 0.36] | Energy share in 7.0–7.25 kHz, 0.85 | **−0.17 [−0.28, −0.06]** |
+| UaVirBASE | 0.42 [0.22, 0.65] (drones are not louder) | +0.44 [0.31, 0.55] | Energy share in 6.75–7.0 kHz, 0.89 | −0.04 [−0.23, +0.15] |
+
+So a single 250 Hz band near 7 kHz, chosen with hindsight, does as well as the detector on UaVirBASE and better on
+Svanström. The direction is the same in both chains: more energy near 7 kHz means drone. That this band would hold
+if chosen *without* hindsight (on the training chain) is untested; it needs its own committed design.
+
+**3. What else could produce this?** Does one non-drone class or recording carry the result? No: every part in the
+table above holds.
+
+**4. What it rests on:** the counts in the first table.
+
+**Limits:**
+
+- Only two chains.
+- It's a ranking only. No threshold has been tested across chains.
+- The detector is not shown to add anything over one band near 7 kHz.
+- UaVirBASE ambient recordings later in the morning are harder (0.74–0.77) than the early ones (0.93–0.98).
+- A deployed microphone is a third chain, and chains are highly identifiable (dataset identification 0.81 balanced
+  accuracy on drone windows alone, `shortcut_baselines.md`).
 
 ### A2. Detection within one chain: reference only
 
@@ -78,56 +119,82 @@ Variants B and D trained on identical sources, so three variants were tested, no
 
 ## RF detection
 
+Source for power and best-single-feature numbers: `scripts/check_power_inside_tests.py` →
+`results/checks/power_inside_tests.json`. Every detector was refitted and reproduced its saved AUC exactly.
+
 ### R1. Across receivers (UAVSig ↔ CardRF): NOT ESTABLISHED
 
-| Test | v1.1, 25 MHz tiles | v1.2, 40 MHz tiles | Rests on |
+**T2, CardRF → UAVSig (2 negative groups):**
+
+| Version | Detector | Power inside UAVSig | Detector − power |
 | --- | --- | --- | --- |
-| T1, UAVSig → CardRF | 0.38 | 0.32 | |
-| T2, CardRF → UAVSig | 0.73 | 0.75 | 2 negative groups |
+| v1.1, 25 MHz | 0.73 | 0.95 | −0.23 [−0.25, −0.19] |
+| v1.2, 40 MHz | 0.75 | 0.96 | −0.21 [−0.24, −0.18] |
 
-The "power baseline" column in `rf_cross*.md` scores exactly 0.50 in every row. It was trained on one receiver's
-amplitude scale and applied to the other's, so "detector − power" there means detector minus chance. Power
-computed inside each test set has not been run.
+**T1, UAVSig → CardRF:**
 
-### R2. CardRF → Noisy RF (stage 2): NOT ESTABLISHED
+| Version | Detector | Power inside CardRF | Best single feature |
+| --- | --- | --- | --- |
+| v1.1 | 0.38 | 0.61 | 0.82 |
+| v1.2 | 0.32 | 0.61 | 0.87 |
+
+The "power baseline" column in `rf_cross*.md` reads 0.50 because it was trained on the other receiver's scale.
+Measured inside the test sets, power beats both directions.
+
+### R2. CardRF → Noisy RF (stage 2): NOT ESTABLISHED; the cause of the floor is unresolved
 
 | Model | AUC [95% CI] | Status |
 | --- | --- | --- |
 | gbm (primary) | 0.44 | Fails |
 | CNN | 0.64 [0.55, 0.71] | Not a detection result |
 
-The CNN by SNR (`rf_stage2.md`): 0.60 at −20 dB, where the drone is 1% of the power; down to 0.54 at −4 dB; up to
-0.74 at ≥ 20 dB. Separation where the drone is weakest points to a difference in how the two classes' backgrounds
-were built. That cause is untested.
+The CNN by SNR: 0.60 at −20 dB, 0.54 at −4 dB, 0.74 at ≥ 20 dB.
 
-- All non-drones come from one building.
-- The interval resamples the 6 RC transmitters only.
+The floor check (`scripts/check_noisy_rf_floor.py` → `results/checks/noisy_rf_floor.json`):
+
+- **The pre-committed rule's outcome is "inconclusive".** A gbm trained inside Noisy RF on the quiet half of
+  each tile reaches 0.57 at −20 dB. The rule was: ≥ 0.60 means the backgrounds explain the floor and Noisy RF is
+  retired; < 0.55 means not explained by these features. **So Noisy RF is not retired.**
+- **The CNN's score moves with the background statistics (descriptive).** Spearman correlation with the
+  background-only score is 0.55 within −20 dB drone vectors and 0.33 within noise vectors, where there is no drone.
+- **The background-only model is drone-free only at low SNR.** It rises to 0.80 at high SNR, because a strong
+  drone enters the quiet half of the tile.
+- **Power inside Noisy RF:** 0.51 at −20 dB, then 0.38–0.46 (drone tiles are slightly quieter).
+- **Reproduction:** the CNN retrained to within 0.015 of the saved AUC at every SNR (GPU training is not
+  bit-identical), 0.63 overall. The gbm reproduced exactly.
+- **Rests on:** all non-drones come from one building, and the interval resamples the 6 RC transmitters only.
 
 ### R3. Merged drone-only pool → CardRF
 
-Source: `scripts/check_claim_breakdowns.py` and `results/checks/claim_breakdowns.json`.
+Sources: `scripts/check_claim_breakdowns.py` and `scripts/check_power_inside_tests.py`.
 
-| Score | All non-drones | vs Wi-Fi (2 routers) | vs Bluetooth (5 devices) |
-| --- | --- | --- | --- |
-| kNN (declared primary) | 0.78 | 0.53 | 0.88 |
-| GMM (declared secondary) | 0.86 | 0.79 | 0.89 |
-| Best single feature (picked on CardRF, optimistic) | 0.78 | 0.47 | 0.91 |
-| Occupied bandwidth alone | 0.64 | 0.18 | 0.83 |
+| Score | All | vs Wi-Fi (2 routers) | vs Bluetooth (5 devices) | − power (0.61) | − best single (0.78) |
+| --- | --- | --- | --- | --- | --- |
+| kNN (declared primary) | 0.78 | 0.53 | 0.88 | +0.17 [−0.20, +0.47] | −0.00 [−0.16, +0.08] |
+| GMM (declared secondary) | 0.86 | 0.79 | 0.89 | +0.25 [−0.04, +0.50] | +0.08 [−0.05, +0.23] |
 
-- **kNN: NOT ESTABLISHED.** It separates drones from Bluetooth only and adds nothing over one feature.
-- **GMM: HINT.** The Wi-Fi side is 2 routers, CardRF is development data, and the GMM was the declared secondary.
+- **kNN: NOT ESTABLISHED.** It separates drones from Bluetooth only and equals the best single feature.
+- **GMM: HINT.** It doesn't beat power or the best single feature, the Wi-Fi side is 2 routers, and CardRF is
+  development data.
 - **Rests on:** 6 UAS systems (aircraft and controller), 2 Wi-Fi routers, 5 Bluetooth devices.
 - **The same pool on other test sets is inverted:** UAVSig 0.19 / 0.44 and Noisy RF 0.33 / 0.37.
-  - Two explanations fit all three test sets: "task mismatch", and "the pool learned wide, continuous signals",
-    which accepts Wi-Fi and rejects narrow emitters.
+  - Two explanations fit: "task mismatch", and "the pool learned wide, continuous signals".
   - Neither has been tested.
 
-### R4. Within one receiver: reference only
+### R4. Within one receiver: NOT ESTABLISHED beyond a single feature
 
-| Test | AUC [95% CI] | p | Note |
-| --- | --- | --- | --- |
-| CardRF, v1.2 | 0.82 [0.52, 0.99] | 0.03 | Development data; tile width was changed after v1.1 results on this set |
-| UAVSig | 0.81 | | 2 negative groups |
+| Test | Detector | Power | Detector − power | Best single feature | Detector − best |
+| --- | --- | --- | --- | --- | --- |
+| CardRF, v1.1 | 0.76 | 0.61 | +0.15 [−0.22, +0.38] | 0.82 | −0.06 [−0.33, +0.18] |
+| CardRF, v1.2 | 0.82 | 0.61 | +0.21 [−0.21, +0.49] | 0.87 | −0.05 [−0.23, +0.04] |
+| UAVSig, v1.1 | 0.81 | 0.95 | −0.14 [−0.17, −0.11] | | |
+| UAVSig, v1.2 | 0.81 | 0.96 | −0.15 [−0.17, −0.12] | | |
+
+The CardRF best single features are frequency-centroid movement within the tile: `centroid_jump_mean` (v1.1) and
+`centroid_spread` (v1.2).
+
+UAVSig asks "drone or empty band?", and power answers it at 0.95–0.96. Stage 1 (activity) is therefore energy
+detection with a noise-floor estimate, not a trained model.
 
 ### R5. Fixed-threshold operating point: reference only
 
@@ -137,26 +204,58 @@ That is development data, per 250 µs tile. No false-alarms-per-hour figure exis
 
 ## RF identification (DRFF-R2 Dataset 3)
 
-### I. Which drone model this is: PENDING GATE
+Source: `drff_identification.md`, plus `scripts/check_drff_bandwidth_and_test_d.py` →
+`results/checks/drff_bandwidth_and_test_d.json`. The setup:
 
-8 models, chance 0.125, gbm primary (`drff_identification.md`). All 26 units appear on day 1 (receiver u2), so every
-unit tested on day 2, day 3 or receiver u1 was in day-1 training (`claim_breakdowns.json`).
+- 8 models, chance 0.125; gbm on all features.
+- p comes from permuting model labels between units, and intervals resample units.
+- All 26 units appear on day 1 (receiver u2).
+- I1–I3 reproduced exactly.
 
-| Test | What it actually tests | Balanced accuracy [95% CI] |
-| --- | --- | --- |
-| I1a, I1b | The same drones on a later day (was labelled "unseen day") | 0.29 [0.24, 0.45] / 0.37 [0.34, 0.48] |
-| I2 | The same 8 drones, same day, other receiver (was labelled "unseen receiver") | 0.24 [0.19, 0.31] |
-| I3 | An unseen unit of a known model, same day | 0.51 [0.45, 0.61] |
+"Bandwidth alone" is a gbm on occupied bandwidth only, on the same splits; DJI links switch between 10, 20 and
+40 MHz.
 
-- I3 pools 22 held-out units of 4 models. The null median is 0.21, because only 4 classes are true.
-- I2 shows that changing only the receiver erases most of the accuracy on drones the model already knows. The
-  features largely encode the receiver.
-- **Missing gate item 2:** identification from bandwidth alone. DJI links switch between 10, 20 and 40 MHz.
-- **Missing gate item 3:** test D (an unseen unit on an unseen day) and the receiver-shortcut tests from
-  `docs/datasets/drff_r2_experimental_design.md`, none of which were run.
-- **Other observations:**
-  - Mavic 3, 3C and 3S are confused with each other, so the model identifies radio family more than airframe.
-  - The CNN (secondary) is weaker, at 0.21–0.29.
+### I-D. An unseen unit on an unseen day, same receiver: QUOTABLE, with limits
+
+Each unit is held out of all training, the model trains on day 1, and the held-out unit is tested on days 2–3 at
+receiver u2. The design and rule were committed in `e68d5dc` before the run.
+
+| Measure | Value |
+| --- | --- |
+| Balanced accuracy [95% CI] | **0.44 [0.38, 0.61]** |
+| Permutation null | median 0.21, 95th percentile 0.33 |
+| p | 0.0015 |
+| Rule (interval above the null's 95th percentile, p < 0.05) | **Met** |
+
+- **Gate 1, per model:**
+
+  | Model | Recall | Training units | Held-out units |
+  | --- | --- | --- | --- |
+  | mavicAir2 | 0.65 | 7 | 3 |
+  | mavicAir2s | 0.59 | 6 | 3 |
+  | mini4PRO | 0.43 | 4 | 2 |
+  | mini3pro | 0.07 | 1 | 1 |
+
+  It works where the model has seen several units, and fails with one.
+- **Gate 2:** best single feature (amplitude kurtosis) 0.25; full − best +0.19 [+0.12, +0.37].
+- **Gate 3:** bandwidth alone 0.18; full − bandwidth +0.26 [+0.18, +0.44]. This is not the link's bandwidth setting.
+- **Gate 4:** 9 held-out units of 4 models, one receiver, one site.
+- **Limits:**
+  - Same receiver as training.
+  - Only models with ≥ 2 units can be tested this way, and DJI models only.
+  - Mavic 3, 3C and 3S (one unit each) are not covered.
+
+### I-other. The remaining identification tests
+
+| Test | What it tests | Balanced accuracy | Full − bandwidth | Status |
+| --- | --- | --- | --- | --- |
+| I1a | Same drones, day 2 | 0.29 [0.24, 0.45] | +0.06 [−0.02, +0.26] | **Not beyond bandwidth** |
+| I1b | Same drones, day 3 | 0.37 [0.34, 0.48] | +0.18 [+0.13, +0.37] | Beyond bandwidth; same drones, so not a generalisation claim |
+| I2 | Same 8 drones, other receiver | 0.24 [0.19, 0.31] | +0.03 [−0.06, +0.14] | **Not beyond bandwidth.** A receiver change leaves only what bandwidth alone gives |
+| I3 | Unseen unit, same day | 0.51 [0.45, 0.61] | +0.28 [+0.18, +0.46] | Superseded by I-D, which also changes the day |
+| D-rx | Unseen unit + day + receiver (d2 u1) | 0.37 [0.12, 0.61], p = 0.17, 4 units | | NOT ESTABLISHED (declared descriptive) |
+
+The CNN (secondary) is weaker, at 0.21–0.29.
 
 ## Withdrawn
 
@@ -166,6 +265,7 @@ unit tested on day 2, day 3 or receiver u1 was in day-1 training (`claim_breakdo
 | W2 | "AUC is unaffected by a receiver change because a shift raises both classes equally" | An assumption. It holds only if the change moves both classes' scores equally, which has to be measured each time |
 | W3 | "Site calibration" as a performance property | Calibration on local background places a threshold. It does not improve how well drones separate from background. It remains a deployment requirement, because thresholds don't transfer between receivers |
 | W4 | "CardRF session leakage confirmed" (2026-10-07) | An artefact of fold-averaged AUC with test-fold model selection |
+| W5 | "Beats the power shortcut" / "beats loudness" margins in `rf_cross*.md` and `detectors.md` | Those baselines were trained on the other receiver or chain. Inside the test sets, power beats every RF detection result (R1, R4), and loudness is inverted (A1) |
 
 ## Corrections to reports and commit messages
 
@@ -176,6 +276,8 @@ unit tested on day 2, day 3 or receiver u1 was in day-1 training (`claim_breakdo
 - Commit messages superseded by this log:
   - `0e188c0` "RF works on CardRF 0.78-0.86": see R3. "RF recall across datasets and bands": see W1.
   - `a33a2f9` "GPU CNN transfers modestly (0.64, 0.74 at high SNR)": see R2.
+- `check_drff_bandwidth_and_test_d.py` gained a per-model recall output after its first run. It is reporting only:
+  the rerun reproduced every number.
 
 ## Known pipeline issues
 
@@ -185,12 +287,11 @@ unit tested on day 2, day 3 or receiver u1 was in day-1 training (`claim_breakdo
 - **No time integration yet.** RF numbers are per 250 µs tile (4,000 decisions per second), and acoustic numbers
   are per 1 s window. Nothing integrates over time or reports false alarms per hour.
 
-## Open checks
+## Open questions (each needs its own committed design before any run)
 
-Designs committed before running. Each script's docstring holds its design and decision rule.
-
-1. Noisy RF: the −20 dB floor, plus a baseline built from background only (`scripts/check_noisy_rf_floor.py`).
-2. Power computed inside each RF test set (`scripts/check_power_inside_tests.py`).
-3. DRFF-R2: identification from bandwidth alone, and test D (`scripts/check_drff_bandwidth_and_test_d.py`).
-4. Acoustic: the Svanström background/helicopter breakdown, each UaVirBASE ambient recording, and the best single
-   feature inside each test set (`scripts/check_acoustic_gate.py`).
+1. **Acoustic:** does the 6.75–7.25 kHz energy share, chosen on the training chain, transfer to the other chain?
+   And does the detector add anything beyond it?
+2. **RF identification:** test D at the other receiver with enough units. Dataset 3 has only 4 such units at u1.
+3. **RF detection across receivers** can't be tested with public data: every public set defines "drone vs not"
+   differently, and power dominates within each set. It needs matched recordings of drones and background through
+   one receiver.
