@@ -68,7 +68,7 @@ and models come after it.
 
 Each of these is a test, so each gets a committed design before it runs.
 
-## Critical path
+## Critical path (next semester; this semester is software only)
 
 Our own recordings, from one SDR plus a microphone array at the same site, following
 `docs/data_collection_protocol.md`. They remove the receiver confound by construction, give true negatives from the
