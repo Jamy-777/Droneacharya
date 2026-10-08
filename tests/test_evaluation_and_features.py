@@ -39,6 +39,17 @@ def test_subset_auc_keeps_only_the_selected_rows():
     assert sub["n"] == int(keep.sum()) and sub["groups_per_label"] == {"False": 9, "True": 9}
 
 
+def test_paired_label_difference_sign_and_zero():
+    rng = np.random.default_rng(4)
+    groups = np.repeat([f"u{i}" for i in range(12)], 10)
+    y = np.repeat(np.array(["a", "b", "c"] * 4, dtype=object), 10)
+    guess = rng.choice(["a", "b", "c"], size=y.size).astype(object)
+    same = E.paired_label_difference(y, y, y, groups, n_bootstrap=100)
+    assert same["difference"] == 0 and same["ci95"] == [0.0, 0.0]
+    better = E.paired_label_difference(y, guess, y, groups, n_bootstrap=100)
+    assert better["difference"] > 0.4 and better["ci95"][0] > 0
+
+
 def test_audio_features_ignore_level():
     rng = np.random.default_rng(3)
     t = np.arange(48000) / 48000

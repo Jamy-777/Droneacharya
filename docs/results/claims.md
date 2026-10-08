@@ -187,7 +187,10 @@ unit tested on day 2, day 3 or receiver u1 was in day-1 training (`claim_breakdo
 
 ## Open checks
 
-1. Noisy RF: the −20 dB floor, plus a baseline built from background only.
-2. Power computed inside each RF test set.
-3. DRFF-R2: identification from bandwidth alone, and test D.
-4. Acoustic: the Svanström background/helicopter breakdown, and the best single feature inside each test set.
+Designs committed before running. Each script's docstring holds its design and decision rule.
+
+1. Noisy RF: the −20 dB floor, plus a baseline built from background only (`scripts/check_noisy_rf_floor.py`).
+2. Power computed inside each RF test set (`scripts/check_power_inside_tests.py`).
+3. DRFF-R2: identification from bandwidth alone, and test D (`scripts/check_drff_bandwidth_and_test_d.py`).
+4. Acoustic: the Svanström background/helicopter breakdown, each UaVirBASE ambient recording, and the best single
+   feature inside each test set (`scripts/check_acoustic_gate.py`).

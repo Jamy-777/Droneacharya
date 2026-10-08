@@ -138,6 +138,20 @@ def paired_difference(scores_a, scores_b, y, groups, n_bootstrap=2000, seed=0):
             "share_of_resamples_at_or_below_zero": float(np.mean(np.asarray(diffs) <= 0))}
 
 
+def paired_label_difference(predicted_a, predicted_b, y, groups, n_bootstrap=2000, seed=0):
+    """Balanced accuracy(a) − balanced accuracy(b) on identical rows, with a group-bootstrap 95% interval."""
+    a, b, y = (np.asarray(v).astype(object) for v in (predicted_a, predicted_b, y))
+    _, _, members = _groups(np.asarray(groups), y)
+    rng = np.random.default_rng(seed)
+    diffs = []
+    for _ in range(n_bootstrap):
+        rows = np.concatenate([members[g] for g in rng.integers(0, len(members), len(members))])
+        diffs.append(metric(y[rows], a[rows]) - metric(y[rows], b[rows]))
+    return {"difference": metric(y, a) - metric(y, b),
+            "ci95": [float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))],
+            "share_of_resamples_at_or_below_zero": float(np.mean(np.asarray(diffs) <= 0))}
+
+
 def subset_auc(scores, y, groups, keep, n_bootstrap=2000, seed=0):
     """AUC on a subset of rows (e.g. one emitter type vs all negatives), with a group-bootstrap interval."""
     keep = np.asarray(keep, bool)
