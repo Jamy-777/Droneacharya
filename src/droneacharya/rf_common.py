@@ -140,3 +140,20 @@ def uavsig_steered(capture_id, n_tiles=20, width=SUB_FS):
     out = [steered_tile(x[a:a + block].astype(np.complex128), s.sample_rate_hz, s.center_frequency_hz, width=width)
            for a in starts]
     return np.stack([t for t, _ in out]), [c for _, c in out]
+
+
+# ---------------------------------------------------------------- stage 2: 14 MHz tiles (Noisy RF's full width)
+STAGE2_WIDTH = 14e6                   # complex, 14 MS/s, 250 us = 3,500 samples
+
+
+def notch_dc(tile, fs):
+    """Zero the receiver's LO leakage (|f| < 100 kHz) of a complex baseband tile."""
+    spectrum = np.fft.fft(tile.astype(np.complex128))
+    spectrum[np.abs(np.fft.fftfreq(len(tile), 1 / fs)) < DC_NOTCH_HZ] = 0
+    return np.fft.ifft(spectrum).astype(np.complex64)
+
+
+def noisy_rf_tile(capture_id):
+    """Noisy RF: already 14 MHz complex baseband at 14 MS/s; the first 250 us of the vector, DC notched."""
+    s = signal.read(capture_id, count=int(round(STAGE2_WIDTH * TILE / FS)))
+    return notch_dc(s.samples[0], s.sample_rate_hz)

@@ -12,7 +12,7 @@ from pathlib import Path
 from .paths import INDEX
 
 PACKAGE = Path(__file__).resolve().parent
-CODE_FILES = ("signal.py", "baselines.py", "features.py", "rf_common.py", "rf_features.py", "index/tables.py", "index/acoustic.py")
+CODE_FILES = ("signal.py", "baselines.py", "features.py", "rf_common.py", "rf_features.py", "cnn.py", "index/tables.py", "index/acoustic.py")
 
 
 def key(compute, params, datasets):
