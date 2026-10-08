@@ -5,7 +5,8 @@ Every other file here is raw generator output and is rewritten on each run.
 
 **State on 2026-10-08, after the gate checks:** two results have passed the gate:
 
-- **A1:** acoustic ranking on an unseen recording chain.
+- **A0:** acoustic ranking on an unseen recording chain, by one band near 7 kHz chosen on the training chain. It is
+  better than the gbm detector (A1), which adds nothing beyond it.
 - **I-D:** RF identification of an unseen unit on an unseen day, at the same receiver.
 
 Both are quotable only with the limits written beside them. No RF detection result has passed.
@@ -51,7 +52,7 @@ answers and what counts as passing.
 
 | Capability | Question | Test | Passes if | Status |
 | --- | --- | --- | --- | --- |
-| Acoustic presence | Is a drone audible? | Train on one recording chain, test on another held out whole | Interval above 0.5; every non-drone class holds; beats in-test loudness and the best single feature | **A1:** passes as a ranking. Does not beat a 7 kHz band chosen with hindsight. Threshold transfer and false alarms per hour are untested |
+| Acoustic presence | Is a drone audible? | Train on one recording chain, test on another held out whole | Interval above 0.5; every non-drone class holds; beats in-test loudness and the best single feature | **A0:** one band near 7 kHz, chosen on the training chain, passes as a ranking (0.84 / 0.89). The detector adds nothing beyond it. Thresholds do not transfer between chains. False alarms per hour are not measurable with this data |
 | RF activity | Is anything transmitting? | Energy above an estimated noise floor | Classical signal processing, not ML. Power inside UAVSig: 0.95–0.96 | Implementation only |
 | RF presence (stage 2) | Is the transmitter a drone, not Wi-Fi/Bluetooth? | Both classes from one receiver, receiver unseen in training | Beats power and the best single feature inside the test set | **NOT ESTABLISHED.** Needs a set like DroneRFb-DIR (`docs/datasets/candidates.md`) or our own recordings |
 | RF identification | Which known drone model is this? | Unseen unit on an unseen day; then another receiver | Interval above the permutation null's 95th percentile; beats bandwidth alone | **I-D:** passes at the same receiver. Across receivers: not established |
@@ -83,9 +84,56 @@ answers and what counts as passing.
 
 ## Acoustic
 
-### A1. Detection on an unseen recording chain: QUOTABLE, with limits
+### A0. One band near 7 kHz, chosen on the training chain: QUOTABLE as a ranking
 
-A detector trained on one chain ranks drones above non-drones on the other chain.
+This is the best acoustic result, and it is simpler than the detector. Source:
+`scripts/check_acoustic_single_feature_transfer.py` (design committed in `87f8417` before the run) →
+`results/checks/acoustic_single_feature_transfer.json`.
+
+**The rule.** Pick the single feature with the largest training-chain AUC among the 41 detector features and
+loudness, then apply it unchanged to the other chain. Both training chains pick the share of window energy near
+7 kHz:
+
+| Train → test | Rule chosen on training | Test AUC [95% CI] | p | Detector on the same rows | Detector − rule |
+| --- | --- | --- | --- | --- | --- |
+| UaVirBASE → Svanström | 6.75–7.0 kHz share (training AUC 0.89) | **0.84 [0.76, 0.90]** | 0.0005 | 0.68 | −0.16 [−0.27, −0.05] |
+| Svanström → UaVirBASE | 7.0–7.25 kHz share (training AUC 0.85) | **0.89 [0.82, 0.97]** | 0.001 | 0.85 | −0.04 [−0.23, +0.15] |
+
+- **Gate 1, every non-drone part holds:**
+  - Svanström: background 0.80 [0.70, 0.88], helicopter 0.88 [0.81, 0.94].
+  - UaVirBASE ambients: 09:31 0.82, 10:39 0.86, 11:17 0.88, 12:47 1.00 (all intervals above 0.78).
+- **Gate 2:** the rule *is* a single feature. Chosen without hindsight, it scores 0.84 / 0.89, against 0.85 / 0.89
+  for the best feature picked on the test set. In-test loudness is inverted (0.43 / 0.42).
+- **Gate 3, what else?**
+  - Both chains point the same way, and both test classes come from one chain, so the chain itself can't produce
+    this.
+  - Untested alternative: energy near 7 kHz falls fastest with distance, so the rule may reflect how close the
+    drone was to the microphone. No distance labels exist to check it.
+- **Gate 4:** as A1 (1 drone model in UaVirBASE, 30 drone clips in Svanström, 2 chains).
+- **Decisions under the committed rules:**
+  - The rule transfers.
+  - **The gbm detector adds nothing beyond it.**
+  - **Thresholds do not transfer**, for the detector or the rule. A threshold set at 5% false positives on the
+    training chain gives:
+
+    | Train → test | Threshold from | Window false positives | Window recall |
+    | --- | --- | --- | --- |
+    | UaVirBASE → Svanström | Detector | 21% | 42% |
+    | UaVirBASE → Svanström | Rule | 88% | 100% |
+    | Svanström → UaVirBASE | Detector | 0% | 2% |
+    | Svanström → UaVirBASE | Rule | 0% | 0% |
+
+    The score scale shifts between chains, as it does for RF. Ranking transfers; absolute levels need calibration
+    on site.
+- **False alarms per hour (indicative, first ≤ 10 s of each recording):**
+  - Detector on Svanström: 132/h (95% upper bound 188/h).
+  - On UaVirBASE: 0 in 40 s, which still allows up to 270/h.
+  - Not a deployment figure.
+
+### A1. Detection on an unseen recording chain (gbm detector): superseded by A0
+
+A detector trained on one chain ranks drones above non-drones on the other chain. A0 shows that a single band chosen
+on the training chain does as well or better.
 
 | Train → test | AUC [95% CI] | p | Rests on |
 | --- | --- | --- | --- |
@@ -313,6 +361,9 @@ The CNN (secondary) is weaker, at 0.21–0.29.
 - Commit messages superseded by this log:
   - `0e188c0` "RF works on CardRF 0.78-0.86": see R3. "RF recall across datasets and bands": see W1.
   - `a33a2f9` "GPU CNN transfers modestly (0.64, 0.74 at high SNR)": see R2.
+- `check_acoustic_single_feature_transfer.py`: two decisions were written under one key, so the threshold verdict
+  overwrote the rule's AUC verdict (fixed by renaming the key). The per-class breakdown of the rule was added after
+  the first run. Both changes are reporting only; every number reproduced.
 - `check_drff_bandwidth_and_test_d.py` gained a per-model recall output after its first run. It is reporting only:
   the rerun reproduced every number.
 
@@ -326,12 +377,11 @@ The CNN (secondary) is weaker, at 0.21–0.29.
 
 ## Open questions (each needs its own committed design before any run)
 
-1. **Acoustic, one design with three parts:**
-   - Does the 6.75–7.25 kHz energy share, chosen on the training chain, transfer to the other chain, and does the
-     detector add anything beyond it?
-   - Does a threshold set on the training chain hold on the other chain (recall and false alarms)?
-   - False alarms per hour of continuous negative audio, with time integration, reported with its upper bound
-     given only minutes of negatives.
+1. **Acoustic.** Answered in A0: the band transfers, the detector adds nothing, and thresholds do not transfer.
+   Still open, each needing its own design:
+   - a frequency ablation with features recomputed from audio low-passed at 6 kHz;
+   - false alarms per hour over the full ambient recordings;
+   - whether the 7 kHz cue survives distance.
 2. **RF identification:** test D at the other receiver with enough units. Dataset 3 has only 4 such units at u1.
    DroneRFb-DIR (3 units per model; Air 2S and Mini 4 Pro shared with DRFF-R2) could supply a second receiver.
 3. **RF presence across receivers** can't be tested with the data we hold: every set we hold defines "drone vs not"

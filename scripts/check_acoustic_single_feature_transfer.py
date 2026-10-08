@@ -111,6 +111,13 @@ def transfer(train_name, train, test_name, test, saved_auc):
     rule = E.evaluate_external(rule_test, test["y"], test["groups"], "single feature")
     rule.update({"feature": feature, "direction": direction, "train_auc": train_auc[feature],
                  "near_7khz": feature in ("band_27", "band_28")})
+    # reporting only (added after the first run): the rule against each non-drone class or recording
+    meta = {c["capture_id"]: c for c in splits.captures_of(test_name)}
+    part = np.array([str(meta[i]["label_class"]) for i in test["ids"]])
+    if len(set(part[~test["y"]])) == 1:
+        part = test["groups"]
+    rule["breakdown"] = {n: E.subset_auc(rule_test, test["y"], test["groups"], test["y"] | (part == n))
+                         for n in sorted(set(part[~test["y"]]))}
     # the detector, refitted as run_detectors.py did
     fitted = E.model("gbm").fit(train["X"], train["y"])
     detector_test = E.positive_scores(fitted, test["X"])
@@ -127,7 +134,7 @@ def transfer(train_name, train, test_name, test, saved_auc):
     result["decisions"] = {
         "rule_transfers": bool(rule["ci95"][0] > 0.5 and rule["permutation"]["p_value"] < 0.05),
         "detector_adds_beyond_rule": bool(result["detector_minus_rule"]["ci95"][0] > 0),
-        **{f"{k}_transfers": bool(result[f"{k}_threshold"]["window_false_positive_rate"]["rate"] <= MAX_FPR and
+        **{f"{k}_threshold_transfers": bool(result[f"{k}_threshold"]["window_false_positive_rate"]["rate"] <= MAX_FPR and
                                   result[f"{k}_threshold"]["window_recall"]["rate"] >= MIN_RECALL)
            for k in ("detector", "rule")}}
     return result
